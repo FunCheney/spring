@@ -1,6 +1,6 @@
-# <img src="src/docs/asciidoc/images/spring-framework.png" width="80" height="80"> Spring Framework 源码阅读
+#Spring Framework 源码阅读
 ## 环境搭建与代码编译
-* 
+ 
 ## spring IOC
 
 ## spring AOP

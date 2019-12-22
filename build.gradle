@@ -131,7 +131,7 @@ configure(allprojects) { project ->
 
 	test {
 		systemProperty("java.awt.headless", "true")
-		systemProperty("testGroups", project.properties.get("testGroups"))
+//		systemProperty("testGroups", project.properties.get("testGroups"))
 		systemProperty("io.netty.leakDetection.level", "paranoid")
 		scanForTestClasses = false
 		include(["**/*Tests.class", "**/*Test.class"])
