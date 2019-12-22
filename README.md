@@ -1,4 +1,4 @@
-#Spring Framework 源码阅读
+# Spring Framework 源码阅读
 ## 环境搭建与代码编译
 - 1.在github 上克隆代码。
 - 2.打开 import-into-idea.md 按照该文件中步骤 操作。
@@ -8,8 +8,21 @@
     
 &ensp;&ensp;注意在spring-study module下的build.gradle 中添加 `compile(project(":spring-context"))`。
 
+### 由一段测试代码开始
+#### spring 的启动
 
- 
+**代码片段一**
+
+```java
+ClassPathXmlApplicationContext clx = new ClassPathXmlApplicationContext("");
+```
+**代码片段二**
+```java
+AnnotationConfigApplicationContext applicationContext =
+				new AnnotationConfigApplicationContext(AppConfig.class);
+``` 
+
+
 ## spring IOC
 
 ## spring AOP
