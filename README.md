@@ -21,7 +21,9 @@ ClassPathXmlApplicationContext clx = new ClassPathXmlApplicationContext("");
 AnnotationConfigApplicationContext applicationContext =
 				new AnnotationConfigApplicationContext(AppConfig.class);
 ``` 
+#### spring中Bean的描述
 
+在Spring中通过BeanDefinition来描述一个Bean，通过这个类来设置Spring中Bean的属性，加载方式。
 
 ## spring IOC
 

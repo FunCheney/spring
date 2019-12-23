@@ -91,7 +91,6 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 		/**
 		 * 调用默认的构造方法，由于该类有父类，故而先调用父类的构造方法，在调用自己的构造方法
-		 *
 		 */
 		this();
 		register(componentClasses);

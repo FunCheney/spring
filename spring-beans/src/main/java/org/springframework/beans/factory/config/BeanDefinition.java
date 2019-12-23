@@ -22,6 +22,7 @@ import org.springframework.core.AttributeAccessor;
 import org.springframework.lang.Nullable;
 
 /**
+ * 通过BeanDefinition来描述一个bean的实例，
  * A BeanDefinition describes a bean instance, which has property values,
  * constructor argument values, and further information supplied by
  * concrete implementations.
@@ -84,11 +85,13 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 
 	/**
 	 * Set the name of the parent definition of this bean definition, if any.
+	 * 设置当前bean的父类名称
 	 */
 	void setParentName(@Nullable String parentName);
 
 	/**
 	 * Return the name of the parent definition of this bean definition, if any.
+	 * 获取类的父类名称
 	 */
 	@Nullable
 	String getParentName();
@@ -100,10 +103,12 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * @see #setParentName
 	 * @see #setFactoryBeanName
 	 * @see #setFactoryMethodName
+	 * 设置Bean的名称
 	 */
 	void setBeanClassName(@Nullable String beanClassName);
 
 	/**
+	 * 获取当前类的名称
 	 * Return the current bean class name of this bean definition.
 	 * <p>Note that this does not have to be the actual class name used at runtime, in
 	 * case of a child definition overriding/inheriting the class name from its parent.
@@ -119,6 +124,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	String getBeanClassName();
 
 	/**
+	 * 设置类的作用域
 	 * Override the target scope of this bean, specifying a new scope name.
 	 * @see #SCOPE_SINGLETON
 	 * @see #SCOPE_PROTOTYPE
@@ -126,6 +132,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	void setScope(@Nullable String scope);
 
 	/**
+	 * 获当前类的作用域
 	 * Return the name of the current target scope for this bean,
 	 * or {@code null} if not known yet.
 	 */
