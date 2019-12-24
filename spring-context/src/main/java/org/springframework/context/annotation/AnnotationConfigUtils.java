@@ -230,13 +230,28 @@ public abstract class AnnotationConfigUtils {
 		}
 	}
 
+	/**
+	 * 处理类的通用注解
+	 * @param abd spring中bean的描述类
+	 */
 	public static void processCommonDefinitionAnnotations(AnnotatedBeanDefinition abd) {
 		processCommonDefinitionAnnotations(abd, abd.getMetadata());
 	}
 
+	/**
+	 *  处理类的通用注解
+	 * @param abd spring中bean的描述类
+	 * @param metadata 通过spring中bean的描述类获取 bean的元数据信息
+	 *
+	 *       处理完通用注解后的信息 放回到 spring中bean的描述类(AnnotatedBeanDefinition)
+	 */
 	static void processCommonDefinitionAnnotations(AnnotatedBeanDefinition abd, AnnotatedTypeMetadata metadata) {
+		/**
+		 * 处理 @Lazy 注解
+		 */
 		AnnotationAttributes lazy = attributesFor(metadata, Lazy.class);
 		if (lazy != null) {
+			/** 设置bean的懒加载信息*/
 			abd.setLazyInit(lazy.getBoolean("value"));
 		}
 		else if (abd.getMetadata() != metadata) {
@@ -246,18 +261,32 @@ public abstract class AnnotationConfigUtils {
 			}
 		}
 
+		/**
+		 * 处理 @Primary 注解
+		 */
 		if (metadata.isAnnotated(Primary.class.getName())) {
 			abd.setPrimary(true);
 		}
+
+		/**
+		 * 处理 @DependsOn 注解
+		 */
 		AnnotationAttributes dependsOn = attributesFor(metadata, DependsOn.class);
 		if (dependsOn != null) {
 			abd.setDependsOn(dependsOn.getStringArray("value"));
 		}
 
+		/**
+		 * 处理 @Role 注解
+		 */
 		AnnotationAttributes role = attributesFor(metadata, Role.class);
 		if (role != null) {
 			abd.setRole(role.getNumber("value").intValue());
 		}
+
+		/**
+		 * 处理 @Description注解
+		 */
 		AnnotationAttributes description = attributesFor(metadata, Description.class);
 		if (description != null) {
 			abd.setDescription(description.getString("value"));

@@ -229,18 +229,35 @@ public class AnnotatedBeanDefinitionReader {
 		 * 设置类的作用域
 		 */
 		abd.setScope(scopeMetadata.getScopeName());
+		/**
+		 * 通过beanNameGenerator生成一个beanName
+		 */
 		String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
 
+		/**
+		 * 处理类当中的通用注解
+		 * 处理完的数据 存放在 abd 中
+		 */
 		AnnotationConfigUtils.processCommonDefinitionAnnotations(abd);
+
+		/**
+		 * 当 qualifiers 不为null 时，处理qualifiers
+		 *
+		 */
 		if (qualifiers != null) {
 			for (Class<? extends Annotation> qualifier : qualifiers) {
+				/** 如果设置来了 @Primary 则将其值设置为true */
 				if (Primary.class == qualifier) {
 					abd.setPrimary(true);
 				}
 				else if (Lazy.class == qualifier) {
+					/** 如果设置来了 @Lazy 则将其值设置为true */
 					abd.setLazyInit(true);
 				}
 				else {
+					/**
+					 * 使用了其他注解，则为该bean添加一个根据名字自动装配的限定符
+					 */
 					abd.addQualifier(new AutowireCandidateQualifier(qualifier));
 				}
 			}
@@ -249,8 +266,23 @@ public class AnnotatedBeanDefinitionReader {
 			customizer.customize(abd);
 		}
 
+		/**
+		 * BeanDefinitionHolder 也是一种数据结构
+		 * 将beanName 与 abd 关联
+		 */
 		BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(abd, beanName);
+
+		/**
+		 * ScopedProxyMode 结合web去理解
+		 */
 		definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
+		/**
+		 * 将definitionHolder 注册给 registry
+		 * registry 是 AnnotationConfigApplicationContext
+		 * AnnotationConfigApplicationContext 在初始化的时候通过调用父类的构造方法实例化一个 DefaultListableBeanFactory
+		 *
+		 *   registerBeanDefinition 就是将 definitionHolder 注册到 DefaultListableBeanFactory中
+		 */
 		BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, this.registry);
 	}
 

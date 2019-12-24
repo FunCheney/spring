@@ -916,6 +916,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 							"] with [" + beanDefinition + "]");
 				}
 			}
+
 			this.beanDefinitionMap.put(beanName, beanDefinition);
 		}
 		else {
@@ -932,7 +933,15 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			}
 			else {
 				// Still in startup registration phase
+				/**
+				 * DefaultListableBeanFactory 中 定义一个Map
+				 *            key -> beanName, value -> beanDefinition
+				 */
 				this.beanDefinitionMap.put(beanName, beanDefinition);
+				/**
+				 * DefaultListableBeanFactory 中 定义一个List
+				 *      存放所有的bean的名字
+				 */
 				this.beanDefinitionNames.add(beanName);
 				removeManualSingletonName(beanName);
 			}
