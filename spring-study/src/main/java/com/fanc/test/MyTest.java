@@ -3,7 +3,6 @@ package com.fanc.test;
 import com.fanc.app.AppConfig;
 import com.fanc.dao.TestDao;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * @author: Fchen

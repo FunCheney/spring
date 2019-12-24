@@ -90,7 +90,9 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 */
 	public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 		/**
-		 * 调用默认的构造方法，由于该类有父类，故而先调用父类的构造方法，在调用自己的构造方法
+		 * 调用默认的构造方法，由于该类有父类，
+		 * 故而先调用父类的构造方法，在调用自己的构造方法
+		 * 在自己的构造方法中初始一个读取器和一个扫描器
 		 */
 		this();
 		register(componentClasses);
@@ -154,6 +156,12 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	//---------------------------------------------------------------------
 
 	/**
+	 * 注册单个bean给容器
+	 * 比如有新加的类可以用这个方法
+	 * 但是注册之后需要手动调用refresh()方法触发容器解释注释
+	 *
+	 * 可以注册一个配置类
+	 * 也可以注册一个bean
 	 * Register one or more component classes to be processed.
 	 * <p>Note that {@link #refresh()} must be called in order for the context
 	 * to fully process the new classes.
