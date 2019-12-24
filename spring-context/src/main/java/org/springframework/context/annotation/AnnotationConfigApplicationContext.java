@@ -95,7 +95,13 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		 * 在自己的构造方法中初始一个读取器和一个扫描器
 		 */
 		this();
+		/**
+		 *
+		 */
 		register(componentClasses);
+		/**
+		 *
+		 */
 		refresh();
 	}
 
