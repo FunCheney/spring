@@ -58,6 +58,8 @@ public class AnnotatedBeanDefinitionReader {
 
 
 	/**
+	 * BeanDefinitionRegistry是通过AnnotatedBeanDefinitionReader构造方法中的this传进来
+	 * 这里说明 AnnotationConfigApplicationContext 就是 BeanDefinitionRegistry。
 	 * Create a new {@code AnnotatedBeanDefinitionReader} for the given registry.
 	 * <p>If the registry is {@link EnvironmentCapable}, e.g. is an {@code ApplicationContext},
 	 * the {@link Environment} will be inherited, otherwise a new
@@ -85,6 +87,9 @@ public class AnnotatedBeanDefinitionReader {
 		Assert.notNull(environment, "Environment must not be null");
 		this.registry = registry;
 		this.conditionEvaluator = new ConditionEvaluator(registry, environment, null);
+		/**
+		 * 通过AnnotationConfigUtils
+		 */
 		AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
 	}
 

@@ -67,8 +67,13 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	public AnnotationConfigApplicationContext() {
 		/**
 		 * 实例化 读取器
+		 * 将spring中加了注解的类转化为 一个 spring当中bean的描述文件
 		 */
 		this.reader = new AnnotatedBeanDefinitionReader(this);
+		/**
+		 * 实例化 扫描器
+		 * 能够扫描一个类，并转换为 spring当中bean的描述文件
+		 */
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
 
@@ -96,11 +101,11 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		 */
 		this();
 		/**
-		 *
+		 * 向spring 的容器中注册bean
 		 */
 		register(componentClasses);
 		/**
-		 *
+		 * 初始化spring的环境
 		 */
 		refresh();
 	}
