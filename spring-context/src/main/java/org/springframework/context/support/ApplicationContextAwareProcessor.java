@@ -100,8 +100,15 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor {
 	}
 
 	private void invokeAwareInterfaces(Object bean) {
+		/**
+		 * 判断bean是否实现 Aware 接口
+		 */
 		if (bean instanceof Aware) {
+			/**
+			 * 判断bean是否实现 EnvironmentAware 接口
+			 */
 			if (bean instanceof EnvironmentAware) {
+
 				((EnvironmentAware) bean).setEnvironment(this.applicationContext.getEnvironment());
 			}
 			if (bean instanceof EmbeddedValueResolverAware) {
@@ -116,7 +123,13 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor {
 			if (bean instanceof MessageSourceAware) {
 				((MessageSourceAware) bean).setMessageSource(this.applicationContext);
 			}
+			/**
+			 * 这里代码在spring初始化的时候必会调用到
+			 */
 			if (bean instanceof ApplicationContextAware) {
+				/**
+				 * 将 ApplicationContext 对象设置给bean
+				 */
 				((ApplicationContextAware) bean).setApplicationContext(this.applicationContext);
 			}
 		}

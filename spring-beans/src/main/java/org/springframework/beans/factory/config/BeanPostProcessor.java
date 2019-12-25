@@ -20,6 +20,21 @@ import org.springframework.beans.BeansException;
 import org.springframework.lang.Nullable;
 
 /**
+ * BeanPostProcessor是spring框架提供的一个类的扩展点，称之为bean的后置处理器
+ * 通过实现BeanPostProcessor接口，可以干预bean的初始化过程，从而减轻了beanFactory负担
+ * 这个接口可以用多个实现类，这批实现类都是同一种类型的扩展点。这些实现类会形成一个列表，然后依次执行
+ * (spring 自己提的实现通过set到容器中，程序员实现只需交给spring容器管理即可)
+ * 比如：
+ *    AOP就是在bean实例化期间，将切面逻辑织入bean实例中
+ *    AOP就是通过BeanPostProcessor与BeanFactory建立联系
+ *
+ * spring 提供了默认的 BeanPostProcessor实现，常用的如下：
+ *   1. ApplicationContextAwareProcessor
+ *   2. InitDestroyAnnotationBeanPostProcessor
+ *   3. InstantiationAwareBeanPostProcessor
+ *
+ *   4. AbstractAutoProxyCreator
+ *
  * Factory hook that allows for custom modification of new bean instances,
  * e.g. checking for marker interfaces or wrapping them with proxies.
  *
@@ -43,6 +58,7 @@ import org.springframework.lang.Nullable;
 public interface BeanPostProcessor {
 
 	/**
+	 * 在bean的初始化之前执行
 	 * Apply this BeanPostProcessor to the given new bean instance <i>before</i> any bean
 	 * initialization callbacks (like InitializingBean's {@code afterPropertiesSet}
 	 * or a custom init-method). The bean will already be populated with property values.
@@ -61,6 +77,7 @@ public interface BeanPostProcessor {
 	}
 
 	/**
+	 * 在bean的初始化之后执行
 	 * Apply this BeanPostProcessor to the given new bean instance <i>after</i> any bean
 	 * initialization callbacks (like InitializingBean's {@code afterPropertiesSet}
 	 * or a custom init-method). The bean will already be populated with property values.
