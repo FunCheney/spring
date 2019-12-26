@@ -161,9 +161,12 @@ class ConfigurationClassParser {
 
 	public void parse(Set<BeanDefinitionHolder> configCandidates) {
 		for (BeanDefinitionHolder holder : configCandidates) {
+			/** 获取BeanDefinition */
 			BeanDefinition bd = holder.getBeanDefinition();
 			try {
+				/** 根据不同的 BeanDefinition 类型做相应的处理*/
 				if (bd instanceof AnnotatedBeanDefinition) {
+
 					parse(((AnnotatedBeanDefinition) bd).getMetadata(), holder.getBeanName());
 				}
 				else if (bd instanceof AbstractBeanDefinition && ((AbstractBeanDefinition) bd).hasBeanClass()) {
@@ -219,6 +222,7 @@ class ConfigurationClassParser {
 			return;
 		}
 
+		/** 处理 imported 的情况*/
 		ConfigurationClass existingClass = this.configurationClasses.get(configClass);
 		if (existingClass != null) {
 			if (configClass.isImported()) {
