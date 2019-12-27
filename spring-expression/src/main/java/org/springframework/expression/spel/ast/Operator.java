@@ -19,7 +19,7 @@ package org.springframework.expression.spel.ast;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.springframework.asm.Label;
+import org.springframework.asmgit.Label;
 import org.springframework.asm.MethodVisitor;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.CodeFlow;
