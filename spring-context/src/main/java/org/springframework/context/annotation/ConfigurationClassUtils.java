@@ -124,13 +124,19 @@ abstract class ConfigurationClassUtils {
 		/** 判断元数据 是否加了 @Configuration 注解*/
 		if (isFullConfigurationCandidate(metadata)) {
 			/**
-			 * 如果存在 Configuration 注解，beanDefinition 中设置 configurationClass 为 full
+			 * 如果存在 @Configuration 注解，beanDefinition 中设置 configurationClass 为 full
+			 * spring 认为该类是一个全注解的类
 			 */
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_FULL);
 		}
+		/**
+		 * 判断是否加了 @Import，@Component
+		 *            @ImportResource, @ComponentScan 注解
+		 */
 		else if (isLiteConfigurationCandidate(metadata)) {
 			/**
-			 * 判断是否加了 @Import，@Compantent
+			 * 如果不存在 @Configuration 注解，beanDefinition 中设置 configurationClass 为 lite
+			 * spring 认为该类是一个部分注解类
 			 */
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_LITE);
 		}
