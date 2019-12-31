@@ -106,6 +106,7 @@ class ConfigurationClassEnhancer {
 			}
 			return configClass;
 		}
+		/** cglib 代理*/
 		Class<?> enhancedClass = createClass(newEnhancer(configClass, classLoader));
 		if (logger.isTraceEnabled()) {
 			logger.trace(String.format("Successfully enhanced %s; enhanced class name is: %s",
@@ -119,9 +120,18 @@ class ConfigurationClassEnhancer {
 	 */
 	private Enhancer newEnhancer(Class<?> configSuperClass, @Nullable ClassLoader classLoader) {
 		Enhancer enhancer = new Enhancer();
+		/** 增强父类 */
 		enhancer.setSuperclass(configSuperClass);
+		/** 增强接口，便于判断，表示一个类被增强了*/
 		enhancer.setInterfaces(new Class<?>[] {EnhancedConfiguration.class});
 		enhancer.setUseFactory(false);
+		/**
+		 * BeanFactoryAwareGeneratorStrategy 是一个生成策略
+		 * 主要为生成的 cglib 类中添加成员变量 $$beanFactory
+		 * 同时基于接口 EnhancedConfiguration 的父接口 BeanFactoryAware 中的 setBeanFactory 方法，
+		 * 设置此变量的值为当前 context 中的 beanFactory，这样一来 cglib 代理的对象就有了 beanFactory
+		 *
+		 */
 		enhancer.setNamingPolicy(SpringNamingPolicy.INSTANCE);
 		enhancer.setStrategy(new BeanFactoryAwareGeneratorStrategy(classLoader));
 		enhancer.setCallbackFilter(CALLBACK_FILTER);

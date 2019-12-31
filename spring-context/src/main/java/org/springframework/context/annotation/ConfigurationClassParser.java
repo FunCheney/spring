@@ -313,7 +313,15 @@ class ConfigurationClassParser {
 		}
 
 		// Process any @Import annotations
-		/** 处理@Import */
+		/**
+		 * 处理 @Import
+		 * 判断类中是否有 @Import 注解 如果有 把 @Import 中的值拿出来，是一个类；
+		 *   比如 @Import(xxx.class), 这里将 xxx 传进去解析
+		 *   在解析过程中 如果发现是一个 importSelector 那么就回调 selector 的方法
+		 *   返回一个字符串(类名), 通过字符串得到一个类。然后递归调用本方法来处理这个类
+		 *
+		 *
+		 */
 		processImports(configClass, sourceClass, getImports(sourceClass), true);
 
 		// Process any @ImportResource annotations
@@ -572,6 +580,7 @@ class ConfigurationClassParser {
 					if (candidate.isAssignable(ImportSelector.class)) {
 						// Candidate class is an ImportSelector -> delegate to it to determine imports
 						Class<?> candidateClass = candidate.loadClass();
+						/** 反射一个对象实现 */
 						ImportSelector selector = BeanUtils.instantiateClass(candidateClass, ImportSelector.class);
 						ParserStrategyUtils.invokeAwareMethods(
 								selector, this.environment, this.resourceLoader, this.registry);
@@ -579,7 +588,12 @@ class ConfigurationClassParser {
 							this.deferredImportSelectorHandler.handle(configClass, (DeferredImportSelector) selector);
 						}
 						else {
+							/** 回调*/
 							String[] importClassNames = selector.selectImports(currentSourceClass.getMetadata());
+							/**
+							 * 递归，这里第二次调用 processImports
+							 * 如果是一个普通的类 会进 else
+							 */
 							Collection<SourceClass> importSourceClasses = asSourceClasses(importClassNames);
 							processImports(configClass, currentSourceClass, importSourceClasses, false);
 						}
@@ -597,6 +611,10 @@ class ConfigurationClassParser {
 					else {
 						// Candidate class not an ImportSelector or ImportBeanDefinitionRegistrar ->
 						// process it as an @Configuration class
+						/**
+						 * 普通类的处理方式
+						 * 加入到 importStack 后调用 processConfigurationClass 进行处理
+						 */
 						this.importStack.registerImport(
 								currentSourceClass.getMetadata(), candidate.getMetadata().getClassName());
 						processConfigurationClass(candidate.asConfigClass(configClass));
