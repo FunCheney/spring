@@ -107,8 +107,13 @@ final class PostProcessorRegistrationDelegate {
 			 * 合并list
 			 */
 			registryProcessors.addAll(currentRegistryProcessors);
-
+			/**
+			 * spring 中 无论是自己定义的 还是内置的 BeanDefinitionRegistryPostProcessor
+			 * 都在这里处理完成
+			 * 这里是重要代码。。。
+			 */
 			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
+			/** 清除list */
 			currentRegistryProcessors.clear();
 
 			// Next, invoke the BeanDefinitionRegistryPostProcessors that implement Ordered.
@@ -147,7 +152,6 @@ final class PostProcessorRegistrationDelegate {
 			 * 执行 BeanFactoryPostProcessor 的回调
 			 * 前面执行的是 BeanFactoryPostProcessor 的子类 BeanDefinitionRegistryPostProcessor 的回调方法
 			 * 这里执行的是 BeanFactoryPostProcessor 的 postProcessBeanFactory() 方法
-			 *  ConfigurationClassPostProcessor 中的方法
 			 */
 			invokeBeanFactoryPostProcessors(registryProcessors, beanFactory);
 			invokeBeanFactoryPostProcessors(regularPostProcessors, beanFactory);

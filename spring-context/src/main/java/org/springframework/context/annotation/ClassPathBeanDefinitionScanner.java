@@ -293,7 +293,8 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 				if (candidate instanceof AnnotatedBeanDefinition) {
 					/**
 					 * 如果 candidate 是 AnnotatedBeanDefinition 的子类
-					 * 检查并处理常用的注解
+					 * 检查并处理常用的注解，把值设置到 AnnotatedBeanDefinition 中
+					 * 这里只有被加了注解的类才会被处理
 					 */
 					AnnotationConfigUtils.processCommonDefinitionAnnotations((AnnotatedBeanDefinition) candidate);
 				}

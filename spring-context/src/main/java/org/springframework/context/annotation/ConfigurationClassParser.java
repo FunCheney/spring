@@ -614,6 +614,11 @@ class ConfigurationClassParser {
 						/**
 						 * 普通类的处理方式
 						 * 加入到 importStack 后调用 processConfigurationClass 进行处理
+						 * processConfigurationClass 里面主要就是把类放到 configurationClasses 中
+						 * configurationClasses 是一个集合 会在后面拿出来解析成bd 接续注册
+						 * 注意：
+						 *    普通类实在扫描出来的时候就被注册了
+						 *    importSelector 会放到 configurationClasses 中 然后进行注册
 						 */
 						this.importStack.registerImport(
 								currentSourceClass.getMetadata(), candidate.getMetadata().getClassName());

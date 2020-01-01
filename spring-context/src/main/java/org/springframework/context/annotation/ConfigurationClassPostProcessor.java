@@ -324,8 +324,12 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 
 		Set<ConfigurationClass> alreadyParsed = new HashSet<>(configCandidates.size());
 		do {
-			/** 解析配置文件*/
+			/**
+			 * 解析注解类
+			 *  这里是重点代码
+			 */
 			parser.parse(candidates);
+
 			parser.validate();
 
 			Set<ConfigurationClass> configClasses = new LinkedHashSet<>(parser.getConfigurationClasses());
@@ -337,6 +341,9 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 						registry, this.sourceExtractor, this.resourceLoader, this.environment,
 						this.importBeanNameGenerator, parser.getImportRegistry());
 			}
+			/**
+			 * loadBeanDefinitions() 中处理 @Import 的类
+			 */
 			this.reader.loadBeanDefinitions(configClasses);
 			alreadyParsed.addAll(configClasses);
 
@@ -398,10 +405,14 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 							"is a non-static @Bean method with a BeanDefinitionRegistryPostProcessor " +
 							"return type: Consider declaring such methods as 'static'.");
 				}
+				/** 如果是全注解类，就将其 put 到 configBeanDefs 中*/
 				configBeanDefs.put(beanName, (AbstractBeanDefinition) beanDef);
 			}
 		}
 		if (configBeanDefs.isEmpty()) {
+			/**
+			 * Map 为空 表示没有全注解类，则返回
+			 */
 			// nothing to enhance -> return immediately
 			return;
 		}
@@ -414,7 +425,8 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			try {
 				// Set enhanced subclass of the user-specified bean class
 				/**
-				 * 对全注解进行 cglib 代理
+				 * 对全注解类 进行 cglib 代理
+				 * config 类 -> cglib class -> BeanDefinition -> bean
 				 */
 				Class<?> configClass = beanDef.resolveBeanClass(this.beanClassLoader);
 				if (configClass != null) {
