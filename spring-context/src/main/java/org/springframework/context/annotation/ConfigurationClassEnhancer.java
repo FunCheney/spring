@@ -135,7 +135,7 @@ class ConfigurationClassEnhancer {
 		 * 同时基于接口 EnhancedConfiguration 的父接口 BeanFactoryAware 中的 setBeanFactory 方法，
 		 * 设置此变量的值为当前 context 中的 beanFactory，这样一来 cglib 代理的对象就有了 beanFactory
 		 * 有了 factory 就能获得对象了，不用通过 new 来获取对象了
-		 *
+		 * 该BeanFactory 的作用是在 this 调用时拦截该调用，并直接在 beanFactory 中获得目标bean
 		 *
 		 */
 		enhancer.setNamingPolicy(SpringNamingPolicy.INSTANCE);
