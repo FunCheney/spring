@@ -251,7 +251,7 @@ public class AnnotatedBeanDefinitionReader {
 		 */
 		if (qualifiers != null) {
 			for (Class<? extends Annotation> qualifier : qualifiers) {
-				/** 如果设置来了 @Primary 则将其值设置为true */
+				/** 如果设置了 @Primary 则将其值设置为true */
 				if (Primary.class == qualifier) {
 					abd.setPrimary(true);
 				}
