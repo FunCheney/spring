@@ -370,7 +370,7 @@ class ConfigurationClassEnhancer {
 				}
 			}
 			/**
-			 * 判断执行的方法 和 调用的方法是不是同一个
+			 * 判断执行的方法 和 调用的方法是不是同一个方法
 			 */
 			if (isCurrentlyInvokedFactoryMethod(beanMethod)) {
 				// The factory is calling the bean method in order to instantiate and register the bean
@@ -386,9 +386,14 @@ class ConfigurationClassEnhancer {
 									"these container lifecycle issues; see @Bean javadoc for complete details.",
 							beanMethod.getDeclaringClass().getSimpleName(), beanMethod.getName()));
 				}
+				/**
+				 * 执行的方法和调用的方法是同一个 执行父类的方法 创建对象
+				 */
 				return cglibMethodProxy.invokeSuper(enhancedConfigInstance, beanMethodArgs);
 			}
-
+			/**
+			 * 执行的方法和调用的方法不是同一个，在 &&BeanFactory 中 get 一个 bean 出来
+			 */
 			return resolveBeanReference(beanMethod, beanMethodArgs, beanFactory, beanName);
 		}
 
@@ -399,6 +404,13 @@ class ConfigurationClassEnhancer {
 			// the bean method, direct or indirect. The bean may have already been marked
 			// as 'in creation' in certain autowiring scenarios; if so, temporarily set
 			// the in-creation status to false in order to avoid an exception.
+			/**
+			 * 判断对象是否正在创建
+			 * 一个对象有三种状态
+			 *   a. 没有创建
+			 *   b. 正在创建
+			 *   c. 创建成功
+			 */
 			boolean alreadyInCreation = beanFactory.isCurrentlyInCreation(beanName);
 			try {
 				if (alreadyInCreation) {
@@ -416,6 +428,9 @@ class ConfigurationClassEnhancer {
 						}
 					}
 				}
+				/**
+				 * 调用 beanFactory.getBean() 获取对象
+				 */
 				Object beanInstance = (useArgs ? beanFactory.getBean(beanName, beanMethodArgs) :
 						beanFactory.getBean(beanName));
 				if (!ClassUtils.isAssignableValue(beanMethod.getReturnType(), beanInstance)) {
