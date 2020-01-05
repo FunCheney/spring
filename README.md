@@ -8,27 +8,45 @@
     
 &ensp;&ensp;注意在spring-study module下的build.gradle 中添加 `compile(project(":spring-context"))`。
 
-### 由一段测试代码开始
-#### spring 的启动
+### 环境测试
+工程目录如下：
 
-**代码片段一**
-
+#### 新建配置类
 ```java
-ClassPathXmlApplicationContext clx = new ClassPathXmlApplicationContext("");
+@Configuration
+@ComponentScan("com.fchen")
+public class MyConfig {
+}
 ```
-**代码片段二**
+#### 新建逻辑测试类
 ```java
-AnnotationConfigApplicationContext applicationContext =
-				new AnnotationConfigApplicationContext(MyConfig.class);
-``` 
+@Service
+public class MyService {
+
+	public void test(){
+		System.out.println("hello test");
+	}
+}
+```
+#### 新建Spring启动测试类
+```java
+public class MyTestStart {
+	public static void main(String[] args) {
+		AnnotationConfigApplicationContext ann = new AnnotationConfigApplicationContext(MyConfig.class);
+		MyService myService = ann.getBean(MyService.class);
+		myService.test();
+	}
+}
+```
+## Spring 几个重要概念
+#### 控制翻转 与 依赖注入
+
+
 #### spring中Bean的描述
 
 Spring通过定义BeanDefinition来管理基于Spring的应用中的各种对象以及他们之间的相互依赖关系。
 在Spring中通过BeanDefinition来描述一个Bean，通过这个类来设置Spring中Bean的属性，加载方式。
 BeanDefinition抽象了对Bean的定义，是让容器起作用的主要数据类型
-
-
-#### 控制翻转 与 依赖注入
 
 ## spring IOC
 ### spring中IOC容器的系列设计与实现
