@@ -21,6 +21,8 @@ import org.springframework.core.ResolvableType;
 import org.springframework.lang.Nullable;
 
 /**
+ * BeanFactory 提供最基本的IOC容器功能，在该接口中定义了IOC最基本的形式
+ * 提供了IOC容器应该遵守的最基本的服务，同时也为使用IOC容器定义了应该遵守的最底层，最基本的编码规范
  * The root interface for accessing a Spring bean container.
  * This is the basic client view of a bean container;
  * further interfaces such as {@link ListableBeanFactory} and
@@ -116,10 +118,13 @@ import org.springframework.lang.Nullable;
 public interface BeanFactory {
 
 	/**
-	 * Used to dereference a {@link FactoryBean} instance and distinguish it from
-	 * beans <i>created</i> by the FactoryBean. For example, if the bean named
-	 * {@code myJndiObject} is a FactoryBean, getting {@code &myJndiObject}
-	 * will return the factory, not the instance returned by the factory.
+	 * 使用转义符"&"来得到 FactoryBean。用来区分通过容器获取 FactoryBean 产生的对象，和 FactoryBean 本身
+	 * 举例：
+	 *   myJndiObject  得到一个 FactoryBean 的对象
+	 *   &myJndiObject 得到的是 FactoryBean 的工厂，用来产生 FactoryBean 的对象
+	 * 区分 FactoryBean 和 BeanFactory
+	 *   FactoryBean 是对象，是一个能产生或者修饰对象生成的工厂 Bean
+	 *   BeanFactory 是对象工厂 也是就 IOC 容器，所有的 Bean 都是由 BeanFactory 进行管理
 	 */
 	String FACTORY_BEAN_PREFIX = "&";
 
@@ -234,6 +239,7 @@ public interface BeanFactory {
 	<T> ObjectProvider<T> getBeanProvider(ResolvableType requiredType);
 
 	/**
+	 * 通过指定的名字判断 工厂中是否定义 或者 已经注册了 一个 BeanDefinition
 	 * Does this bean factory contain a bean definition or externally registered singleton
 	 * instance with the given name?
 	 * <p>If the given name is an alias, it will be translated back to the corresponding
@@ -251,6 +257,7 @@ public interface BeanFactory {
 	boolean containsBean(String name);
 
 	/**
+	 * 用来出查询指定名字的 bean 是否是单例（singleton）的，单例属性 是在 BeanDefinition 指定的
 	 * Is this bean a shared singleton? That is, will {@link #getBean} always
 	 * return the same instance?
 	 * <p>Note: This method returning {@code false} does not clearly indicate
@@ -268,6 +275,7 @@ public interface BeanFactory {
 	boolean isSingleton(String name) throws NoSuchBeanDefinitionException;
 
 	/**
+	 * 用来出查询指定名字的 bean 是否是原型（prototype）的，原型属性 是在 BeanDefinition 指定的
 	 * Is this bean a prototype? That is, will {@link #getBean} always return
 	 * independent instances?
 	 * <p>Note: This method returning {@code false} does not clearly indicate
@@ -286,6 +294,7 @@ public interface BeanFactory {
 	boolean isPrototype(String name) throws NoSuchBeanDefinitionException;
 
 	/**
+	 * 判断指定名字的 Bean 的 Class 类型是否是特定的 Class 类型
 	 * Check whether the bean with the given name matches the specified type.
 	 * More specifically, check whether a {@link #getBean} call for the given name
 	 * would return an object that is assignable to the specified target type.
@@ -320,6 +329,7 @@ public interface BeanFactory {
 	boolean isTypeMatch(String name, Class<?> typeToMatch) throws NoSuchBeanDefinitionException;
 
 	/**
+	 * 查询指定名字的 Bean 的 Class 类型
 	 * Determine the type of the bean with the given name. More specifically,
 	 * determine the type of object that {@link #getBean} would return for the given name.
 	 * <p>For a {@link FactoryBean}, return the type of object that the FactoryBean creates,
@@ -337,6 +347,7 @@ public interface BeanFactory {
 	Class<?> getType(String name) throws NoSuchBeanDefinitionException;
 
 	/**
+	 * 获取指定的名字的 Bean 的所有别名，别名是用户在 BeanDefinition 中自己定义的
 	 * Return the aliases for the given bean name, if any.
 	 * All of those aliases point to the same bean when used in a {@link #getBean} call.
 	 * <p>If the given name is an alias, the corresponding original bean name

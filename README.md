@@ -19,13 +19,30 @@ ClassPathXmlApplicationContext clx = new ClassPathXmlApplicationContext("");
 **代码片段二**
 ```java
 AnnotationConfigApplicationContext applicationContext =
-				new AnnotationConfigApplicationContext(AppConfig.class);
+				new AnnotationConfigApplicationContext(MyConfig.class);
 ``` 
 #### spring中Bean的描述
 
+Spring通过定义BeanDefinition来管理基于Spring的应用中的各种对象以及他们之间的相互依赖关系。
 在Spring中通过BeanDefinition来描述一个Bean，通过这个类来设置Spring中Bean的属性，加载方式。
+BeanDefinition抽象了对Bean的定义，是让容器起作用的主要数据类型
+
+
+#### 控制翻转 与 依赖注入
 
 ## spring IOC
+### spring中IOC容器的系列设计与实现
+#### BeanFactory
+
+#### ApplicationContext
+### IOC 容器的初始化过程
+从下面这段代码开始：
+``` java
+AnnotationConfigApplicationContext applicationContext =
+				new AnnotationConfigApplicationContext(MyConfig.class);
+```
+
+
 
 ## spring AOP
 ### AOP
