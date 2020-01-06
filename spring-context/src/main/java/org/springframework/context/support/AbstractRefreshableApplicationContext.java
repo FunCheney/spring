@@ -123,10 +123,18 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	@Override
 	protected final void refreshBeanFactory() throws BeansException {
 		if (hasBeanFactory()) {
+			/**
+			 * 已经创建了 BeanFactory
+			 * 销毁并关闭 BeanFactory
+			 */
 			destroyBeans();
 			closeBeanFactory();
 		}
 		try {
+			/**
+			 * 创建并设置持有 DefaultListableBeanFactory 的地方
+			 * 同时调用 loadBeanDefinitions() 载入 BeanDefinition 的信息
+			 */
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
 			beanFactory.setSerializationId(getId());
 			customizeBeanFactory(beanFactory);
@@ -204,6 +212,11 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 * @see org.springframework.beans.factory.support.DefaultListableBeanFactory#setAllowRawInjectionDespiteWrapping
 	 */
 	protected DefaultListableBeanFactory createBeanFactory() {
+		/**
+		 * 创建 DefaultListableBeanFactory 的实例
+		 * getInternalParentBeanFactory() 的具体实现 查看 AbstractApplicationContext 中的实现
+		 * 根据容器已有的双亲 IOC 容器的信息 来生成 DefaultListableBeanFactory 的双亲 IOC 容器
+		 */
 		return new DefaultListableBeanFactory(getInternalParentBeanFactory());
 	}
 
@@ -231,6 +244,8 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	}
 
 	/**
+	 * 加载 BeanDefinition 到 bean 工厂中，spring中存在多中 载入的方式，因此这里是抽象类
+	 * 具体的实现，更具不同的子类来完成
 	 * Load bean definitions into the given bean factory, typically through
 	 * delegating to one or more bean definition readers.
 	 * @param beanFactory the bean factory to load bean definitions into
