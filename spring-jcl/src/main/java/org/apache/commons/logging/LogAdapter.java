@@ -141,6 +141,7 @@ final class LogAdapter {
 	private static class JavaUtilAdapter {
 
 		public static Log createLog(String name) {
+			/* 返回jul*/
 			return new JavaUtilLog(name);
 		}
 	}

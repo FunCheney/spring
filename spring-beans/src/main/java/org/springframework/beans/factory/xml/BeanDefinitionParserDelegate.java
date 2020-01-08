@@ -413,7 +413,7 @@ public class BeanDefinitionParserDelegate {
 	 */
 	@Nullable
 	public BeanDefinitionHolder parseBeanDefinitionElement(Element ele, @Nullable BeanDefinition containingBean) {
-		/**
+		/*
 		 * 获取 <bean> 标签中的 id、name、aliases 属性
 		 */
 		String id = ele.getAttribute(ID_ATTRIBUTE);
@@ -437,7 +437,7 @@ public class BeanDefinitionParserDelegate {
 		if (containingBean == null) {
 			checkNameUniqueness(beanName, aliases, ele);
 		}
-		/** 详细解析Bean元素 */
+		/* 详细解析Bean元素 */
 		AbstractBeanDefinition beanDefinition = parseBeanDefinitionElement(ele, beanName, containingBean);
 		if (beanDefinition != null) {
 			if (!StringUtils.hasText(beanName)) {
@@ -506,7 +506,10 @@ public class BeanDefinitionParserDelegate {
 			Element ele, String beanName, @Nullable BeanDefinition containingBean) {
 
 		this.parseState.push(new BeanEntry(beanName));
-
+		/*
+		 * 读取定义的<bean>中设置的class名字，然后载入到BeanDefinition中去
+		 * 这里只做记录，并不涉及对象实例化的过程，对象的实例化是在依赖注入时完成的
+		 */
 		String className = null;
 		if (ele.hasAttribute(CLASS_ATTRIBUTE)) {
 			className = ele.getAttribute(CLASS_ATTRIBUTE).trim();
@@ -517,16 +520,20 @@ public class BeanDefinitionParserDelegate {
 		}
 
 		try {
+			/* 生成需要的BeanDefinition对象*/
 			AbstractBeanDefinition bd = createBeanDefinition(className, parent);
-
+			/* 对当前的Bean元素进行属性解析*/
 			parseBeanDefinitionAttributes(ele, beanName, containingBean, bd);
+			/* 设置Description信息*/
 			bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));
 
 			parseMetaElements(ele, bd);
 			parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
 			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
 
+			/* 解析<bean>的构造函数*/
 			parseConstructorArgElements(ele, bd);
+			/* 解析<bean>的property属性*/
 			parsePropertyElements(ele, bd);
 			parseQualifierElements(ele, bd);
 
@@ -535,6 +542,11 @@ public class BeanDefinitionParserDelegate {
 
 			return bd;
 		}
+		/*
+		 * 这些异常在Bean的配置出现问题的时候会看到，
+		 * 在createBeanDefinition() 时抛出的异常。
+		 * 会检查Bean的class设置是否正确，比如这个类能否找到
+		 */
 		catch (ClassNotFoundException ex) {
 			error("Bean class [" + className + "] not found", ele, ex);
 		}
@@ -708,12 +720,15 @@ public class BeanDefinitionParserDelegate {
 
 	/**
 	 * Parse property sub-elements of the given bean element.
+	 * 解析 bean 的 property 子元素集合
 	 */
 	public void parsePropertyElements(Element beanEle, BeanDefinition bd) {
+		//遍历所有Bean元素下定义的property属性
 		NodeList nl = beanEle.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node node = nl.item(i);
 			if (isCandidateElement(node) && nodeNameEquals(node, PROPERTY_ELEMENT)) {
+				/* 对 property 元素解析的过程*/
 				parsePropertyElement((Element) node, bd);
 			}
 		}
@@ -842,6 +857,7 @@ public class BeanDefinitionParserDelegate {
 	 * Parse a property element.
 	 */
 	public void parsePropertyElement(Element ele, BeanDefinition bd) {
+		// 获取到 propertyName
 		String propertyName = ele.getAttribute(NAME_ATTRIBUTE);
 		if (!StringUtils.hasLength(propertyName)) {
 			error("Tag 'property' must have a 'name' attribute", ele);
@@ -849,10 +865,19 @@ public class BeanDefinitionParserDelegate {
 		}
 		this.parseState.push(new PropertyEntry(propertyName));
 		try {
+			/*
+			 * 一个BeanDefinition中含有相同的 propertyName，则不进行解析，直接返回；
+			 * 也就是说 具有相同的 property 只有一个起作用
+			 */
 			if (bd.getPropertyValues().contains(propertyName)) {
 				error("Multiple 'property' definitions for property '" + propertyName + "'", ele);
 				return;
 			}
+			/*
+			 * 解析 propertyValue 的地方，返回的对象对应Bean定义的property属性设置的解析结果，
+			 * 解析结果封装到 PropertyValue中
+			 * 然后设置到 BeanDefinition 中
+			 */
 			Object val = parsePropertyValue(ele, bd, propertyName);
 			PropertyValue pv = new PropertyValue(propertyName, val);
 			parseMetaElements(ele, pv);
@@ -909,6 +934,7 @@ public class BeanDefinitionParserDelegate {
 	/**
 	 * Get the value of a property element. May be a list etc.
 	 * Also used for constructor arguments, "propertyName" being null in this case.
+	 * 取得property元素的值，也许是一个list或其他
 	 */
 	@Nullable
 	public Object parsePropertyValue(Element ele, BeanDefinition bd, @Nullable String propertyName) {
@@ -932,7 +958,10 @@ public class BeanDefinitionParserDelegate {
 				}
 			}
 		}
-
+		/*
+		 * 这里判断的属性是 ref 还是 value
+		 * 不允许 ref 和 value 同时出现
+		 */
 		boolean hasRefAttribute = ele.hasAttribute(REF_ATTRIBUTE);
 		boolean hasValueAttribute = ele.hasAttribute(VALUE_ATTRIBUTE);
 		if ((hasRefAttribute && hasValueAttribute) ||
@@ -940,7 +969,7 @@ public class BeanDefinitionParserDelegate {
 			error(elementName +
 					" is only allowed to contain either 'ref' attribute OR 'value' attribute OR sub-element", ele);
 		}
-
+		// 如果是ref，创建一个 RuntimeBeanReference 对象，这个对象封装了ref的信息
 		if (hasRefAttribute) {
 			String refName = ele.getAttribute(REF_ATTRIBUTE);
 			if (!StringUtils.hasText(refName)) {
@@ -950,11 +979,13 @@ public class BeanDefinitionParserDelegate {
 			ref.setSource(extractSource(ele));
 			return ref;
 		}
+		// 如果是value，创建一个value的数据对象 TypedStringValue，这个对象封装了value的信息
 		else if (hasValueAttribute) {
 			TypedStringValue valueHolder = new TypedStringValue(ele.getAttribute(VALUE_ATTRIBUTE));
 			valueHolder.setSource(extractSource(ele));
 			return valueHolder;
 		}
+		// 如果还有子元素，触发对子元素的解析
 		else if (subElement != null) {
 			return parsePropertySubElement(subElement, bd);
 		}

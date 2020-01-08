@@ -80,6 +80,7 @@ public class IocTest {
 
 完成整个bean的载入和注册之后，需要的IOC容器就建立起来了，可供程序员使用。
 
+
 #### ApplicationContext
 ### IOC 容器的初始化过程
 从下面这段代码开始：
@@ -88,7 +89,8 @@ AnnotationConfigApplicationContext applicationContext =
 				new AnnotationConfigApplicationContext(MyConfig.class);
 ```
 
-
+##### ClassPathXmlApplicationContext
+##### FileSystemXmlApplicationContext 
 
 ## spring AOP
 ### AOP
