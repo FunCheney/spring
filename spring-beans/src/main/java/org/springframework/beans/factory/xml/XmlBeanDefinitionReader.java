@@ -399,7 +399,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			Document doc = doLoadDocument(inputSource, resource);
 			/**
 			 * 这里是重点代码
-			 * 这里 完成了 对 BeanDefinition 的载入，spring 容器中对象的加载
+			 * 这里 完成了 对 BeanDefinition 的载入，
+			 * spring 容器中对象的加载 及 注册
 			 */
 			int count = registerBeanDefinitions(doc, resource);
 			if (logger.isDebugEnabled()) {
