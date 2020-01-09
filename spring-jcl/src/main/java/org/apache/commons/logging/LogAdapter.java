@@ -35,18 +35,24 @@ import org.slf4j.spi.LocationAwareLogger;
  * @since 5.1
  */
 final class LogAdapter {
-
+    /** 定义LOG4J_SPI 的类名*/
 	private static final String LOG4J_SPI = "org.apache.logging.log4j.spi.ExtendedLogger";
 
+	/** 定义LOG4J_SLF4J_PROVIDER 的类名*/
 	private static final String LOG4J_SLF4J_PROVIDER = "org.apache.logging.slf4j.SLF4JProvider";
 
+	/** 定义SLF4J_SPI 的类名 */
 	private static final String SLF4J_SPI = "org.slf4j.spi.LocationAwareLogger";
 
+	/** 定义SLF4J_API 的类名*/
 	private static final String SLF4J_API = "org.slf4j.Logger";
 
 
 	private static final LogApi logApi;
 
+	/**
+	 * 给logApi 赋值
+	 */
 	static {
 		if (isPresent(LOG4J_SPI)) {
 			if (isPresent(LOG4J_SLF4J_PROVIDER) && isPresent(SLF4J_SPI)) {
@@ -70,6 +76,7 @@ final class LogAdapter {
 		}
 		else {
 			// java.util.logging as default
+			// spring 默认使用户 jul日志
 			logApi = LogApi.JUL;
 		}
 	}

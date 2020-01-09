@@ -1,5 +1,7 @@
 package com.fchen.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,8 +11,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class MyService {
-
+	private Logger log = LoggerFactory.getLogger(MyService.class);
 	public void test(){
-		System.out.println("hello test");
+		log.info("hello test");
 	}
 }
