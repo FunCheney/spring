@@ -110,3 +110,7 @@ AnnotationConfigApplicationContext applicationContext =
 - 基于CGLIB实现的动态代理
 
 file --> class --> byte[] --> object(class)
+
+## Spring 日志
+### java日志体系
+
