@@ -7,7 +7,7 @@ import org.junit.Test;
 /**
  * @author: Fchen
  * @date: 2020/1/9 11:50 下午
- * @desc: TODO
+ * @desc: 测试jcl应用类
  */
 public class JclTest {
 	@Test

@@ -6,7 +6,7 @@ import org.junit.Test;
 /**
  * @author: Fchen
  * @date: 2020/1/9 11:33 下午
- * @desc: TODO
+ * @desc: log4j 应用测视类
  */
 public class Log4jTest {
 	@Test
