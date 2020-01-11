@@ -63,6 +63,7 @@ final class LogAdapter {
 			}
 			else {
 				// Use Log4j 2.x directly, including location awareness support
+				/* Log4j 2.x 的版本*/
 				logApi = LogApi.LOG4J;
 			}
 		}
@@ -76,7 +77,7 @@ final class LogAdapter {
 		}
 		else {
 			// java.util.logging as default
-			// spring 默认使用户 jul日志
+			// spring 默认使用 jcl 绑定 jul 打印日志
 			logApi = LogApi.JUL;
 		}
 	}
@@ -148,7 +149,7 @@ final class LogAdapter {
 	private static class JavaUtilAdapter {
 
 		public static Log createLog(String name) {
-			/* 返回jul*/
+			/* 默认返回jul*/
 			return new JavaUtilLog(name);
 		}
 	}
