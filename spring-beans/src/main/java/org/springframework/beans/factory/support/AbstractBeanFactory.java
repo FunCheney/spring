@@ -227,6 +227,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	/**
 	 * Return an instance, which may be shared or independent, of the specified bean.
+	 * 返回一个具体的Bean的实例，触发依赖注入的地方
 	 * @param name the name of the bean to retrieve
 	 * @param requiredType the required type of the bean to retrieve
 	 * @param args arguments to use when creating a bean instance using explicit arguments
@@ -244,6 +245,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		Object bean;
 
 		// Eagerly check singleton cache for manually registered singletons.
+		/** 先从缓存中取得Bean，处理那些已经被创建过的单例模式的Bean，这些Bean无需重复创建*/
 		Object sharedInstance = getSingleton(beanName);
 		if (sharedInstance != null && args == null) {
 			if (logger.isTraceEnabled()) {
@@ -255,6 +257,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					logger.trace("Returning cached instance of singleton bean '" + beanName + "'");
 				}
 			}
+			/**
+			 * getObjectForBeanInstance() 完成的是FactoryBean的相关处理，以取得FactoryBean的生产结果，
+			 * BeanFactory 和 FactoryBean的区别 查看之前的解释
+			 */
 			bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);
 		}
 
@@ -266,6 +272,11 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 
 			// Check if bean definition exists in this factory.
+			/**
+			 * 判断IOC容器中的 BeanDefinition 是否存在，检查是否能在当前的BeanFactory中取得需要的Bean，
+			 * 如果当前的 BeanFactory 中取不到，则到双亲的 BeanFactory 中去取；
+			 * 如果当前的双亲工长中取不到，就顺着双亲BeanFactory 链一直向上查找
+			 */
 			BeanFactory parentBeanFactory = getParentBeanFactory();
 			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {
 				// Not found -> check parent.
@@ -292,10 +303,16 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 
 			try {
+				/** 根据bean的名字 获取 BeanDefinition*/
 				final RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
+				/**
+				 * 获取当前Bean的所有依赖Bean，在geiBean()时递归调用。
+				 * 直到取到一个没有任何依赖的Bean为止
+				 */
 				checkMergedBeanDefinition(mbd, beanName, args);
 
 				// Guarantee initialization of beans that the current bean depends on.
+				// 获取当前Bean的所有依赖
 				String[] dependsOn = mbd.getDependsOn();
 				if (dependsOn != null) {
 					for (String dep : dependsOn) {
@@ -1331,8 +1348,13 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 */
 	protected void checkMergedBeanDefinition(RootBeanDefinition mbd, String beanName, @Nullable Object[] args)
 			throws BeanDefinitionStoreException {
-
+		/**
+		 * 这里判断 mbd 是否是抽象的
+		 * 如果是抽象的抛出
+		 *   Error creating bean with name "beanName" Bean definition is abstract
+		 */
 		if (mbd.isAbstract()) {
+			//抛出异常
 			throw new BeanIsAbstractException(beanName);
 		}
 	}

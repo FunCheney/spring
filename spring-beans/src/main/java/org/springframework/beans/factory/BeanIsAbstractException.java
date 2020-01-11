@@ -29,6 +29,7 @@ public class BeanIsAbstractException extends BeanCreationException {
 
 	/**
 	 * Create a new BeanIsAbstractException.
+	 * 创建 BeanIsAbstractException
 	 * @param beanName the name of the bean requested
 	 */
 	public BeanIsAbstractException(String beanName) {
