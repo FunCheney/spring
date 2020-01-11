@@ -1062,18 +1062,23 @@ public class BeanDefinitionParserDelegate {
 			return nullHolder;
 		}
 		else if (nodeNameEquals(ele, ARRAY_ELEMENT)) {
+			/** 解析 Array 元素*/
 			return parseArrayElement(ele, bd);
 		}
 		else if (nodeNameEquals(ele, LIST_ELEMENT)) {
+			/** 解析 List 元素*/
 			return parseListElement(ele, bd);
 		}
 		else if (nodeNameEquals(ele, SET_ELEMENT)) {
+			/** 解析 set 元素*/
 			return parseSetElement(ele, bd);
 		}
 		else if (nodeNameEquals(ele, MAP_ELEMENT)) {
+			/** 解析 Map 元素*/
 			return parseMapElement(ele, bd);
 		}
 		else if (nodeNameEquals(ele, PROPS_ELEMENT)) {
+		    /** 解析 props 元素*/
 			return parsePropsElement(ele);
 		}
 		else {
@@ -1163,14 +1168,17 @@ public class BeanDefinitionParserDelegate {
 
 	/**
 	 * Parse a list element.
+	 * 解析 list 属性
 	 */
 	public List<Object> parseListElement(Element collectionEle, @Nullable BeanDefinition bd) {
+
 		String defaultElementType = collectionEle.getAttribute(VALUE_TYPE_ATTRIBUTE);
 		NodeList nl = collectionEle.getChildNodes();
 		ManagedList<Object> target = new ManagedList<>(nl.getLength());
 		target.setSource(extractSource(collectionEle));
 		target.setElementTypeName(defaultElementType);
 		target.setMergeEnabled(parseMergeAttribute(collectionEle));
+		/** 具体解析 List 属性的方法*/
 		parseCollectionElements(nl, target, bd, defaultElementType);
 		return target;
 	}
@@ -1192,9 +1200,15 @@ public class BeanDefinitionParserDelegate {
 	protected void parseCollectionElements(
 			NodeList elementNodes, Collection<Object> target, @Nullable BeanDefinition bd, String defaultElementType) {
 
+		/** 遍历所有的元素结点，判断其类型是不是 Element*/
 		for (int i = 0; i < elementNodes.getLength(); i++) {
 			Node node = elementNodes.item(i);
 			if (node instanceof Element && !nodeNameEquals(node, DESCRIPTION_ELEMENT)) {
+				/**
+				 * 向 target 中添加，target 是一个ManagedList
+				 * 同时触发对下一层子元素的解析过程
+				 * 递归调用
+				 */
 				target.add(parsePropertySubElement((Element) node, bd, defaultElementType));
 			}
 		}
