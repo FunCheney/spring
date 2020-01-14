@@ -256,7 +256,7 @@ public class AnnotatedBeanDefinitionReader {
 					abd.setPrimary(true);
 				}
 				else if (Lazy.class == qualifier) {
-					/** 如果设置来了 @Lazy 则将其值设置为true */
+					/** 如果设置了 @Lazy 则将其值设置为true */
 					abd.setLazyInit(true);
 				}
 				else {
