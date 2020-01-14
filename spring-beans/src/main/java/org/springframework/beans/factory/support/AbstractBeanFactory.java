@@ -333,6 +333,11 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 				// Create bean instance.
 				if (mbd.isSingleton()) {
+					/**
+					 * 通过createBean()方法创建singleton bean的实例，
+					 * 这里通过拉姆达表达式创建 Object 对象
+					 * 在getSingleton()中调用ObjectFactory 的createBean
+					 */
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
 							return createBean(beanName, mbd, args);
@@ -348,6 +353,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					bean = getObjectForBeanInstance(sharedInstance, name, beanName, mbd);
 				}
 
+				/** 这里是创建prototype bean的地方*/
 				else if (mbd.isPrototype()) {
 					// It's a prototype -> create a new instance.
 					Object prototypeInstance = null;
@@ -394,6 +400,11 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		}
 
 		// Check if required type matches the type of the actual bean instance.
+		/**
+		 * 这里对创建的Bean进行类型检查，
+		 * 如果没有问题，就返回这个新创建的Bean
+		 * 这个Bean 是已经包含了依赖关系的Bean
+		 */
 		if (requiredType != null && !requiredType.isInstance(bean)) {
 			try {
 				T convertedBean = getTypeConverter().convertIfNecessary(bean, requiredType);

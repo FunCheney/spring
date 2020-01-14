@@ -487,6 +487,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Make sure bean class is actually resolved at this point, and
 		// clone the bean definition in case of a dynamically resolved Class
 		// which cannot be stored in the shared merged bean definition.
+		// 判断需要创建的Bean是否可以实例化，这个类是否可以通过类装载器载入
 		Class<?> resolvedClass = resolveBeanClass(mbd, beanName);
 		if (resolvedClass != null && !mbd.hasBeanClass() && mbd.getBeanClassName() != null) {
 			mbdToUse = new RootBeanDefinition(mbd);
@@ -504,6 +505,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		try {
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
+			// 如果Bean配置了PostProcessor，这里返回的是一个Proxy
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
 				return bean;
@@ -515,6 +517,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		try {
+			// 创建Bean的调用
 			Object beanInstance = doCreateBean(beanName, mbdToUse, args);
 			if (logger.isTraceEnabled()) {
 				logger.trace("Finished creating instance of bean '" + beanName + "'");
@@ -549,12 +552,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	protected Object doCreateBean(final String beanName, final RootBeanDefinition mbd, final @Nullable Object[] args)
 			throws BeanCreationException {
 
-		// Instantiate the bean.
+		// BeanWrapper 是用来持有创建出来的Bean对象
 		BeanWrapper instanceWrapper = null;
 		if (mbd.isSingleton()) {
+			// 如果是singleton，先清除缓存中同名的Bean
 			instanceWrapper = this.factoryBeanInstanceCache.remove(beanName);
 		}
 		if (instanceWrapper == null) {
+			// 通过createBeanInstance 来完成Bean的创建
 			instanceWrapper = createBeanInstance(beanName, mbd, args);
 		}
 		/** getWrappedInstance() 获得原生对象*/
