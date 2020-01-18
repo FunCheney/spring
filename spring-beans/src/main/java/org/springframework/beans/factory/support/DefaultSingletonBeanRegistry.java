@@ -213,6 +213,10 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 				if (logger.isDebugEnabled()) {
 					logger.debug("Creating shared instance of singleton bean '" + beanName + "'");
 				}
+				/**
+				 * 把beanName添加到 singletonsCurrentlyInCreation 的set集合中
+				 * 表示beanName正在创建中
+				 */
 				beforeSingletonCreation(beanName);
 				boolean newSingleton = false;
 				boolean recordSuppressedExceptions = (this.suppressedExceptions == null);

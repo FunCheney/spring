@@ -496,6 +496,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		// Prepare method overrides.
 		try {
+			//处理lockup-method 和 replace-method配置，spring将这两个方法统称为 method overrides
 			mbdToUse.prepareMethodOverrides();
 		}
 		catch (BeanDefinitionValidationException ex) {
@@ -517,7 +518,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		try {
-			// 创建Bean的调用
+			/**
+			 * 创建Bean的实例，若bean的配置信息中配置了 lookup-method 和 replace-method
+			 */
 			Object beanInstance = doCreateBean(beanName, mbdToUse, args);
 			if (logger.isTraceEnabled()) {
 				logger.trace("Finished creating instance of bean '" + beanName + "'");
