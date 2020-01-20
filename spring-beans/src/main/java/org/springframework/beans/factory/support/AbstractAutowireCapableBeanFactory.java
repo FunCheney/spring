@@ -357,6 +357,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Use non-singleton bean definition, to avoid registering bean as dependent bean.
 		final RootBeanDefinition bd = new RootBeanDefinition(beanClass, autowireMode, dependencyCheck);
 		bd.setScope(BeanDefinition.SCOPE_PROTOTYPE);
+
 		if (bd.getResolvedAutowireMode() == AUTOWIRE_CONSTRUCTOR) {
 			return autowireConstructor(beanClass.getName(), bd, null, null).getWrappedInstance();
 		}
@@ -1324,7 +1325,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}
 			else {
 				/**
-				 * 使用默认的实例化策略对Bean进行实例化
+				 * 使用默认的实例化策略对Bean进行实例化,默认情况下通过反射完成
+				 * @LookUp 注解要通过cglib增强
 				 */
 				beanInstance = getInstantiationStrategy().instantiate(mbd, beanName, parent);
 			}
