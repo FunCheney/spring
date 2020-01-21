@@ -120,6 +120,10 @@ class ConstructorResolver {
 		BeanWrapperImpl bw = new BeanWrapperImpl();
 		this.beanFactory.initBeanWrapper(bw);
 
+		/**
+		 * 确定参数列表，第一种通过BeanDefinition 设置
+		 * 也可以通过 xml设置
+		 */
 		Constructor<?> constructorToUse = null;
 		ArgumentsHolder argsHolderToUse = null;
 		Object[] argsToUse = null;
@@ -130,6 +134,7 @@ class ConstructorResolver {
 		else {
 			Object[] argsToResolve = null;
 			synchronized (mbd.constructorArgumentLock) {
+				//获取已解析的构造方法
 				constructorToUse = (Constructor<?>) mbd.resolvedConstructorOrFactoryMethod;
 				if (constructorToUse != null && mbd.constructorArgumentsResolved) {
 					// Found a cached constructor...
@@ -144,8 +149,9 @@ class ConstructorResolver {
 			}
 		}
 
+		// 没有已解析的构造方法
 		if (constructorToUse == null || argsToUse == null) {
-			// Take specified constructors, if any.
+			// 解析构造方法
 			Constructor<?>[] candidates = chosenCtors;
 			if (candidates == null) {
 				Class<?> beanClass = mbd.getBeanClass();
@@ -174,15 +180,25 @@ class ConstructorResolver {
 			}
 
 			// Need to resolve the constructor.
+			// 判断构造方法是否为空，判断是否根据构造方法自动注入
 			boolean autowiring = (chosenCtors != null ||
 					mbd.getResolvedAutowireMode() == AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR);
 			ConstructorArgumentValues resolvedValues = null;
 
+			/**
+			 * 定义了最小参数个数
+			 * 如果给构造方法的参数列表给定了具体的值
+			 * 那么这些值的个数就是构造方法参数的个数
+			 */
 			int minNrOfArgs;
 			if (explicitArgs != null) {
 				minNrOfArgs = explicitArgs.length;
 			}
 			else {
+				/**
+				 * 实例化一个对象，用来存放构造方法的参数值
+				 * 主要存放参数值和参数值对应的下标
+				 */
 				ConstructorArgumentValues cargs = mbd.getConstructorArgumentValues();
 				resolvedValues = new ConstructorArgumentValues();
 				minNrOfArgs = resolveConstructorArguments(beanName, mbd, bw, cargs, resolvedValues);
