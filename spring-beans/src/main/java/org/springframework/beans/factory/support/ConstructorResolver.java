@@ -117,12 +117,15 @@ class ConstructorResolver {
 	public BeanWrapper autowireConstructor(String beanName, RootBeanDefinition mbd,
 			@Nullable Constructor<?>[] chosenCtors, @Nullable Object[] explicitArgs) {
 
+		// 实例化一个BeanWrapperImpl对象
 		BeanWrapperImpl bw = new BeanWrapperImpl();
+
 		this.beanFactory.initBeanWrapper(bw);
 
 		/**
 		 * 确定参数列表，第一种通过BeanDefinition 设置
 		 * 也可以通过 xml设置
+		 * constructorToUse spring 决定采用哪个构造方法初始化
 		 */
 		Constructor<?> constructorToUse = null;
 		ArgumentsHolder argsHolderToUse = null;
@@ -206,6 +209,10 @@ class ConstructorResolver {
 			}
 
 			//排序
+			/**
+			 * 优先访问权限，访问权限相同，
+			 * 通过构造器的参数个数来排序
+			 */
 			AutowireUtils.sortConstructors(candidates);
 
 			//定义了一个差异变量
