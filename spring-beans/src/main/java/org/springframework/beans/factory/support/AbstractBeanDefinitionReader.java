@@ -192,6 +192,7 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 
 	@Override
 	public int loadBeanDefinitions(String location) throws BeanDefinitionStoreException {
+		// 将读入的xml资源进行特殊的编码处理
 		return loadBeanDefinitions(location, null);
 	}
 
