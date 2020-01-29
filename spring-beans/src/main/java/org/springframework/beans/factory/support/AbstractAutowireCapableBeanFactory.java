@@ -1488,7 +1488,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		String[] propertyNames = unsatisfiedNonSimpleProperties(mbd, bw);
 		for (String propertyName : propertyNames) {
 			if (containsBean(propertyName)) {
+				// 使用取得当前bean的属性名作为bean的名字，向IOC容器索取bean
 				Object bean = getBean(propertyName);
+				// 把从容器中得到的bean设置到当前Bean的属性中去
 				pvs.add(propertyName, bean);
 				registerDependentBean(propertyName, beanName);
 				if (logger.isTraceEnabled()) {

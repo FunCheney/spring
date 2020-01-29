@@ -17,6 +17,7 @@
 package org.springframework.beans.factory;
 
 /**
+ * 在Bean中得到它在IOC容器中Bean的名称
  * Interface to be implemented by beans that want to be aware of their
  * bean name in a bean factory. Note that it is not usually recommended
  * that an object depends on its bean name, as this represents a potentially

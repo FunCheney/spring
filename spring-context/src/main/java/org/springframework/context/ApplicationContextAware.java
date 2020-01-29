@@ -20,6 +20,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.Aware;
 
 /**
+ * 可以在Bean中得到Bean所在的应用上下文，从而直接在Bean中使用应用上下文的服务
  * Interface to be implemented by any object that wishes to be notified
  * of the {@link ApplicationContext} that it runs in.
  *
@@ -59,6 +60,9 @@ import org.springframework.beans.factory.Aware;
 public interface ApplicationContextAware extends Aware {
 
 	/**
+	 * 这是一个回调函数，在Bean中通过实现这个函数，可以在容器中回调该Aware接口
+	 * 方法时使注入的applicationContext引用在Bean中保存下来，供Bean需要使用
+	 * applicationContext的基本服务时使用。这个方法的回调是由容器自动完成的
 	 * Set the ApplicationContext that this object runs in.
 	 * Normally this call will be used to initialize the object.
 	 * <p>Invoked after population of normal bean properties but before an init callback such

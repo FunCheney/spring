@@ -19,6 +19,7 @@ package org.springframework.beans.factory;
 import org.springframework.beans.BeansException;
 
 /**
+ * 可以在Bean中得到Bean所在的IOC容器，从而直接在Bean中使用IOC容器的服务
  * Interface to be implemented by beans that wish to be aware of their
  * owning {@link BeanFactory}.
  *
