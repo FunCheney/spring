@@ -295,6 +295,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 
 	/**
+	 * 通过具体的xml文件加载BeanDefinition的调用入口
 	 * Load bean definitions from the specified XML file.
 	 * @param resource the resource descriptor for the XML file
 	 * @return the number of bean definitions found
@@ -445,7 +446,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	protected Document doLoadDocument(InputSource inputSource, Resource resource) throws Exception {
 		/**
 		 * 通过 documentLoader 对象 完成 Document 的读取
-		 * documentLoader 对象在创建的时候初始化
+		 * documentLoader 是 DefaultDocumentLoader
+		 * 在定义documentLoader的地方创建
 		 */
 		return this.documentLoader.loadDocument(inputSource, getEntityResolver(), this.errorHandler,
 				getValidationModeForResource(resource), isNamespaceAware());

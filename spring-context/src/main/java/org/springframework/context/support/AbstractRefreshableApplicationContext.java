@@ -138,6 +138,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
 			beanFactory.setSerializationId(getId());
 			customizeBeanFactory(beanFactory);
+			// 启动对BeanDefinition的载入
 			loadBeanDefinitions(beanFactory);
 			synchronized (this.beanFactoryMonitor) {
 				this.beanFactory = beanFactory;
@@ -245,7 +246,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 
 	/**
 	 * 加载 BeanDefinition 到 bean 工厂中，spring中存在多中 载入的方式，因此这里是抽象类
-	 * 具体的实现，更具不同的子类来完成
+	 * 具体的实现，根据不同的子类来完成
 	 * Load bean definitions into the given bean factory, typically through
 	 * delegating to one or more bean definition readers.
 	 * @param beanFactory the bean factory to load bean definitions into
