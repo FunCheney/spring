@@ -71,15 +71,15 @@ import org.springframework.util.StringUtils;
 public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements SingletonBeanRegistry {
 
 	/** Cache of singleton objects: bean name to bean instance. */
-	// 用于存放完全初始化好的bean，从该缓存中取出的bean可以直接使用
+	/** 用于存放完全初始化好的bean，从该缓存中取出的bean可以直接使用*/
 	private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);
 
 	/** Cache of singleton factories: bean name to ObjectFactory. */
-	// 存放bean工厂对象，用于解决循环依赖
+	/** 存放bean工厂对象，用于解决循环依赖 */
 	private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
 
 	/** Cache of early singleton objects: bean name to bean instance. */
-	// 存放原始的bean对象用于解决循环依赖，存放的对象还未被填充属性
+	/** 存放原始的bean对象用于解决循环依赖，存放的对象还未被填充属性 */
 	private final Map<String, Object> earlySingletonObjects = new HashMap<>(16);
 
 	/** Set of registered singletons, containing the bean names in registration order. */
@@ -87,6 +87,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	private final Set<String> registeredSingletons = new LinkedHashSet<>(256);
 
 	/** Names of beans that are currently in creation. */
+	/** 用来记录正在创建的Bean的名字*/
 	private final Set<String> singletonsCurrentlyInCreation =
 			Collections.newSetFromMap(new ConcurrentHashMap<>(16));
 
@@ -181,12 +182,14 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		//从Map中获取Bean，如果不为空直接返回，不在进行初始化工作
 		Object singletonObject = this.singletonObjects.get(beanName);
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
+			// 未被初始换 且 beanName 存在于正在被创建的单例Bean的池子中，进行初始化
 			synchronized (this.singletonObjects) {
 				singletonObject = this.earlySingletonObjects.get(beanName);
 				if (singletonObject == null && allowEarlyReference) {
 					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
 					if (singletonFactory != null) {
 						singletonObject = singletonFactory.getObject();
+						// 将原始的Bean对象存放至Map中
 						this.earlySingletonObjects.put(beanName, singletonObject);
 						this.singletonFactories.remove(beanName);
 					}
@@ -334,6 +337,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * @param beanName the name of the bean
 	 */
 	public boolean isSingletonCurrentlyInCreation(String beanName) {
+		// 判断beanName 是否存在于正在创建的单例Bean的池子(Set 集合)中
 		return this.singletonsCurrentlyInCreation.contains(beanName);
 	}
 

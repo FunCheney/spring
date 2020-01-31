@@ -129,6 +129,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	private ParameterNameDiscoverer parameterNameDiscoverer = new DefaultParameterNameDiscoverer();
 
 	/** Whether to automatically try to resolve circular references between beans. */
+	/** 是否尝试自动解决bean之间的循环引用 默认为 true*/
 	private boolean allowCircularReferences = true;
 
 	/**
@@ -563,7 +564,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			instanceWrapper = this.factoryBeanInstanceCache.remove(beanName);
 		}
 		if (instanceWrapper == null) {
-			/** 通过createBeanInstance 来完成Bean的创建 */
+			/**
+			 * 通过createBeanInstance 来完成Bean的创建。
+			 * 对象的生成有很多种不同的方式，可以通过工厂方法生成，
+			 * 也可以通过容器的autowire特性生成，这些生成方式都是由BeanDefinition来指定的
+			 */
 			instanceWrapper = createBeanInstance(beanName, mbd, args);
 		}
 		/** getWrappedInstance() 获得原生对象*/
@@ -596,11 +601,19 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				logger.trace("Eagerly caching bean '" + beanName +
 						"' to allow for resolving potential circular references");
 			}
+			/**
+			 * setter 方法注入的Bean，通过提前暴露一个单例工厂方法
+			 * 从而能够使其他Bean引用到该Bean，注意通过setter方法注入的
+			 * Bean 必须是单例的才会到这里来。
+			 */
 			addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
 		}
 
 		// Initialize the bean instance.
-		// 将原生对象复制一份 到 exposedObject
+		/**
+		 * 将原生对象复制一份 到 exposedObject，这个exposedObject在初始化完成处理之后
+		 * 会作为依赖注入完成后的Bean
+		 */
 		Object exposedObject = bean;
 		try {
 			/** Bean的依赖关系处理过程*/
@@ -1393,6 +1406,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}
 			else {
 				// Skip property population phase for null instance.
+				// 没有任何属性需要填充
 				return;
 			}
 		}
@@ -1485,6 +1499,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	protected void autowireByName(
 			String beanName, AbstractBeanDefinition mbd, BeanWrapper bw, MutablePropertyValues pvs) {
 
+		//寻找bw中需要依赖注入的属性
 		String[] propertyNames = unsatisfiedNonSimpleProperties(mbd, bw);
 		for (String propertyName : propertyNames) {
 			if (containsBean(propertyName)) {
@@ -1527,6 +1542,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		Set<String> autowiredBeanNames = new LinkedHashSet<>(4);
+
+		//寻找bw中需要依赖注入的属性
 		String[] propertyNames = unsatisfiedNonSimpleProperties(mbd, bw);
 		for (String propertyName : propertyNames) {
 			try {
@@ -1534,15 +1551,18 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				// Don't try autowiring by type for type Object: never makes sense,
 				// even if it technically is a unsatisfied, non-simple property.
 				if (Object.class != pd.getPropertyType()) {
+					// 探测指定属性的set方法
 					MethodParameter methodParam = BeanUtils.getWriteMethodParameter(pd);
 					// Do not allow eager init for type matching in case of a prioritized post-processor.
 					boolean eager = !(bw.getWrappedInstance() instanceof PriorityOrdered);
+					//解析指定beanName的属性所匹配的值，并把解析到的属性名称存储在autowireBeanNames中
 					DependencyDescriptor desc = new AutowireByTypeDependencyDescriptor(methodParam, eager);
 					Object autowiredArgument = resolveDependency(desc, beanName, autowiredBeanNames, converter);
 					if (autowiredArgument != null) {
 						pvs.add(propertyName, autowiredArgument);
 					}
 					for (String autowiredBeanName : autowiredBeanNames) {
+						//注册依赖
 						registerDependentBean(autowiredBeanName, beanName);
 						if (logger.isTraceEnabled()) {
 							logger.trace("Autowiring by type from bean name '" + beanName + "' via property '" +
