@@ -144,6 +144,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	private String serializationId;
 
 	/** Whether to allow re-registration of a different definition with the same name. */
+	/** 是否允许*/
 	private boolean allowBeanDefinitionOverriding = true;
 
 	/** Whether to allow eager class loading even for lazy-init beans. */
@@ -899,10 +900,16 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			}
 		}
 
+		// 根据beanName判断IOC容器中是否有相同名称的BeanDefinition已经注册
 		BeanDefinition existingDefinition = this.beanDefinitionMap.get(beanName);
 		if (existingDefinition != null) {
-			/** beanName 对应的 BeanDefinition 已在 Map 中存在 */
+			/**
+			 * beanName 对应的 BeanDefinition 已在 Map 中存在
+			 * 遇到同名的BeanDefinition，进行处理的时候需要依据
+			 * isAllowBeanDefinitionOverriding的配置来完成
+			 */
 			if (!isAllowBeanDefinitionOverriding()) {
+				// 如果有相同名字的BeanDefinition，isAllowBeanDefinitionOverriding 不允许覆盖，抛出异常
 				throw new BeanDefinitionOverrideException(beanName, beanDefinition, existingDefinition);
 			}
 			else if (existingDefinition.getRole() < beanDefinition.getRole()) {

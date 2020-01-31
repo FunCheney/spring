@@ -22,6 +22,8 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.core.AliasRegistry;
 
 /**
+ * 这个接口的实现完成BeanDefinition向容器中注册，这个注册过程并不复杂，
+ * 就是把解析得到的BeanDefinition设置到Map中去
  * Interface for registries that hold bean definitions, for example RootBeanDefinition
  * and ChildBeanDefinition instances. Typically implemented by BeanFactories that
  * internally work with the AbstractBeanDefinition hierarchy.
