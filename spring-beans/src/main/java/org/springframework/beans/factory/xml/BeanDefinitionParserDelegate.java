@@ -419,6 +419,7 @@ public class BeanDefinitionParserDelegate {
 		String id = ele.getAttribute(ID_ATTRIBUTE);
 		String nameAttr = ele.getAttribute(NAME_ATTRIBUTE);
 
+		// 分割name属性
 		List<String> aliases = new ArrayList<>();
 		if (StringUtils.hasLength(nameAttr)) {
 			String[] nameArr = StringUtils.tokenizeToStringArray(nameAttr, MULTI_VALUE_ATTRIBUTE_DELIMITERS);
@@ -441,6 +442,7 @@ public class BeanDefinitionParserDelegate {
 		AbstractBeanDefinition beanDefinition = parseBeanDefinitionElement(ele, beanName, containingBean);
 		if (beanDefinition != null) {
 			if (!StringUtils.hasText(beanName)) {
+				// 如果不存在beanName 那么根据Spring中提供的命名规则为当前bean生成对应的beanName
 				try {
 					if (containingBean != null) {
 						beanName = BeanDefinitionReaderUtils.generateBeanName(
@@ -515,6 +517,7 @@ public class BeanDefinitionParserDelegate {
 			className = ele.getAttribute(CLASS_ATTRIBUTE).trim();
 		}
 		String parent = null;
+		/* 解析parent属性*/
 		if (ele.hasAttribute(PARENT_ATTRIBUTE)) {
 			parent = ele.getAttribute(PARENT_ATTRIBUTE);
 		}
@@ -527,14 +530,18 @@ public class BeanDefinitionParserDelegate {
 			/* 设置Description信息*/
 			bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));
 
+			/* 解析元数据*/
 			parseMetaElements(ele, bd);
+			/* 解析lookup-method属性*/
 			parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
+			/* 解析replace-method属性*/
 			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
 
 			/* 解析<bean>的构造函数*/
 			parseConstructorArgElements(ele, bd);
 			/* 解析<bean>的property属性*/
 			parsePropertyElements(ele, bd);
+			/* 解析qualifier属性*/
 			parseQualifierElements(ele, bd);
 
 			bd.setResource(this.readerContext.getResource());
@@ -1580,6 +1587,10 @@ public class BeanDefinitionParserDelegate {
 	 * Determine whether the given node indicates the default namespace.
 	 */
 	public boolean isDefaultNamespace(Node node) {
+		/**
+		 * getNamespaceURI() 获取命名空间，并且与spring的命名空间
+		 * http://www.springframework.org/schema/beans 进行对比
+		 */
 		return isDefaultNamespace(getNamespaceURI(node));
 	}
 

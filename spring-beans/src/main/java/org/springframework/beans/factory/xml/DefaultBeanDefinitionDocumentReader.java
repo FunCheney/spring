@@ -93,6 +93,9 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	@Override
 	public void registerBeanDefinitions(Document doc, XmlReaderContext readerContext) {
 		this.readerContext = readerContext;
+		/**
+		 * 真正的开始BeanDefinition的入口
+		 */
 		doRegisterBeanDefinitions(doc.getDocumentElement());
 	}
 
@@ -125,10 +128,12 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		// the new (child) delegate with a reference to the parent for fallback purposes,
 		// then ultimately reset this.delegate back to its original (parent) reference.
 		// this behavior emulates a stack of delegates without actually necessitating one.
+		// 专门处理解析
 		BeanDefinitionParserDelegate parent = this.delegate;
 		this.delegate = createDelegate(getReaderContext(), root, parent);
 
 		if (this.delegate.isDefaultNamespace(root)) {
+			// 处理profile属性
 			String profileSpec = root.getAttribute(PROFILE_ATTRIBUTE);
 			if (StringUtils.hasText(profileSpec)) {
 				String[] specifiedProfiles = StringUtils.tokenizeToStringArray(
@@ -145,11 +150,13 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			}
 		}
 
+		// 解析前处理，留给子类实现
 		preProcessXml(root);
 		/**
 		 * 处理BeanDefinition，交给BeanDefinitionParserDelegate来完成
 		 */
 		parseBeanDefinitions(root, this.delegate);
+		// 解析后处理，留给子类实现
 		postProcessXml(root);
 
 		this.delegate = parent;
@@ -169,6 +176,10 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	 * @param root the DOM root element of the document
 	 */
 	protected void parseBeanDefinitions(Element root, BeanDefinitionParserDelegate delegate) {
+		/**
+		 * 判断命名空间与spring默认的命名空间呢是否一致
+		 * 不一致采用 parseCustomElement 处理自定义的命名空间
+		 */
 		if (delegate.isDefaultNamespace(root)) {
 			NodeList nl = root.getChildNodes();
 			for (int i = 0; i < nl.getLength(); i++) {
@@ -176,31 +187,43 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 				if (node instanceof Element) {
 					Element ele = (Element) node;
 					if (delegate.isDefaultNamespace(ele)) {
-						/** 解析默认的元素*/
+						/**
+						 * 解析默认的元素，对bean的处理
+						 * 对默认标签的解析
+						 */
 						parseDefaultElement(ele, delegate);
 					}
 					else {
+						/**
+						 * 对Bean的处理
+						 * 对自定义 标签的解析
+						 */
 						delegate.parseCustomElement(ele);
 					}
 				}
 			}
 		}
 		else {
+
 			delegate.parseCustomElement(root);
 		}
 	}
 
 	private void parseDefaultElement(Element ele, BeanDefinitionParserDelegate delegate) {
+		/** 对 import 标签的处理*/
 		if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {
 			importBeanDefinitionResource(ele);
 		}
+		/** 对alias 标签的处理*/
 		else if (delegate.nodeNameEquals(ele, ALIAS_ELEMENT)) {
 			processAliasRegistration(ele);
 		}
+		/** 对bean 标签的处理，这里最为重要*/
 		else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {
 			// 处理<bean></bean>元素信息
 			processBeanDefinition(ele, delegate);
 		}
+		/** 对beans标签的处理*/
 		else if (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) {
 			// recurse
 			doRegisterBeanDefinitions(ele);
@@ -306,6 +329,13 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	/**
 	 * Process the given bean element, parsing the bean definition
 	 * and registering it with the registry.
+	 * 处理 bean 标签的元素，逻辑总结如下：
+	 * ①: 首先委托给 BeanDefinitionParserDelegate类的parseBeanDefinitionElement()方法进行元素解析，
+	 *     返回BeanDefinitionHolder的实例 bdHolder，经过该方法之后，bdHolder已经包含了配置文件中配置的
+	 *     各种属性，如：class，name，id，alias等。
+	 * ②: 当返回的 bdHolder 不为空的情况下若存在默认标签的子节点下再有自定义的属性，还需要再次对自定义的标签进行解析。
+	 * ③: 解析完成后需要对bdHolder进行注册，同样，注册操作委托给了BeanDefinitionReaderUtils的registerBeanDefinition()方法
+	 * ④: 最后发出响应事件，通知相关的接听器，这个bean加载完成了。
 	 */
 	protected void processBeanDefinition(Element ele, BeanDefinitionParserDelegate delegate) {
 		/**
