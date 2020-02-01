@@ -141,64 +141,98 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	private volatile Object beanClass;
 
 	@Nullable
+	/** bean 的作用范围，对应bean属性scope*/
 	private String scope = SCOPE_DEFAULT;
 
+	/** 是否抽象，对应bean的属性 abstract*/
 	private boolean abstractFlag = false;
 
+	/** 是否延迟加载，对应bean属性 lazy-init*/
 	private boolean lazyInit = false;
 
+	/** 自动注入模式，对应bean属性autowire*/
 	private int autowireMode = AUTOWIRE_NO;
 
+	/** 依赖检查*/
 	private int dependencyCheck = DEPENDENCY_CHECK_NONE;
 
 	@Nullable
+	/** 用来表示一个bean的实例化依靠另一个bean先实例化*/
 	private String[] dependsOn;
 
+	/**
+	 * autowire-candidate 属性设置为false，这样容器在查找自动装配对象时，
+	 * 将不考虑该bean，即他不会被考虑作为去其他bean自动装配的候选者，但是该
+	 * bean本身还是可以使用自动装配来注入其他bean的。
+	 * 对应bean属性 autowire-candidate
+	 */
 	private boolean autowireCandidate = true;
 
+	/** 自动装配出现多个候选者时，将作为首选，对应bean属性primary*/
 	private boolean primary = false;
 
+	/**
+	 * 用于记录Qualifier，对应元素qualifier
+	 */
 	private final Map<String, AutowireCandidateQualifier> qualifiers = new LinkedHashMap<>();
 
 	@Nullable
 	private Supplier<?> instanceSupplier;
 
+	/** 允许访问非公开的构造器和方法，程序设置*/
 	private boolean nonPublicAccessAllowed = true;
 
+	/**
+	 * 是否以一种宽松的模式解析构造函数，默认为true
+	 * 如果为false，这出现多个构造函数时
+	 * 抛出异常，因为spring无法准确定位使用哪个构造函数
+	 */
 	private boolean lenientConstructorResolution = true;
 
 	@Nullable
+	/** 对应bean的属性 factory-bean*/
 	private String factoryBeanName;
 
 	@Nullable
+	/** 对应bean的属性 factory-method*/
 	private String factoryMethodName;
 
 	@Nullable
+	/** 记录构造函数注入属性，对应bean的 constructor-arg*/
 	private ConstructorArgumentValues constructorArgumentValues;
 
 	@Nullable
+	/** 普通属性集合*/
 	private MutablePropertyValues propertyValues;
 
+	/** 方法重写的持有者，记录lookup-method、replace-method 元素*/
 	private MethodOverrides methodOverrides = new MethodOverrides();
 
 	@Nullable
+	/** 初始化方法，对应bean属性 init-method*/
 	private String initMethodName;
 
 	@Nullable
+	/** 销毁方法，对应bean属性 destroy-method*/
 	private String destroyMethodName;
 
+	/** 是否执行 init-method */
 	private boolean enforceInitMethod = true;
 
+	/** 是否执行 destroy-method */
 	private boolean enforceDestroyMethod = true;
 
+	/** 是否用户定义的，而不是应用程序本身定义的，创建AOP的时候为true*/
 	private boolean synthetic = false;
 
 	private int role = BeanDefinition.ROLE_APPLICATION;
 
 	@Nullable
+	/** bean的描述信息*/
 	private String description;
 
 	@Nullable
+	/** 这个bean定义的资源*/
 	private Resource resource;
 
 

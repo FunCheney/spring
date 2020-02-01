@@ -18,14 +18,20 @@ package org.springframework.beans.factory.config;
 
 import org.springframework.beans.BeanMetadataElement;
 import org.springframework.beans.MutablePropertyValues;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
+import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.core.AttributeAccessor;
 import org.springframework.lang.Nullable;
 
 /**
- * 通过BeanDefinition来描述一个bean的实例，
- * A BeanDefinition describes a bean instance, which has property values,
- * constructor argument values, and further information supplied by
- * concrete implementations.
+ * 通过BeanDefinition来描述一个bean的实例，是一个接口，有一个抽象类，有三种实现
+ * @see AbstractBeanDefinition
+ *    @see org.springframework.beans.factory.support.RootBeanDefinition
+ *        最常用的实现类，对应一般性的<bean>元素标签
+ *    @see org.springframework.beans.factory.support.ChildBeanDefinition
+ *    @see GenericBeanDefinition
+ * 在配置文件中可以定义父<bean><bean/> 和 子<bean><bean/>，其中父<bean>用RootBeanDefinition表示
+ *   子<bean> 用 ChildBeanDefinition 表示，没有父<bean>的bean就用ChildBeanDefinition表示
  *
  * <p>This is just a minimal interface: The main intention is to allow a
  * {@link BeanFactoryPostProcessor} such as {@link PropertyPlaceholderConfigurer}

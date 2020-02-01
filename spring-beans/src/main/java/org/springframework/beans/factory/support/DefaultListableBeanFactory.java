@@ -892,6 +892,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		/** 判断 beanDefinition 是否是AbstractBeanDefinition 的实现 */
 		if (beanDefinition instanceof AbstractBeanDefinition) {
 			try {
+				/**
+				 * 注册前的最后一次校验，主要是对AbstractBeanDefinition属性中的
+				 * methodOverrides校验，校验methodOverrides是否与工厂方法并存
+				 * 或者methodOverrides对应的方法根本不存在
+				 */
 				((AbstractBeanDefinition) beanDefinition).validate();
 			}
 			catch (BeanDefinitionValidationException ex) {
