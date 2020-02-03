@@ -511,6 +511,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			// 如果Bean配置了PostProcessor，这里返回的是一个Proxy
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
+				// 在配置了PostProcessor的处理器中 改变了Bean，直接返回
 				return bean;
 			}
 		}
@@ -594,6 +595,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		// Eagerly cache singletons to be able to resolve circular references
 		// even when triggered by lifecycle interfaces like BeanFactoryAware.
+		/**
+		 * 是否需要提前曝光：单例 & 允许循环依赖& 当前的bean正在创建中，检测循环依赖
+		 */
 		boolean earlySingletonExposure = (mbd.isSingleton() && this.allowCircularReferences &&
 				isSingletonCurrentlyInCreation(beanName));
 		if (earlySingletonExposure) {
@@ -641,10 +645,16 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					String[] dependentBeans = getDependentBeans(beanName);
 					Set<String> actualDependentBeans = new LinkedHashSet<>(dependentBeans.length);
 					for (String dependentBean : dependentBeans) {
+						// 检测循环依赖
 						if (!removeSingletonIfCreatedForTypeCheckOnly(dependentBean)) {
 							actualDependentBeans.add(dependentBean);
 						}
 					}
+					/**
+					 * 因为Bean创建后其所依赖的Bean一定是已经创建的，
+					 * actualDependentBeans 不为空则表示当前bean创建后其依赖的Bean却没有全部创建完，
+					 * 也就是说存在循环依赖
+					 */
 					if (!actualDependentBeans.isEmpty()) {
 						throw new BeanCurrentlyInCreationException(beanName,
 								"Bean with name '" + beanName + "' has been injected into other beans [" +
@@ -1117,13 +1127,16 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	@Nullable
 	protected Object resolveBeforeInstantiation(String beanName, RootBeanDefinition mbd) {
 		Object bean = null;
+		/** 如果尚未被解析*/
 		if (!Boolean.FALSE.equals(mbd.beforeInstantiationResolved)) {
 			// Make sure bean class is actually resolved at this point.
 			if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
 				Class<?> targetType = determineTargetType(beanName, mbd);
 				if (targetType != null) {
+					// bean的前置处理器
 					bean = applyBeanPostProcessorsBeforeInstantiation(targetType, beanName);
 					if (bean != null) {
+						// bean的后置处理器
 						bean = applyBeanPostProcessorsAfterInitialization(bean, beanName);
 					}
 				}
