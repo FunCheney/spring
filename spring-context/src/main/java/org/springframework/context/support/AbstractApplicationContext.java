@@ -622,10 +622,17 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// Initialize any placeholder property sources in the context environment.
+		/**
+		 * 留给子类覆盖
+		 * 符合spring的开放式结构设计，给用户扩展spring提供了可能
+		 * 用户可根据自身需要重写initPropertySources()方法，并在方法中进行个性化
+		 * 的属性处理及设置
+		 */
 		initPropertySources();
 
 		// Validate that all properties marked as required are resolvable:
 		// see ConfigurablePropertyResolver#setRequiredProperties
+		/** 验证需要的属性文件是否都已经放入环境中*/
 		getEnvironment().validateRequiredProperties();
 
 		// Store pre-refresh ApplicationListeners...
@@ -661,6 +668,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
 		// 这里使用了委派设计模式，父类定义了抽象方法，具体的实现通过子类实现
 		refreshBeanFactory();
+		// 返回当前实体的 beanFactory属性
 		return getBeanFactory();
 	}
 
