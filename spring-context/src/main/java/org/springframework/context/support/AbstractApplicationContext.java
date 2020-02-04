@@ -688,9 +688,21 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.addPropertyEditorRegistrar(new ResourceEditorRegistrar(this, getEnvironment()));
 
 		// Configure the bean factory with context callbacks.
-		/** 工厂中添加一个bean的后置处理器*/
+		/**
+		 * 工厂中添加一个bean的后置处理器
+		 * 目的就是 注册一个 BeanPostProcessor，真正的逻辑是在 ApplicationContextAwareProcessor
+		 * 在bean实例化的时候，spring 激活 bean的 init-method 前后 会调用 BeanPostProcessor 的
+		 * postProcessAfterInitialization() 和 postProcessBeforeInitialization()
+		 * 因此，这里 要看一下 ApplicationContextAwareProcessor 类中的这两个方法
+		 */
 		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
-		/** 自动注入被忽略的类*/
+		/**
+		 * 自动注入被忽略的类
+		 * spring 将 ApplicationContextAwareProcessor 注册后，在invokeAwareInterfaces()
+		 * 方法中间接调用的 Aware 类已经不再是 普通的 Bean 了，如：
+		 * ResourceLoaderAware, ApplicationEventPublisherAware, ApplicationContextAware 等
+		 * 那么就要在spring 做依赖注入的时候忽略掉它们，ignoreDependencyInterface() 就是这个作用。
+		 */
 		beanFactory.ignoreDependencyInterface(EnvironmentAware.class);
 		beanFactory.ignoreDependencyInterface(EmbeddedValueResolverAware.class);
 		beanFactory.ignoreDependencyInterface(ResourceLoaderAware.class);
@@ -700,6 +712,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		// BeanFactory interface not registered as resolvable type in a plain factory.
 		// MessageSource registered (and found for autowiring) as a bean.
+		/**
+		 * 设置几个自动装配的特殊规则
+		 * 注册依赖注入的功能，如，当对注册了对 BeanFactory 的依赖解析后，
+		 * 当 bean 的属性注入的时候，一旦检测到 属性为 BeanFactory 类型
+		 * 便将 beanFactory 的实例注入进去
+		 */
 		beanFactory.registerResolvableDependency(BeanFactory.class, beanFactory);
 		beanFactory.registerResolvableDependency(ResourceLoader.class, this);
 		beanFactory.registerResolvableDependency(ApplicationEventPublisher.class, this);
@@ -709,6 +727,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.addBeanPostProcessor(new ApplicationListenerDetector(this));
 
 		// Detect a LoadTimeWeaver and prepare for weaving, if found.
+		/** 增加对AspectJ的支持*/
 		if (beanFactory.containsBean(LOAD_TIME_WEAVER_BEAN_NAME)) {
 			beanFactory.addBeanPostProcessor(new LoadTimeWeaverAwareProcessor(beanFactory));
 			// Set a temporary ClassLoader for type matching.
@@ -716,6 +735,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// Register default environment beans.
+		/** 添加默认的系统环境bean*/
 		if (!beanFactory.containsLocalBean(ENVIRONMENT_BEAN_NAME)) {
 			beanFactory.registerSingleton(ENVIRONMENT_BEAN_NAME, getEnvironment());
 		}
