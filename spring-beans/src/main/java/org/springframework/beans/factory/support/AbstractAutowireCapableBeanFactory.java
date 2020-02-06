@@ -1965,6 +1965,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	protected void invokeCustomInitMethod(String beanName, final Object bean, RootBeanDefinition mbd)
 			throws Throwable {
 
+		/**
+		 * 获取 Bean 定义的 initMethod
+		 */
 		String initMethodName = mbd.getInitMethodName();
 		Assert.state(initMethodName != null, "No init method set");
 		Method initMethod = (mbd.isNonPublicAccessAllowed() ?
@@ -2008,6 +2011,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		else {
 			try {
 				ReflectionUtils.makeAccessible(methodToInvoke);
+				/**
+				 * 通过 JDk 的反射机制得到 Method 对象
+				 * 直接调用在 Bean 中定义声明的初始化方法
+				 */
 				methodToInvoke.invoke(bean);
 			}
 			catch (InvocationTargetException ex) {

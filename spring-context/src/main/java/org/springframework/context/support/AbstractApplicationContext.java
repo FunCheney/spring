@@ -1058,6 +1058,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	}
 
 	/**
+	 * 容器的关闭，需要完成一系列的工作
+	 * 先发出容器关闭的信号，然后将 Bean 逐个关闭，最后关闭容器自身
 	 * Actually performs context closing: publishes a ContextClosedEvent and
 	 * destroys the singletons in the bean factory of this application context.
 	 * <p>Called by both {@code close()} and a JVM shutdown hook, if any.
@@ -1094,6 +1096,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			}
 
 			// Destroy all cached singletons in the context's BeanFactory.
+			// 销毁在BeanFactory 中缓存的所有单例的bean
 			destroyBeans();
 
 			// Close the state of this context itself.
