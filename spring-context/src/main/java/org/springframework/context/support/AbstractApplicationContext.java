@@ -944,6 +944,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		/**
 		 * 这里是重点代码
 		 * 初始化剩下的实例(非惰性的)
+		 * 这个 预实例化的完成 委托给容器来实现，如果需要预实例化，采用getBean() 触发依赖注入，
+		 * 与正常的依赖注入的触发相比，只有触发的时间和场合不同，这里依赖注入是发生在容器执行 refresh() 的过程，也就是IOC容器初始化的过程
+		 * 正常不是 Lazy-init 属性的依赖注入发生在IOC容器初始化完成之后，第一次向容器执行getBean() 时。
 		 */
 		beanFactory.preInstantiateSingletons();
 	}
