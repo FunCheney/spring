@@ -28,6 +28,13 @@ import org.springframework.aop.MethodBeforeAdvice;
 @SuppressWarnings("serial")
 public class CountingBeforeAdvice extends MethodCounter implements MethodBeforeAdvice {
 
+	/**
+	 * 实现before 回调接口，这是接口 MethodBeforeAdvice 的要求
+	 * @param m
+	 * @param args arguments to the method
+	 * @param target target of the method invocation. May be {@code null}.
+	 * @throws Throwable
+	 */
 	@Override
 	public void before(Method m, Object[] args, Object target) throws Throwable {
 		count(m);
