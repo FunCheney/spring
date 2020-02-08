@@ -179,6 +179,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 * 创建一新的 Bean的抽象工厂
 	 */
 	public AbstractBeanFactory() {
+		System.out.println("into AbstractBeanFactory");;
 	}
 
 	/**
