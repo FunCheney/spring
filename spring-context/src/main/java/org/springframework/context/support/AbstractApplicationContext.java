@@ -194,7 +194,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	@Nullable
 	private Thread shutdownHook;
 
-	/** ResourcePatternResolver used by this context. */
+	/**
+	 * ResourcePatternResolver used by this context.
+	 * 这个上下文中使用的 ResourcePatternResolver
+	 * 这个是策略接口（涉及到策略模式）,用于加载资源，比如类路径下的xml文件，或者是文件系统中的文件。
+	 */
 	private ResourcePatternResolver resourcePatternResolver;
 
 	/** LifecycleProcessor for managing the lifecycle of beans within this context. */
@@ -454,6 +458,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see org.springframework.core.io.support.PathMatchingResourcePatternResolver
 	 */
 	protected ResourcePatternResolver getResourcePatternResolver() {
+		System.out.println("getResourcePatternResolver into");
 		return new PathMatchingResourcePatternResolver(this);
 	}
 
