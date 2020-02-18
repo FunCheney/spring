@@ -4,7 +4,7 @@
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans
         https://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="..." class="">
+	<bean id="classPathAppContextService" class="com.fchen.service.ClassPathAppContextService">
 		<!-- collaborators and configuration for this bean go here -->
 	</bean>
 
