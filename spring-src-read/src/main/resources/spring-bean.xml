@@ -8,5 +8,7 @@
 		<!-- collaborators and configuration for this bean go here -->
 	</bean>
 
-
+	<bean id="xmlServiceTest" class="com.fchen.service.XmlBeanFactoryService">
+		<!-- collaborators and configuration for this bean go here -->
+	</bean>
 </beans>
