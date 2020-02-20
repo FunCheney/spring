@@ -73,7 +73,7 @@ Spring中的Resource类。在XmlBeanFactory中定义了一个XmlBeanDefinitionRe
 **XmlBeanDefinitionReader对象**
 
 <div align="center">
-    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/xmlBeanfactory-XMLBeanDefinitionReader.png">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/xmlBeanfactory-XmlBeanDefinitionReader.png">
  </div>
 
 * 1.通过继承AbstractBeanDefinitionReader 中的方法，来使用 ResourceLoader 将资源文件路径转换
@@ -83,3 +83,21 @@ Spring中的Resource类。在XmlBeanFactory中定义了一个XmlBeanDefinitionRe
 
 * 3.通过实现BeanDefinitionDocumentReader 接口的 DefaultBeanDefinitionDocumentReader类，
 对Document进行解析，并使用BeanDefinitionParserDelegate对Element进行解析。
+
+#### XmlBeanFactory 的初始化
+&ensp;&esnp;从这一行代码开始
+```java
+BeanFactory bf = new XmlBeanFactory(new ClassPathResource("spring-bean.xml"));
+```
+<div align="center">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/XmlBeanFactory_init.png">
+ </div>
+
+&ensp;&ensp;构造XmlBeanFactory这个IoC容器时，需要指定的BeanDefinition的信息来源，而这个信息
+来源需要封装成Spring的Resource类来给出。Resource是Spring用来封装I/O操作的类。然后将Resource作为
+构造参数传递给XmlBeanFactory构造函数。这样，IoC容器就可以方便定位到需要的BeanDefinition信息来对Bean
+完成容器的初始化和依赖注入过程。
+
+&ensp;&ensp;对XMLBeanDefinitionReader对象的初始化，以及使用这个对象来完成loadBeanDefinitions的
+调用，就是这个调用启动从Resource中加载BeanDefinition的过程，loadBeanDefinitions()同时也是IoC容器
+初始化的重要组成部分。
