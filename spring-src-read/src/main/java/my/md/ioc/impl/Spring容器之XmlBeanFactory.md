@@ -111,6 +111,7 @@ BeanFactory bf = new XmlBeanFactory(new ClassPathResource("spring-bean.xml"));
 
 ##### super(parentBeanFactory)
 &ensp;&ensp;代码的调用顺序，结合XmlBeanFactory的类关系的继承图，可以看到其调用顺序如下：
+
 ①: XmlBeanFactory#super(parentBeanFactory) 其中parentBeanFactory 为null；
 
 ②: DefaultListableBeanFactory#super(null)
@@ -155,10 +156,10 @@ BeanFactory bf = new XmlBeanFactory(new ClassPathResource("spring-bean.xml"));
 
 ⑩: BeanDefinitionParserDelegate#parseCustomElement(org.w3c.dom.Element)
 
-11: DefaultBeanDefinitionDocumentReader#(Element ele, BeanDefinitionParserDelegate delegate)
+⑪: DefaultBeanDefinitionDocumentReader#(Element ele, BeanDefinitionParserDelegate delegate)
 
-12: BeanDefinitionReaderUtils#registerBeanDefinition(BeanDefinitionHolder definitionHolder, BeanDefinitionRegistry registry)
+⑫: BeanDefinitionReaderUtils#registerBeanDefinition(BeanDefinitionHolder definitionHolder, BeanDefinitionRegistry registry)
 
-13: DefaultListableBeanFactory#registerBeanDefinition(String beanName, BeanDefinition beanDefinition)
+⑬: DefaultListableBeanFactory#registerBeanDefinition(String beanName, BeanDefinition beanDefinition)
 
-14: DefaultListableBeanFactory#beanDefinitionMap.put(beanName, beanDefinition);
+⑭: DefaultListableBeanFactory#beanDefinitionMap.put(beanName, beanDefinition);
