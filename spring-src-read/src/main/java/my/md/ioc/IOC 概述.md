@@ -5,7 +5,7 @@
 它可以在解耦代码的同时，提高代码的可测试性。
 
 ### 控制反转(Inversion of Control) & 依赖倒置(Dependency Inversion Principle)
-
+#### 控制翻转 与 依赖注入
 
 ### IOC 容器
 &ensp;&ensp;通过使用IOC容器，对象依赖关系的管理别反转了。对象之间的相互依赖关系由IOC容器来管理，并由IOC容器

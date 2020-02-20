@@ -38,50 +38,32 @@ public class MyTestStart {
 	}
 }
 ```
-## Spring 几个重要概念
-#### 控制翻转 与 依赖注入
-
+## IOC概述
+&ensp;&ensp;[IOC概述]
 
 #### Spring中Bean的描述BeanDefinition
 
-Spring通过定义BeanDefinition来管理基于Spring的应用中的各种对象以及他们之间的相互依赖关系。
-在Spring中通过BeanDefinition来描述一个Bean，通过这个类来设置Spring中Bean的属性，加载方式。
-BeanDefinition抽象了对Bean的定义，是让容器起作用的主要数据类型
-
-#### Spring中对BeanDefinition的封装BeanDefinitionHolder
-
+&ensp;&ens;[Spring中Bean的描述BeanDefinition]
 
 ## spring IOC
-### spring中IOC容器的系列设计与实现
 
+### spring中IOC容器的系列设计与实现
+&ensp;&ensp;[spring中IOC]
 
 #### BeanFactory
+&ensp;&ensp;[BeanFactory详解]
 
 #### XmlBeanFactory
+&ensp;&ensp;[XmlBeanFactory使用与详解]
 
-编程式使用IOC容器
-``` java
-public class IocTest {
-	public static void main(String[] args) {
-		ClassPathResource cpr = new ClassPathResource("spring-bean.xml");
-		DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
-		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
-		reader.loadBeanDefinitions(cpr);
-	}
-}
-```
-使用IOC 容器时的几个步骤
+#### 编程式使用IOC容器
+&ensp;&ensp;[DefaultListableBeanFactory使用]
 
-- 1.创建IOC配置文件的抽象资源，其中包含了BeanDefinition的定义
-- 2.创建一个BeanFactory，这里使用的是DefaultListableBeanFactory
-- 3.创建一个载入BeanDefinition的读取器，这里使用XmlBeanDefinitionReader来载入xml文件
-形式的BeanDefinition，通过一个回调配回给BeanFactory
-- 4.从定义好的资源位置读入配置信息，具体的解析过程由XmlBeanDefinitionReader来完成。
-
-完成整个bean的载入和注册之后，需要的IOC容器就建立起来了，可供程序员使用。
-
+##### ClassPathXmlApplicationContext
+&ensp;&ensp;[ClassPathXmlApplicationContext使用]
 
 #### ApplicationContext
+
 ### IOC 容器的初始化过程
 从下面这段代码开始：
 ``` java
@@ -89,8 +71,7 @@ AnnotationConfigApplicationContext applicationContext =
 				new AnnotationConfigApplicationContext(MyConfig.class);
 ```
 
-##### ClassPathXmlApplicationContext
-##### FileSystemXmlApplicationContext 
+ 
 
 ## spring AOP
 ### AOP
@@ -119,3 +100,16 @@ file --> class --> byte[] --> object(class)
 #### jcl
 
 ### spring 重写 JCl
+
+
+[IOC概述]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/IOC%20%E6%A6%82%E8%BF%B0.md
+[spring中IOC]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/Spring%E4%B9%8BIOC.md
+[BeanFactory详解]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BBeanFactory.md
+[XmlBeanFactory使用与详解]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BXmlBeanFactory.md
+[DefaultListableBeanFactory使用]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BDefaultListableBeanFactory.md
+[ClassPathXmlApplicationContext使用]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BClassPathXmlApplicationContext.md
+
+
+
+
+[Spring中Bean的描述BeanDefinition]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/Spring%E4%B9%8B%E5%AF%B9%E8%B1%A1%E6%8F%8F%E8%BF%B0BeanDefinition.md
