@@ -85,7 +85,7 @@ Spring中的Resource类。在XmlBeanFactory中定义了一个XmlBeanDefinitionRe
 对Document进行解析，并使用BeanDefinitionParserDelegate对Element进行解析。
 
 #### XmlBeanFactory 的初始化
-&ensp;&esnp;从这一行代码开始
+&ensp;&ensp;从这一行代码开始
 ```java
 BeanFactory bf = new XmlBeanFactory(new ClassPathResource("spring-bean.xml"));
 ```
@@ -101,3 +101,64 @@ BeanFactory bf = new XmlBeanFactory(new ClassPathResource("spring-bean.xml"));
 &ensp;&ensp;对XMLBeanDefinitionReader对象的初始化，以及使用这个对象来完成loadBeanDefinitions的
 调用，就是这个调用启动从Resource中加载BeanDefinition的过程，loadBeanDefinitions()同时也是IoC容器
 初始化的重要组成部分。
+
+**注: 这里请记住 loadBeanDefinitions() 这个方法，在以后的有关IoC的其他实现类中，Spring不之一次的用到这个方法。**
+
+
+#### XmlBeanFactory中的两行代码
+&ensp;&ensp;对于XmlBeaFactory的调用最后都是通过`super(parentBeanFactory);` 与 `this.reader.loadBeanDefinitions(resource);`来完成上述的功能。
+下面，就来看一下这两行代码都做了些什么事情。
+
+##### super(parentBeanFactory)
+&ensp;&ensp;代码的调用顺序，结合XmlBeanFactory的类关系的继承图，可以看到其调用顺序如下：
+①: XmlBeanFactory#super(parentBeanFactory) 其中parentBeanFactory 为null；
+
+②: DefaultListableBeanFactory#super(null)
+
+③: AbstractAutowireCapableBeanFactory#this()
+
+④: AbstractAutowireCapableBeanFactory#super() 这里会调用 ignoreDependencyInterface()相关的方法
+
+⑤: AbstractBeanFactory() 调用AbstractBeanFactory 的无惨构造方法
+
+&ensp;&ensp;这里创建的XmlBeanFactory在继承了DefaultListableBeanFactory容器的功能的同时，增加了新的功能。
+
+
+##### this.reader.loadBeanDefinitions(resource)
+&ensp;&ensp;下面重点看一下loadBeanDefinitions()的调用顺序。
+
+①: XmlBeanDefinitionReader#loadBeanDefinitions(Resource resource)
+
+②: XmlBeanDefinitionReader#loadBeanDefinitions(new EncodedResource(resource))
+
+    a: EncodedResource()#this(resource, null, null)
+    
+    b: EncodedResource(Resource resource, @Nullable String encoding, @Nullable Charset charset)
+    
+    c: Object()
+
+③: XmlBeanDefinitionReader#loadBeanDefinitions(EncodedResource encodedResource)    
+
+    a: encodedResource.getResource().getInputStream()
+    
+④: XmlBeanDefinitionReader#doLoadBeanDefinitions(InputSource inputSource, Resource resource)
+
+⑤: XmlBeanDefinitionReader#registerBeanDefinitions(Document doc, Resource resource)
+
+⑥: XmlBeanDefinitionReader#createBeanDefinitionDocumentReader()
+
+⑦: DefaultBeanDefinitionDocumentReader#registerBeanDefinitions(Document doc, XmlReaderContext readerContext)
+
+⑧: DefaultBeanDefinitionDocumentReader#doRegisterBeanDefinitions(Element root)
+
+⑨: DefaultBeanDefinitionDocumentReader#parseBeanDefinitions(Element root, BeanDefinitionParserDelegate delegate)
+
+⑩: BeanDefinitionParserDelegate#parseCustomElement(org.w3c.dom.Element)
+
+11: DefaultBeanDefinitionDocumentReader#(Element ele, BeanDefinitionParserDelegate delegate)
+
+12: BeanDefinitionReaderUtils#registerBeanDefinition(BeanDefinitionHolder definitionHolder, BeanDefinitionRegistry registry)
+
+13: DefaultListableBeanFactory#registerBeanDefinition(String beanName, BeanDefinition beanDefinition)
+
+14: DefaultListableBeanFactory#beanDefinitionMap.put(beanName, beanDefinition);
