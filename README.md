@@ -43,7 +43,7 @@ public class MyTestStart {
 
 #### Spring中Bean的描述BeanDefinition
 
-&ensp;&ens;[Spring中Bean的描述BeanDefinition]
+&ensp;&ensp;[Spring中Bean的描述BeanDefinition]
 
 ## spring IOC
 
