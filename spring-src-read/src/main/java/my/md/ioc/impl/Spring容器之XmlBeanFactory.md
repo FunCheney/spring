@@ -156,10 +156,17 @@ BeanFactory bf = new XmlBeanFactory(new ClassPathResource("spring-bean.xml"));
 
 ⑩: BeanDefinitionParserDelegate#parseCustomElement(org.w3c.dom.Element)
 
-⑪: DefaultBeanDefinitionDocumentReader#(Element ele, BeanDefinitionParserDelegate delegate)
+⑪: DefaultBeanDefinitionDocumentReader#parseDefaultElement(Element ele, BeanDefinitionParserDelegate delegate)
 
-⑫: BeanDefinitionReaderUtils#registerBeanDefinition(BeanDefinitionHolder definitionHolder, BeanDefinitionRegistry registry)
+⑫: DefaultBeanDefinitionDocumentReader#processBeanDefinition(Element ele, BeanDefinitionParserDelegate delegate)
 
-⑬: DefaultListableBeanFactory#registerBeanDefinition(String beanName, BeanDefinition beanDefinition)
+⑬: BeanDefinitionReaderUtils#registerBeanDefinition(BeanDefinitionHolder definitionHolder, BeanDefinitionRegistry registry)
 
-⑭: DefaultListableBeanFactory#beanDefinitionMap.put(beanName, beanDefinition);
+⑭: DefaultListableBeanFactory#registerBeanDefinition(String beanName, BeanDefinition beanDefinition)
+
+⑮: DefaultListableBeanFactory#beanDefinitionMap.put(beanName, beanDefinition)
+
+##### loadBeanDefinitions(resource)时序图
+
+
+

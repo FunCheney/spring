@@ -17,3 +17,21 @@ Spring IOC 就是对这种设计模式的实现，Spring IoC提供了一个基�
 
 
 #### Spring IoC 容器的设计与实现
+
+
+
+
+### IoC容器的初始化过程
+&ensp;&ensp;IoC容器的启动包括以下的三个过程，具体来说，这个启动包括BeanDefinition的Resource定位、
+载入和注册三个过程。
+
+&ensp;&ensp;第一个过程是Resource定位过程。这个Resource定位指的是BeanDefinition的资源定位，它由
+ResourceLoader通过统一的Resource接口来完成，这个Resource对各种形式BeanDefinition的使用都提供统
+一的接口。
+
+&ensp;&ensp;第二个过程是BeanDefinition的载入。这个载入过程是把用户定义好的Bean表示成IoC容器内部的
+数据结构，而这个容器内部的数据结构就是BeanDefinition。
+
+&ensp;&ensp;第三个过程是向IoC容器注册这些BeanDefinition的过程。这个过程调用BeanDefinitionRegistry
+接口的实现来完成。这个注册过程把载入过程中的解析得到的BeanDefinition向IoC容器进行注册。就是在IoC容器内部
+将BeanDefinition注入到一个HashMap中去，IoC容器就是通过这个HashMap来保存BeanDefinition的数据。
