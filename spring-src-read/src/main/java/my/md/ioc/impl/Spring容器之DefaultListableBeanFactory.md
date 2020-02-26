@@ -1,4 +1,4 @@
-
+## 编程式使用IOC容器
 ``` java
 public class IocTest {
 	public static void main(String[] args) {
@@ -18,3 +18,8 @@ public class IocTest {
 - 4.从定义好的资源位置读入配置信息，具体的解析过程由XmlBeanDefinitionReader来完成。
 
 完成整个bean的载入和注册之后，需要的IOC容器就建立起来了，可供程序员使用。
+
+### new DefaultListableBeanFactory() 干了什么
+
+#### DefaultListableBeanFactory 的类关系
+ 

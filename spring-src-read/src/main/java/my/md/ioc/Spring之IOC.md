@@ -38,3 +38,6 @@ ResourceLoader通过统一的Resource接口来完成，这个Resource对各种�
 &ensp;&ensp;第三个过程是向IoC容器注册这些BeanDefinition的过程。这个过程调用BeanDefinitionRegistry
 接口的实现来完成。这个注册过程把载入过程中的解析得到的BeanDefinition向IoC容器进行注册。就是在IoC容器内部
 将BeanDefinition注入到一个HashMap中去，IoC容器就是通过这个HashMap来保存BeanDefinition的数据。
+
+&ensp;&ensp;后续在介绍IoC容器的实现时，会根据这三个阶段来分别说明IoC容器中BeanDefinition的定位、加载、
+注册。
