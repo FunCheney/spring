@@ -2,7 +2,6 @@ package com.fchen.demo;
 
 import com.fchen.service.XmlBeanFactoryService;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 
 /**
@@ -12,8 +11,8 @@ import org.springframework.core.io.ClassPathResource;
  */
 public class XmlBeanFactoryTest {
 	public static void main(String[] args) {
-		BeanFactory bf = new XmlBeanFactory(new ClassPathResource("spring-bean.xml"));
-		XmlBeanFactoryService xmlServiceTest = (XmlBeanFactoryService)bf.getBean("xmlServiceTest");
-		xmlServiceTest.say();
+//		BeanFactory bf = new XmlBeanFactory(new ClassPathResource("spring-bean.xml"));
+//		XmlBeanFactoryService xmlServiceTest = (XmlBeanFactoryService)bf.getBean("xmlServiceTest");
+//		xmlServiceTest.say();
 	}
 }
