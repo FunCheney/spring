@@ -212,6 +212,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	 * @see org.springframework.core.io.DefaultResourceLoader
 	 */
 	public PathMatchingResourcePatternResolver() {
+		// 使用无参 构造器 指定使用DefaultResourceLoader
 		this.resourceLoader = new DefaultResourceLoader();
 	}
 
@@ -223,6 +224,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	 */
 	public PathMatchingResourcePatternResolver(ResourceLoader resourceLoader) {
 		Assert.notNull(resourceLoader, "ResourceLoader must not be null");
+		// 若指定了 ResourceLoader 则使用指定的
 		this.resourceLoader = resourceLoader;
 	}
 
@@ -234,6 +236,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	 * @see org.springframework.core.io.DefaultResourceLoader
 	 */
 	public PathMatchingResourcePatternResolver(@Nullable ClassLoader classLoader) {
+		// 指定类加载器的 通过给定的类加载器完成 ResourceLoader 的实例化
 		this.resourceLoader = new DefaultResourceLoader(classLoader);
 	}
 

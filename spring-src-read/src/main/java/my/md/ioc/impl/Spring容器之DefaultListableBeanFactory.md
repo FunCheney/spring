@@ -36,4 +36,16 @@ public class IocTest {
 
 &ensp;&ensp;②. AbstractAutowireCapableBeanFactory()#super();
 
-&ensp;&ensp;③. AbstractBeanFactory() 
+&ensp;&ensp;③. AbstractBeanFactory()
+
+ **new XmlBeanDefinitionReader(factory)** 
+ 
+ &ensp;&ensp;XmlBeanDefinitionReader相关的类在XmlBeanFactory中介绍过了，这里不做详细介绍。
+ 主要看看，new XMLBeanDefinitionReader()的调用过程。
+ 
+ &ensp;&ensp;①. XmlBeanDefinitionReader#super(registry)
+ 
+ &ensp;&ensp;②. 实例化 ResourceLoader
+ 
+ &esnp;&ensp;ResourceLoader 为 Spring 资源加载的统一抽象，具体的资源加载则由相应的实现类来完成.
+ 

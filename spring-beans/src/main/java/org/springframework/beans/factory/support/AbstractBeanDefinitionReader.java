@@ -54,6 +54,7 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 	private final BeanDefinitionRegistry registry;
 
 	@Nullable
+	/** 资源的加载则由 ResourceLoader 来统一定义 */
 	private ResourceLoader resourceLoader;
 
 	@Nullable
@@ -83,6 +84,7 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 	 */
 	protected AbstractBeanDefinitionReader(BeanDefinitionRegistry registry) {
 		Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
+		//将外部传入的 registry 赋值给 AbstractBeanDefinitionReader 定义的 BeanDefinitionRegistry
 		this.registry = registry;
 
 		// Determine ResourceLoader to use.
@@ -90,6 +92,7 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 			this.resourceLoader = (ResourceLoader) this.registry;
 		}
 		else {
+			//PathMatchingResourcePatternResolver提供了以classpath开头的通配符方式查询
 			this.resourceLoader = new PathMatchingResourcePatternResolver();
 		}
 
