@@ -1,11 +1,11 @@
-## 编程式使用IOC容器
+### 编程式使用IOC容器
 ``` java
 public class IocTest {
 	public static void main(String[] args) {
-		ClassPathResource cpr = new ClassPathResource("spring-bean.xml");
+		ClassPathResource resource = new ClassPathResource("spring-bean.xml");
 		DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
 		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
-		reader.loadBeanDefinitions(cpr);
+		reader.loadBeanDefinitions(resource);
 	}
 }
 ```
@@ -48,4 +48,8 @@ public class IocTest {
  &ensp;&ensp;②. 实例化 ResourceLoader
  
  &esnp;&ensp;ResourceLoader 为 Spring 资源加载的统一抽象，具体的资源加载则由相应的实现类来完成.
- 
+
+**reader.loadBeanDefinitions(cpr)**
+
+&ensp;&ensp;这里的`reader.loadBeanDefinitions()`与之前的XmlBeanFactory中的 `loadBeanDefinitions(resource)`
+的加载过程一致。

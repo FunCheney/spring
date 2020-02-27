@@ -11,9 +11,9 @@ import org.springframework.core.io.ClassPathResource;
  */
 public class IocTest {
 	public static void main(String[] args) {
-		ClassPathResource cpr = new ClassPathResource("spring-bean.xml");
+		ClassPathResource resource = new ClassPathResource("spring-bean.xml");
 		DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
 		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
-		reader.loadBeanDefinitions(cpr);
+		reader.loadBeanDefinitions(resource);
 	}
 }
