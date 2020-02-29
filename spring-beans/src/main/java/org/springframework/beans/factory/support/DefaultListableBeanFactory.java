@@ -445,6 +445,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	@Override
 	public boolean containsBeanDefinition(String beanName) {
 		Assert.notNull(beanName, "Bean name must not be null");
+		// 判断 beanDefinitionMap 中是否有
 		return this.beanDefinitionMap.containsKey(beanName);
 	}
 

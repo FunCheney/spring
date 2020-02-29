@@ -88,7 +88,8 @@ public class AnnotatedBeanDefinitionReader {
 		this.registry = registry;
 		this.conditionEvaluator = new ConditionEvaluator(registry, environment, null);
 		/**
-		 * 通过AnnotationConfigUtils
+		 * 通过AnnotationConfigUtils.registerAnnotationConfigProcessors()
+		 * 获取所有BeanPostProcessor 的bean
 		 */
 		AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
 	}

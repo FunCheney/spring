@@ -75,6 +75,10 @@ AnnotationConfigApplicationContext applicationContext =
 #### Bean的描述 BeanDefinition
 &ensp;&ensp;[Spring中Bean的描述BeanDefinition]
 
+&ensp;&ensp;[BeanDefinitionHolder]
+
+&ensp;&ensp;[AnnotatedGenericBeanDefinition]
+
 #### Resource(资源) 和 ResourceLoader(资源解析)
 
 &ensp;&ensp;[Spring容器之Resource 和 ResourceLoader]

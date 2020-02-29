@@ -165,9 +165,9 @@ public abstract class BeanDefinitionReaderUtils {
 			throws BeanDefinitionStoreException {
 
 		// Register bean definition under primary name.
-		/* 获取beanName */
+		/** 获取beanName */
 		String beanName = definitionHolder.getBeanName();
-		/*
+		/**
 		 * 注册 beanDefinition, beanName 与 BeanDefinition 放入Map 中
 		 */
 		registry.registerBeanDefinition(beanName, definitionHolder.getBeanDefinition());

@@ -238,15 +238,22 @@ public abstract class AnnotationConfigUtils {
 		 * 将bean放入Map中
 		 */
 		registry.registerBeanDefinition(beanName, definition);
+		// 返回 BeanDefinitionHolder
 		return new BeanDefinitionHolder(definition, beanName);
 	}
 
 	@Nullable
 	private static DefaultListableBeanFactory unwrapDefaultListableBeanFactory(BeanDefinitionRegistry registry) {
+		/** registry 若为DefaultListableBeanFactory的子类，直接返回 */
 		if (registry instanceof DefaultListableBeanFactory) {
 			return (DefaultListableBeanFactory) registry;
 		}
+		/** registry 若为GenericApplicationContext的子类 */
 		else if (registry instanceof GenericApplicationContext) {
+			/**
+			 * 通过 getDefaultListableBeanFactory() 得到 DefaultListableBeanFactory
+			 * 其中 registry 若为 AnnotationConfigApplicationContext 走这里
+			 */
 			return ((GenericApplicationContext) registry).getDefaultListableBeanFactory();
 		}
 		else {
