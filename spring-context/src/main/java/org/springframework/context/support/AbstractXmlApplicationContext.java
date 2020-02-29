@@ -93,6 +93,10 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 		 * 因为父类是 DefaultResourceLoader，所以this 可以直接被使用
 		 */
 		beanDefinitionReader.setEnvironment(this.getEnvironment());
+		/**
+		 * 由于 AbstractXmlApplicationContext 继承了 DefaultResourceLoader
+		 * ResourceLoader 设置为默认的 DefaultResourceLoader
+		 */
 		beanDefinitionReader.setResourceLoader(this);
 		beanDefinitionReader.setEntityResolver(new ResourceEntityResolver(this));
 

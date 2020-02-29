@@ -225,7 +225,11 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 			throw new BeanDefinitionStoreException(
 					"Cannot load bean definitions from location [" + location + "]: no ResourceLoader available");
 		}
-
+		/**
+		 * 这里对Resource的路径模式进行解析，比如我们设定的各种Ant格式的定义，
+		 * 得到需要的Resource集合，这些Resource集合指向我们已经定义好的BeanDefinition
+		 * 信息，可以是多个文件
+		 */
 		if (resourceLoader instanceof ResourcePatternResolver) {
 			// Resource pattern matching available.
 			try {
@@ -233,6 +237,9 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 				 * 调用 ResourceLoader 的 getResources() 方法 完成具体的 Resource 定位
 				 */
 				Resource[] resources = ((ResourcePatternResolver) resourceLoader).getResources(location);
+				/**
+				 * 通过Resource 加载BeanDefinition
+				 */
 				int count = loadBeanDefinitions(resources);
 				if (actualResources != null) {
 					Collections.addAll(actualResources, resources);
@@ -249,6 +256,9 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 		}
 		else {
 			// Can only load single resources by absolute URL.
+			/**
+			 * 调用 ResourceLoader 的 getResources() 方法 完成具体的 Resource 定位
+			 */
 			Resource resource = resourceLoader.getResource(location);
 			int count = loadBeanDefinitions(resource);
 			if (actualResources != null) {

@@ -76,6 +76,7 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 	}
 
 	/**
+	 * 构造函数的 configLocation 包含的是 BeanDefinition 所在的文件路径
 	 * Create a new FileSystemXmlApplicationContext, loading the definitions
 	 * from the given XML file and automatically refreshing the context.
 	 * @param configLocation file path
@@ -86,6 +87,7 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 	}
 
 	/**
+	 * 允许包含多个BeanDefinition的文件路径
 	 * Create a new FileSystemXmlApplicationContext, loading the definitions
 	 * from the given XML files and automatically refreshing the context.
 	 * @param configLocations array of file paths
@@ -96,6 +98,8 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 	}
 
 	/**
+	 * 这个构造函数在允许 configLocations 包含多个BeanDefinition的文件路径时，
+	 * 还允许指定租户的双亲IoC
 	 * Create a new FileSystemXmlApplicationContext with the given parent,
 	 * loading the definitions from the given XML files and automatically
 	 * refreshing the context.
@@ -139,6 +143,9 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 		super(parent);
 		setConfigLocations(configLocations);
 		if (refresh) {
+			/**
+			 * 在对象初始化的时候，调用 refresh() 载入BeanDefinition
+			 */
 			refresh();
 		}
 	}

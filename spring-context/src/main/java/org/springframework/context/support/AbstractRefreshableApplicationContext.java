@@ -146,7 +146,9 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 			 * 定制beanFactory,设置相关的属性，报货是否允许覆盖同名称的不同定义的对象以及循环依赖
 			 */
 			customizeBeanFactory(beanFactory);
-			// 启动对BeanDefinition的载入
+			/**
+			 * 启动对BeanDefinition的载入
+			 */
 			loadBeanDefinitions(beanFactory);
 			synchronized (this.beanFactoryMonitor) {
 				this.beanFactory = beanFactory;

@@ -295,7 +295,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 
 	/**
-	 * 通过具体的xml文件加载BeanDefinition的调用入口
+	 * 通过Resource 加载BeanDefinition的调用入口
 	 * Load bean definitions from the specified XML file.
 	 * @param resource the resource descriptor for the XML file
 	 * @return the number of bean definitions found
