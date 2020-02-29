@@ -1,5 +1,6 @@
 # Spring Framework 源码阅读
-## 环境搭建与代码编译
+
+## 一、环境搭建与代码编译
 - 1.在github 上克隆代码。
 - 2.打开 import-into-idea.md 按照该文件中步骤 操作。
 ----
@@ -41,39 +42,60 @@ public class MyTestStart {
 ## IOC概述
 &ensp;&ensp;[IOC概述]
 
-#### Spring中Bean的描述BeanDefinition
-
-&ensp;&ensp;[Spring中Bean的描述BeanDefinition]
-
-## spring IOC
+## 二、spring IOC
 
 ### spring中IOC容器的系列设计与实现
 &ensp;&ensp;[spring中IOC]
 
-#### BeanFactory
+### 1、BeanFactory
+#### 1.1 使用
 &ensp;&ensp;[BeanFactory详解]
-
-#### XmlBeanFactory
+##### XmlBeanFactory
 &ensp;&ensp;[XmlBeanFactory使用与详解]
-
-#### 编程式使用IOC容器
+##### 编程式使用IOC容器
 &ensp;&ensp;[DefaultListableBeanFactory使用]
+#### 1.2 先关类源码阅读
 
-##### ClassPathXmlApplicationContext
+### 2、ApplicationContext
+
+#### 2.1 使用
+#### ClassPathXmlApplicationContext
 &ensp;&ensp;[ClassPathXmlApplicationContext使用]
+#### FileSystemXmlApplicationContext
+&ensp;&ensp;[FileSystemXmlApplicationContext使用]
 
-#### ApplicationContext
-
-### IOC 容器的初始化过程
+#### AnnotationConfigApplicationContext
 从下面这段代码开始：
 ``` java
 AnnotationConfigApplicationContext applicationContext =
 				new AnnotationConfigApplicationContext(MyConfig.class);
 ```
+#### 1.2 先关类源码阅读
 
- 
 
-## spring AOP
+### 3、Spring中的一些概念
+
+#### Bean的描述 BeanDefinition
+&ensp;&ensp;[Spring中Bean的描述BeanDefinition]
+
+#### Resource(资源) 和 ResourceLoader(资源解析)
+
+&ensp;&ensp;[Spring容器之Resource 和 ResourceLoader]
+
+### 4、IoC容器的初始化
+
+#### 1、BeanDefinition的定位
+
+##### 注解方式定义的BeanDefinition的定位
+
+##### xml方式定义的BeanDefinition的定位
+
+#### 2、BeanDefinition的加载
+
+#### 3、BeanDefinition的注册
+
+
+## 三、spring AOP
 ### AOP
 
 #### 实现方式
@@ -92,7 +114,7 @@ AnnotationConfigApplicationContext applicationContext =
 
 file --> class --> byte[] --> object(class)
 
-## Spring 日志
+## 四、Spring 日志
 ### java日志体系
 #### log4j
 #### slf4j
@@ -108,8 +130,8 @@ file --> class --> byte[] --> object(class)
 [XmlBeanFactory使用与详解]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BXmlBeanFactory.md
 [DefaultListableBeanFactory使用]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BDefaultListableBeanFactory.md
 [ClassPathXmlApplicationContext使用]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BClassPathXmlApplicationContext.md
+[FileSystemXmlApplicationContext使用]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BFileSystemXmlApplicationContext.md
 
-
-
+[Spring容器之Resource 和 ResourceLoader]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BResource%E4%B8%8EResourceLoader.md
 
 [Spring中Bean的描述BeanDefinition]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/Spring%E4%B9%8B%E5%AF%B9%E8%B1%A1%E6%8F%8F%E8%BF%B0BeanDefinition.md
