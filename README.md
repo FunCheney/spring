@@ -54,7 +54,6 @@ public class MyTestStart {
 &ensp;&ensp;[XmlBeanFactory使用与详解]
 ##### 编程式使用IOC容器
 &ensp;&ensp;[DefaultListableBeanFactory使用]
-#### 1.2 先关类源码阅读
 
 ### 2、ApplicationContext
 
@@ -70,8 +69,6 @@ public class MyTestStart {
 AnnotationConfigApplicationContext applicationContext =
 				new AnnotationConfigApplicationContext(MyConfig.class);
 ```
-#### 1.2 先关类源码阅读
-
 
 ### 3、Spring中的一些概念
 

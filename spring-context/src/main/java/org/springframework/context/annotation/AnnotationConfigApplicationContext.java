@@ -73,9 +73,10 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		/**
 		 * 实例化 扫描器
 		 * 能够扫描一个类，并转换为 spring当中bean的描述文件
-		 * 不同过显示的调用scanner的方法的化，spring中的包不是由该scanner扫描
+		 * 不通过显示的调用scanner的方法的情况下，spring中的包不是由该scanner扫描
 		 * 而是由Spring 在实例化 AnnotatedBeanDefinitionReader时
 		 *   自己new的一个 ClasspathBeanDefinitionScanner 对象扫描完成的
+		 * 即：这里初始化的扫描器通过程序员显示的调用才会生效。
 		 */
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
