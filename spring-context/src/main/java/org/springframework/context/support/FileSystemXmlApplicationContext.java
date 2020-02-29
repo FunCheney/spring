@@ -145,6 +145,10 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 
 
 	/**
+	 * 这个是应用于文件系统中Resource的实现，通过构造一个FileSystemResource
+	 * 来得到一个在文件系统中定位的BeanDefinition，这个getResourceByPath()
+	 * 是在BeanDefinitionReader的loadBeanDefinition中被调用的，
+	 * loadBeanDefinition采用了模板模式，具体的定位实现实际上是由各个子类来完成。
 	 * Resolve resource paths as file system paths.
 	 * <p>Note: Even if a given path starts with a slash, it will get
 	 * interpreted as relative to the current VM working directory.
