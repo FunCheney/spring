@@ -56,19 +56,14 @@ public class MyTestStart {
 &ensp;&ensp;[DefaultListableBeanFactory使用]
 
 ### 2、ApplicationContext
-
 #### 2.1 使用
 #### ClassPathXmlApplicationContext
 &ensp;&ensp;[ClassPathXmlApplicationContext使用]
 #### FileSystemXmlApplicationContext
 &ensp;&ensp;[FileSystemXmlApplicationContext使用]
-
 #### AnnotationConfigApplicationContext
-从下面这段代码开始：
-``` java
-AnnotationConfigApplicationContext applicationContext =
-				new AnnotationConfigApplicationContext(MyConfig.class);
-```
+&ensp;&ensp;[AnnotationConfigApplicationContext使用]
+
 
 ### 3、Spring中的一些概念
 
@@ -132,6 +127,8 @@ file --> class --> byte[] --> object(class)
 [DefaultListableBeanFactory使用]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BDefaultListableBeanFactory.md
 [ClassPathXmlApplicationContext使用]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BClassPathXmlApplicationContext.md
 [FileSystemXmlApplicationContext使用]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BFileSystemXmlApplicationContext.md
+[AnnotationConfigApplicationContext使用]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BAnnotationConfigApplicationContext_1.md
+
 
 [Spring容器之Resource 和 ResourceLoader]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BResource%E4%B8%8EResourceLoader.md
 

@@ -16,5 +16,6 @@ public class MyService {
 	private Logger log = LoggerFactory.getLogger(MyService.class);
 	public void test(){
 		log.info("hello test");
+
 	}
 }
