@@ -57,6 +57,9 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 */
 	private final AnnotatedBeanDefinitionReader reader;
 
+	/**
+	 * 定义一个包的扫描器
+	 */
 	private final ClassPathBeanDefinitionScanner scanner;
 
 
