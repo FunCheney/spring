@@ -280,8 +280,15 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 					logger.debug("Bean definition has already been processed as a configuration class: " + beanDef);
 				}
 			}
-			        /** 判断是否是Configuration类 是否包含 @Configuration 注解*/
+			        /**
+					 * 判断是否是Configuration类 是否包含 @Configuration 注解
+					 * checkConfigurationClassCandidate(）注意这个方法
+					 */
 			else if (ConfigurationClassUtils.checkConfigurationClassCandidate(beanDef, this.metadataReaderFactory)) {
+				/** 这里如果添加了 @Configuration
+				 * 将该类封装成BeanDefinitionHolder 放入到 configCandidates
+				 * 后面解析会用到
+				 */
 				configCandidates.add(new BeanDefinitionHolder(beanDef, beanName));
 			}
 		}
@@ -330,7 +337,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		Set<ConfigurationClass> alreadyParsed = new HashSet<>(configCandidates.size());
 		do {
 			/**
-			 * 解析注解类
+			 * 解析注解类，
 			 *  这里是重点代码
 			 */
 			parser.parse(candidates);
@@ -397,7 +404,8 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		for (String beanName : beanFactory.getBeanDefinitionNames()) {
 			BeanDefinition beanDef = beanFactory.getBeanDefinition(beanName);
 			/**
-			 * 判断这个类是不是全注解类
+			 * 判断这个类是不是全注解类,这个地方与前面 {@link Configuration} 注解的类的
+			 * 处理有关
 			 */
 			if (ConfigurationClassUtils.isFullConfigurationClass(beanDef)) {
 				if (!(beanDef instanceof AbstractBeanDefinition)) {

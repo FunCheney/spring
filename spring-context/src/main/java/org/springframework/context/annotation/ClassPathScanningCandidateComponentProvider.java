@@ -430,6 +430,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 					try {
 						MetadataReader metadataReader = getMetadataReaderFactory().getMetadataReader(resource);
 						if (isCandidateComponent(metadataReader)) {
+							/**  将扫描出来的类 转化成 ScannedGenericBeanDefinition*/
 							ScannedGenericBeanDefinition sbd = new ScannedGenericBeanDefinition(metadataReader);
 							sbd.setResource(resource);
 							sbd.setSource(resource);
@@ -437,6 +438,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 								if (debugEnabled) {
 									logger.debug("Identified candidate component class: " + resource);
 								}
+								/** 将扫描出的类的BeanDefinition 添加到 candidates 中*/
 								candidates.add(sbd);
 							}
 							else {
@@ -466,6 +468,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 		catch (IOException ex) {
 			throw new BeanDefinitionStoreException("I/O failure during classpath scanning", ex);
 		}
+		/** 返回所有扫描出来的 BeanDefinition*/
 		return candidates;
 	}
 

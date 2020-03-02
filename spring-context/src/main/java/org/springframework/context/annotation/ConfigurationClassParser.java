@@ -248,6 +248,7 @@ class ConfigurationClassParser {
 		/** 将对象类型 由ConfigurationClass 转为 SourceClass*/
 		SourceClass sourceClass = asSourceClass(configClass);
 		do {
+			/** 处理 configClass */
 			sourceClass = doProcessConfigurationClass(configClass, sourceClass);
 		}
 		while (sourceClass != null);
@@ -269,6 +270,7 @@ class ConfigurationClassParser {
 
 		if (configClass.getMetadata().isAnnotated(Component.class.getName())) {
 			// Recursively process any member (nested) classes first
+			/** 处理内部类*/
 			processMemberClasses(configClass, sourceClass);
 		}
 
@@ -292,10 +294,11 @@ class ConfigurationClassParser {
 				sourceClass.getMetadata(), ComponentScans.class, ComponentScan.class);
 		if (!componentScans.isEmpty() &&
 				!this.conditionEvaluator.shouldSkip(sourceClass.getMetadata(), ConfigurationPhase.REGISTER_BEAN)) {
+			/** 循环处理 componentScans 中的所有属性*/
 			for (AnnotationAttributes componentScan : componentScans) {
 				// The config class is annotated with @ComponentScan -> perform the scan immediately
 				/**
-				 * 扫描普通类
+				 * 扫描普通类，spring 内部开始扫描包的方法
 				 */
 				Set<BeanDefinitionHolder> scannedBeanDefinitions =
 						this.componentScanParser.parse(componentScan, sourceClass.getMetadata().getClassName());
@@ -599,6 +602,9 @@ class ConfigurationClassParser {
 						}
 					}
 					else if (candidate.isAssignable(ImportBeanDefinitionRegistrar.class)) {
+						/**
+						 * 判断Import的是不是 ImportBeanDefinitionRegistrar
+						 */
 						// Candidate class is an ImportBeanDefinitionRegistrar ->
 						// delegate to it to register additional bean definitions
 						Class<?> candidateClass = candidate.loadClass();

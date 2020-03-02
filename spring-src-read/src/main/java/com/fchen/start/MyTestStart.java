@@ -14,9 +14,9 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class MyTestStart {
 	public static void main(String[] args) {
 
-//		ApplicationContext ann = new AnnotationConfigApplicationContext(MyConfig.class);
-//		MyService myService = ann.getBean(MyService.class);
-//		myService.test();
+		ApplicationContext ann = new AnnotationConfigApplicationContext(MyConfig.class);
+		MyService myService = ann.getBean(MyService.class);
+		myService.test();
 
 		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
 		ctx.register(MyConfig.class);

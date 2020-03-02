@@ -190,6 +190,11 @@ abstract class ConfigurationClassUtils {
 		}
 
 		// Any of the typical annotations found?
+		/**
+		 * {@link candidateIndicators}
+		 * 中 包含 {@link Component}、{@link ComponentScan}、
+		 *        {@link Import}、{@link ImportResource}
+		 */
 		for (String indicator : candidateIndicators) {
 			if (metadata.isAnnotated(indicator)) {
 				return true;
