@@ -98,7 +98,7 @@ final class PostProcessorRegistrationDelegate {
 
 			// First, invoke the BeanDefinitionRegistryPostProcessors that implement PriorityOrdered.
 			/**
-			 * getBeanNamesForType() 通过类型的得到一个Ben的名称、type值得是 spring bean 描述文件的class类型
+			 * getBeanNamesForType() 通过type 类型 得到一个Ben的名称、type指的是 spring bean 描述文件的class类型
 			 */
 			String[] postProcessorNames =
 					beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
@@ -121,7 +121,7 @@ final class PostProcessorRegistrationDelegate {
 			registryProcessors.addAll(currentRegistryProcessors);
 			/**
 			 * spring 中 无论是自己定义的 还是内置的 BeanDefinitionRegistryPostProcessor
-			 * 都在这里处理完成
+			 * 都在这里处理完成，比如 {@link ConfigurationClassPostProcessor} 的处理
 			 * 这里是重要代码。。。
 			 */
 			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);

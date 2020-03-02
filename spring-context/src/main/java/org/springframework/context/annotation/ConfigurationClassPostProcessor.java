@@ -66,6 +66,9 @@ import org.springframework.util.ClassUtils;
 import static org.springframework.context.annotation.AnnotationConfigUtils.CONFIGURATION_BEAN_NAME_GENERATOR;
 
 /**
+ * ConfigurationClassPostProcessor 实现了 BeanDefinitionRegistryPostProcessor 接口
+ * 是IoC容器在启动阶段，Spring内部的 BeanFactoryPostProcessor 的的实现类，该类极其重要，对
+ * 应的注解是 @Configuration，用来处理被该注解注解的类。
  * {@link BeanFactoryPostProcessor} used for bootstrapping processing of
  * {@link Configuration @Configuration} classes.
  *
@@ -228,7 +231,9 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 					"postProcessBeanFactory already called on this post-processor against " + registry);
 		}
 		this.registriesPostProcessed.add(registryId);
-
+		/**
+		 * 处理 ConfigurationClassPostProcessor
+		 */
 		processConfigBeanDefinitions(registry);
 	}
 

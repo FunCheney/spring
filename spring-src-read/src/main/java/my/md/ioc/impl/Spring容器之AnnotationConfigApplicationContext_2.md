@@ -30,8 +30,7 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 #### 1. AnnotationConfigApplicationContext 的类关系
 
 <div align="center">
-    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/AnntionConfigApplicationContext_class_relation.jpg
-">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/AnntionConfigApplicationContext_class_relation.jpg">
  </div> 
 
 - a.首先可以看出 AnnotationConfigApplicationContext 在Spring IoC中是属于 ApplicationContext 设计体系下的，
@@ -66,8 +65,7 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 #### 3. 时序图
 
  <div align="center">
-    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/AnnotationConfigApplicationContext_init_sequence.jpg
-">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/AnnotationConfigApplicationContext_init_sequence.jpg">
  </div>
 
 &ensp;&ensp;上述时序图中涉及资源加载器的初始化，DefaultListableBeanFactory 的初始化，以及AnnotatedBeanDefinitionReader
