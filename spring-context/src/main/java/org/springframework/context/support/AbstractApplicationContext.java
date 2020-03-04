@@ -1086,7 +1086,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			LiveBeansView.unregisterApplicationContext(this);
 
 			try {
-				// Publish shutdown event.
+				/**
+				 * 发布容器关闭事件
+				 */
 				publishEvent(new ContextClosedEvent(this));
 			}
 			catch (Throwable ex) {

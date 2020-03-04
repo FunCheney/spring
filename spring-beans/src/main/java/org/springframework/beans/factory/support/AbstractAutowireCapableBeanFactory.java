@@ -1975,7 +1975,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			throws Throwable {
 
 		/**
-		 * 获取 Bean 定义的 initMethod
+		 * 获取 Bean 定义的 @Bean 中的 initMethod 属性 或xml中init-Method
 		 */
 		String initMethodName = mbd.getInitMethodName();
 		Assert.state(initMethodName != null, "No init method set");
