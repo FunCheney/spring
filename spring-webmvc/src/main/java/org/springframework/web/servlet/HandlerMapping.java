@@ -121,6 +121,8 @@ public interface HandlerMapping {
 	String PRODUCIBLE_MEDIA_TYPES_ATTRIBUTE = HandlerMapping.class.getName() + ".producibleMediaTypes";
 
 	/**
+	 * 调用getHandler实际上返回的是一个 HandlerExecutionChain，这个是典型的Command的模式的使用
+	 * 这个 HandlerExecutionChain 不但持有handler对象本省，还包括处理这个Http请求的拦截器
 	 * Return a handler and any interceptors for this request. The choice may be made
 	 * on request URL, session state, or any factor the implementing class chooses.
 	 * <p>The returned HandlerExecutionChain contains a handler Object, rather than
