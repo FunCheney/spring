@@ -19,6 +19,7 @@ package org.springframework.context;
 import org.springframework.beans.factory.Aware;
 
 /**
+ * 在Bean中可以的到消息源
  * Interface to be implemented by any object that wishes to be notified
  * of the MessageSource (typically the ApplicationContext) that it runs in.
  *

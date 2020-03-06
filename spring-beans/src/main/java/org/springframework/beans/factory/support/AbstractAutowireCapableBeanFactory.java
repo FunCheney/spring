@@ -1471,7 +1471,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		if (resolvedAutowireMode == AUTOWIRE_BY_NAME || resolvedAutowireMode == AUTOWIRE_BY_TYPE) {
 			MutablePropertyValues newPvs = new MutablePropertyValues(pvs);
 			// Add property values based on autowire by name if applicable.
-			// byName 处理
+			/**
+			 * byName 处理
+			 * 通过反射从当前Bean中得到需要注入的属性名，
+			 * 然后使用这个属性名想容器申请与之同名的Bean，
+			 * 这样实际有处发了另一个Bean生成和依赖注入的过程
+			 */
 			if (resolvedAutowireMode == AUTOWIRE_BY_NAME) {
 				autowireByName(beanName, mbd, bw, newPvs);
 			}

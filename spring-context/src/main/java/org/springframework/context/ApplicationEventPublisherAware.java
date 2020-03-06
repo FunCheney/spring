@@ -19,6 +19,7 @@ package org.springframework.context;
 import org.springframework.beans.factory.Aware;
 
 /**
+ * 在Bean中可以得到应用的上下文的事件发布器，从而可以在Bean中发布应用的上下文事件
  * Interface to be implemented by any object that wishes to be notified
  * of the ApplicationEventPublisher (typically the ApplicationContext)
  * that it runs in.

@@ -20,6 +20,7 @@ import org.springframework.beans.factory.Aware;
 import org.springframework.core.io.ResourceLoader;
 
 /**
+ * 在Bean中可以的到ResourceLoader，从而在Bean中使用ResourceLoader加载外部对应的Resource资源
  * Interface to be implemented by any object that wishes to be notified of the
  * {@link ResourceLoader} (typically the ApplicationContext) that it runs in.
  * This is an alternative to a full {@link ApplicationContext} dependency via
