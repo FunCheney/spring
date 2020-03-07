@@ -107,10 +107,3 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 &ensp;&ensp;至此，上述`涉及代码`中的`第①部分！！！`对应的`this()`方法部分已经，全部结束咯...
 
 
-
-### BeanDefinition的定位
-
-### BeanDefinition的定位
-      
-      
-      

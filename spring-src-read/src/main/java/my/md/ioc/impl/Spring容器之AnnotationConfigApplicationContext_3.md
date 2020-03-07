@@ -22,3 +22,13 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 ```
 &ensp;&ensp;这里将要解析上述代码中的`register(componentClasses)`这一部分的代码。。。
 ### register(componentClasses);
+<div align="center">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/AnnotationConfigApplicationContext_register.jpg">
+ </div>
+
+&ensp;&ensp;上述改方法的调用过程，最终就是将定义的MyConfig类对应的BeanDefinition放入到beanDefinitionMap中，
+至此beanDefinitionMap中对象又增加了一个，变成6个了。
+
+<div align="center">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/beanDefinitionMap_six_object.jpg">
+ </div>
