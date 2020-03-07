@@ -21,4 +21,4 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 }
 ```
 &ensp;&ensp;这里将要解析上述代码中的`refresh()`这一部分的代码。。。
-### register(componentClasses);
+### refresh();
