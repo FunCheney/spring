@@ -22,3 +22,6 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 ```
 &ensp;&ensp;这里将要解析上述代码中的`refresh()`这一部分的代码。。。
 ### refresh();
+<div align="center">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/AnnotationConfigApplication_refresh.jpg">
+ </div>
