@@ -169,6 +169,5 @@ BeanFactory bf = new XmlBeanFactory(new ClassPathResource("spring-bean.xml"));
 ##### loadBeanDefinitions(resource)时序图
 
 <div align="center">
-    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/xmlBeanFactory_IoC_init.jpg
-">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/xmlBeanFactory_IoC_init.jpg">
  </div>
