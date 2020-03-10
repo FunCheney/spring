@@ -29,7 +29,7 @@
 
 第一步对应的代码实现：
 
-```
+```java
 protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
     /**
      * getBeanFactoryPostProcessors() 获取自定义的（我们自己实现，且没有交给spring管理的）
@@ -63,7 +63,7 @@ public class TestFactoryPostProcessor implements BeanFactoryPostProcessor {
 
 第二步对应的实现：
 
-```
+```java
 public static void invokeBeanFactoryPostProcessors(
         ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {
 
@@ -240,7 +240,7 @@ public static void invokeBeanFactoryPostProcessors(
 ```
 第三步对应的代码实现:
 
-```
+```java
 private static void invokeBeanDefinitionRegistryPostProcessors(
         Collection<? extends BeanDefinitionRegistryPostProcessor> postProcessors, BeanDefinitionRegistry registry) {
 
@@ -261,7 +261,8 @@ private static void invokeBeanDefinitionRegistryPostProcessors(
 
 &ensp;&ensp;由于`ConfigurationClassPostProcessor`是唯一个spring内置的且及其重要的类，看一下
 该类中对应的方法实现：
-```
+
+```java
 public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) {
     int registryId = System.identityHashCode(registry);
     if (this.registriesPostProcessed.contains(registryId)) {
@@ -281,7 +282,7 @@ public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) {
 ```
 第五步对应的代码实现:
     
-```
+```java
 public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {
     /** 存放spring 中 bean的描述文件*/
     List<BeanDefinitionHolder> configCandidates = new ArrayList<>();
@@ -412,7 +413,7 @@ public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {
 ```
 第六步对应的代码实现:
 
-```
+```java
 public static boolean checkConfigurationClassCandidate(
 			BeanDefinition beanDef, MetadataReaderFactory metadataReaderFactory) {
 
@@ -489,7 +490,8 @@ public static boolean checkConfigurationClassCandidate(
 }
 ```
 第七步代码实现：
-```
+
+```java
 ConfigurationClassParser parser = new ConfigurationClassParser(
 				this.metadataReaderFactory, this.problemReporter, this.environment,
 				this.resourceLoader, this.componentScanBeanNameGenerator, registry);
