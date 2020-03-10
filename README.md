@@ -68,6 +68,9 @@ public class MyTestStart {
 &ensp;&ensp;[AnnotationConfigApplicationContext源码解析二]
 &ensp;&ensp;[AnnotationConfigApplicationContext源码解析三]
 
+&ensp;&ensp;[AnnotationConfigApplicationContext源码解析四]
+&ensp;&ensp;[AnnotationConfigApplicationContext源码解析五]
+
 ### 3、Spring中的一些概念
 
 #### Bean的描述 BeanDefinition
@@ -134,6 +137,8 @@ file --> class --> byte[] --> object(class)
 [AnnotationConfigApplicationContext源码解析一]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BAnnotationConfigApplicationContext_2.md
 [AnnotationConfigApplicationContext源码解析二]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BAnnotationConfigApplicationContext_3.md
 [AnnotationConfigApplicationContext源码解析三]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BAnnotationConfigApplicationContext_4.md
+[AnnotationConfigApplicationContext源码解析四]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BAnnotationConfigApplicationContext_5.md
+[AnnotationConfigApplicationContext源码解析五]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BAnnotationConfigApplicationContext_6.md
 
 
 [Spring容器之Resource 和 ResourceLoader]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BResource%E4%B8%8EResourceLoader.md
