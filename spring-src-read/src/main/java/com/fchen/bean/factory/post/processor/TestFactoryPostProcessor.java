@@ -15,14 +15,14 @@ import java.util.Arrays;
  */
 
 
-//public class TestFactoryPostProcessor implements BeanFactoryPostProcessor {
-//
-//
-//	@Override
-//	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-//		int count = beanFactory.getBeanDefinitionCount();
-//		String[] names = beanFactory.getBeanDefinitionNames();
-//		System.out.println("当前BeanFactory中有"+count+" 个Bean");
-//		System.out.println(Arrays.asList(names));
-//	}
-//}
+public class TestFactoryPostProcessor implements BeanFactoryPostProcessor {
+
+
+	@Override
+	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+		int count = beanFactory.getBeanDefinitionCount();
+		String[] names = beanFactory.getBeanDefinitionNames();
+		System.out.println("当前BeanFactory中有"+count+" 个Bean");
+		System.out.println(Arrays.asList(names));
+	}
+}
