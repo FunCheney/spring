@@ -95,6 +95,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		this.readerContext = readerContext;
 		/**
 		 * 真正的开始BeanDefinition的入口
+		 * 真正开始解析 xml 的地方
 		 */
 		doRegisterBeanDefinitions(doc.getDocumentElement());
 	}
@@ -154,6 +155,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		preProcessXml(root);
 		/**
 		 * 处理BeanDefinition，交给BeanDefinitionParserDelegate来完成
+		 * 这里是对xml的读取
 		 */
 		parseBeanDefinitions(root, this.delegate);
 		// 解析后处理，留给子类实现

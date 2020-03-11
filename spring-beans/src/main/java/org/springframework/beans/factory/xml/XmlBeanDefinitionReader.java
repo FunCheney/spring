@@ -262,9 +262,11 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			// Determine default EntityResolver to use.
 			ResourceLoader resourceLoader = getResourceLoader();
 			if (resourceLoader != null) {
+				/**如果是 dtd 从这里解析*/
 				this.entityResolver = new ResourceEntityResolver(resourceLoader);
 			}
 			else {
+				/** 通过调用 META-INF/Spring.schema 解析*/
 				this.entityResolver = new DelegatingEntityResolver(getBeanClassLoader());
 			}
 		}
@@ -448,6 +450,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		 * 通过 documentLoader 对象 完成 Document 的读取
 		 * documentLoader 是 DefaultDocumentLoader
 		 * 在定义documentLoader的地方创建
+		 *
+		 * getEntityResolver() 创建 EntityResolver
 		 */
 		return this.documentLoader.loadDocument(inputSource, getEntityResolver(), this.errorHandler,
 				getValidationModeForResource(resource), isNamespaceAware());
@@ -463,9 +467,11 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 */
 	protected int getValidationModeForResource(Resource resource) {
 		int validationModeToUse = getValidationMode();
+		/** 如果手动指定了验证模式则使用指定的验证模式*/
 		if (validationModeToUse != VALIDATION_AUTO) {
 			return validationModeToUse;
 		}
+		/** 如果未指定则使用自动检测*/
 		int detectedMode = detectValidationMode(resource);
 		if (detectedMode != VALIDATION_AUTO) {
 			return detectedMode;
@@ -504,6 +510,10 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		}
 
 		try {
+			/**
+			 * 将自动检测的验证模式的工作委托给了
+			 * XmlValidationModeDetector 的detectValidationMode 方法
+			 */
 			return this.validationModeDetector.detectValidationMode(inputStream);
 		}
 		catch (IOException ex) {
@@ -513,6 +523,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	}
 
 	/**
+	 * 这个方法很好的应用了面向对象中的单一职责原则，将逻辑类委托给单一的类进行处理，
+	 * 而这个逻辑处理类就是 BeanDefinitionDocumentReader
 	 * Register the bean definitions contained in the given DOM document.
 	 * Called by {@code loadBeanDefinitions}.
 	 * <p>Creates a new instance of the parser class and invokes
@@ -532,7 +544,11 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		 * 用来对 xml 定义的 BeanDefinition 进行解析
 		 */
 		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
-		/** 获取容器中bean的数量*/
+		/**
+		 * 在实例化 BeanDefinitionReader 时候会将 BeanDefinitionRegistry传入，
+		 * 默认使用继承自DefaultListableBeanFactory的子类
+		 * 获取容器中bean的数量
+		 */
 		int countBefore = getRegistry().getBeanDefinitionCount();
 		/**
 		 * registerBeanDefinitions() 中完成具体的解析

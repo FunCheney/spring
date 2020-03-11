@@ -438,7 +438,7 @@ public class BeanDefinitionParserDelegate {
 		if (containingBean == null) {
 			checkNameUniqueness(beanName, aliases, ele);
 		}
-		/** 详细解析Bean元素 */
+		/** 详细解析Bean元素, 并封装到 GenericBeanDefinition 的实例中*/
 		AbstractBeanDefinition beanDefinition = parseBeanDefinitionElement(ele, beanName, containingBean);
 		if (beanDefinition != null) {
 			if (!StringUtils.hasText(beanName)) {
@@ -508,40 +508,41 @@ public class BeanDefinitionParserDelegate {
 			Element ele, String beanName, @Nullable BeanDefinition containingBean) {
 
 		this.parseState.push(new BeanEntry(beanName));
-		/*
+		/**
 		 * 读取定义的<bean>中设置的class名字，然后载入到BeanDefinition中去
 		 * 这里只做记录，并不涉及对象实例化的过程，对象的实例化是在依赖注入时完成的
 		 */
 		String className = null;
+		/** 解析 class属性*/
 		if (ele.hasAttribute(CLASS_ATTRIBUTE)) {
 			className = ele.getAttribute(CLASS_ATTRIBUTE).trim();
 		}
 		String parent = null;
-		/* 解析parent属性*/
+		/** 解析parent属性*/
 		if (ele.hasAttribute(PARENT_ATTRIBUTE)) {
 			parent = ele.getAttribute(PARENT_ATTRIBUTE);
 		}
 
 		try {
-			/* 生成需要的BeanDefinition对象*/
+			/** 生成需要的BeanDefinition对象*/
 			AbstractBeanDefinition bd = createBeanDefinition(className, parent);
-			/* 对当前的Bean元素进行属性解析*/
+			/** 对当前的Bean元素进行属性解析*/
 			parseBeanDefinitionAttributes(ele, beanName, containingBean, bd);
-			/* 设置Description信息*/
+			/** 设置Description信息*/
 			bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));
 
-			/* 解析元数据*/
+			/** 解析元数据*/
 			parseMetaElements(ele, bd);
-			/* 解析lookup-method属性*/
+			/** 解析lookup-method属性*/
 			parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
-			/* 解析replace-method属性*/
+			/** 解析replace-method属性*/
 			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
 
-			/* 解析<bean>的构造函数*/
+			/** 解析<bean>的构造函数*/
 			parseConstructorArgElements(ele, bd);
-			/* 解析<bean>的property属性*/
+			/** 解析<bean>的property属性*/
 			parsePropertyElements(ele, bd);
-			/* 解析qualifier属性*/
+			/** 解析qualifier属性*/
 			parseQualifierElements(ele, bd);
 
 			bd.setResource(this.readerContext.getResource());
@@ -549,7 +550,7 @@ public class BeanDefinitionParserDelegate {
 
 			return bd;
 		}
-		/*
+		/**
 		 * 这些异常在Bean的配置出现问题的时候会看到，
 		 * 在createBeanDefinition() 时抛出的异常。
 		 * 会检查Bean的class设置是否正确，比如这个类能否找到
