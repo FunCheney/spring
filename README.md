@@ -79,9 +79,23 @@ public class MyTestStart {
 #### Bean的描述 BeanDefinition
 &ensp;&ensp;[Spring中Bean的描述BeanDefinition]
 
-&ensp;&ensp;[BeanDefinitionHolder]
+##### BeanDefinition 的子类
+&ensp;&ensp;AbstractBeanDefinition
 
-&ensp;&ensp;[AnnotatedGenericBeanDefinition]
+&ensp;&ensp;RootBeanDefinition
+
+&ensp;&ensp;ChildBeanDefinition
+
+&ensp;&ensp;GenericBeanDefinition
+
+&ensp;&ensp;AnnotatedGenericBeanDefinition
+
+&ensp;&ensp;ScannedGenericBeanDefinition
+
+#### BeanDefinition的封装
+&ensp;&ensp;BeanDefinitionHolder
+
+
 
 #### Resource(资源) 和 ResourceLoader(资源解析)
 
@@ -153,7 +167,7 @@ file --> class --> byte[] --> object(class)
 [Spring容器之Resource 和 ResourceLoader]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BResource%E4%B8%8EResourceLoader.md
 
 [Spring中Bean的描述BeanDefinition]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/Spring%E4%B9%8B%E5%AF%B9%E8%B1%A1%E6%8F%8F%E8%BF%B0BeanDefinition.md
-[BeanDefinitionHolder]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/Spring中的BeanDefinitionHolder.md
+[BeanDefinitionHolder]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/Spring%E4%B8%AD%E7%9A%84BeanDefinitionHolder.md
 
 
 

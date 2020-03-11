@@ -538,7 +538,7 @@ public class BeanDefinitionParserDelegate {
 			/** 解析replace-method属性*/
 			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
 
-			/** 解析<bean>的构造函数*/
+			/** 解析<bean>的构造函数 constructor-args*/
 			parseConstructorArgElements(ele, bd);
 			/** 解析<bean>的property属性*/
 			parsePropertyElements(ele, bd);
@@ -739,6 +739,7 @@ public class BeanDefinitionParserDelegate {
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node node = nl.item(i);
 			if (isCandidateElement(node) && nodeNameEquals(node, CONSTRUCTOR_ARG_ELEMENT)) {
+				/** 解析 constructor-args*/
 				parseConstructorArgElement((Element) node, bd);
 			}
 		}
@@ -931,7 +932,7 @@ public class BeanDefinitionParserDelegate {
 		}
 		this.parseState.push(new PropertyEntry(propertyName));
 		try {
-			/*
+			/**
 			 * 一个BeanDefinition中含有相同的 propertyName，则不进行解析，直接返回；
 			 * 也就是说 具有相同的 property 只有一个起作用
 			 */
@@ -939,7 +940,7 @@ public class BeanDefinitionParserDelegate {
 				error("Multiple 'property' definitions for property '" + propertyName + "'", ele);
 				return;
 			}
-			/*
+			/**
 			 * 解析 propertyValue 的地方，返回的对象对应Bean定义的property属性设置的解析结果，
 			 * 解析结果封装到 PropertyValue中
 			 * 然后设置到 BeanDefinition 中
