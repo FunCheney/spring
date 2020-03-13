@@ -69,7 +69,7 @@ public Set<BeanDefinitionHolder> parse(AnnotationAttributes componentScan, final
 }
 ```
 
-### 极其中套的doScan()方法
+### 极其重要的doScan()方法
 
 ```
 protected Set<BeanDefinitionHolder> doScan(String... basePackages) {
