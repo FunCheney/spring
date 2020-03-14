@@ -1,5 +1,6 @@
 package com.fchen.service;
 
+import com.fchen.dao.MyDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,14 @@ import org.springframework.stereotype.Service;
 public class MyService {
 
 	private Logger log = LoggerFactory.getLogger(MyService.class);
+
+	@Autowired
+	MyDao myDao;
+
+
 	public void test(){
-		log.info("hello test");
+		System.out.println("hello test");
+		myDao.test();
 
 	}
 }
