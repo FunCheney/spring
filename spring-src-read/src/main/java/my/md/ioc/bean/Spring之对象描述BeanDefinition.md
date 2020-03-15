@@ -5,6 +5,10 @@ Spring通过定义BeanDefinition来管理基于Spring的应用中的各种对象
 BeanDefinition抽象了对Bean的定义，是让容器起作用的主要数据类型
 
 #### 类图极其实现
+<div align="center">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/bean/BeanDefinition_class.jpg">
+ </div>
+
 
 
 
