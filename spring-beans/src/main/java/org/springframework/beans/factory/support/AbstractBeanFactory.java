@@ -260,8 +260,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 *       parentBeanFactory != null 这个判断显而易见；
 	 *       !containsBeanDefinition(beanName) 检测如果当前加载的XMl文件不包含beanName所对应的配置，就只能到parentBeanFactory
 	 *       中去尝试加载了，然后再去递归调用getBean()方法。
-	 *   ⑥：将存储XML配置文件的GernericBeanDefinition 转换为 RootBeanDefinition。
-	 *       因为在xml中读取到的Bean信息都存储在 GernericBeanDefinition 中，但是所有Bean的后续处理都是针对RootBeanDefinition的
+	 *   ⑥：将存储XML配置文件的GenericBeanDefinition 转换为 RootBeanDefinition。
+	 *       因为在xml中读取到的Bean信息都存储在 GenericBeanDefinition 中，但是所有Bean的后续处理都是针对RootBeanDefinition的
 	 *       所以这里需要进行一个转换，转换的同时如果父类bean不为空的话，则会一并合并父类的属性
 	 *   ⑦：寻找依赖
 	 *       因为bean的初始化过程可能会用到某些属性，而某些属性可能是动态配置的，并且配置依赖与其他的Bean，这个时候就有必要先加载依赖的Bean

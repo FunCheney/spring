@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * @desc: TODO
  */
 @Component
-public class MyDao {
+public class MyTest {
 
 	public void test(){
 		System.out.println("dao test");
