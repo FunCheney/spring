@@ -33,3 +33,7 @@ public interface FactoryBean<T> {
 }
 
 ```
+
+&esnp;&ensp;当配置文件中<bean>的class属性配置的实现类是 `FactoryBean` 时通过 `getBean()`的方法
+返回的不是 `FactoryBean` 本身，而是 FactoryBean#getObject()方法所返回的对象，相当于FactoryBean#getObject()
+代理了getBean() 方法。
