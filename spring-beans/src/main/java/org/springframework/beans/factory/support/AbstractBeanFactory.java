@@ -1722,6 +1722,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
+	 * 该方法是个高频使用的方法，无论是存缓存中获得bean 还是根据不同的 scope 策略加载bean。
+	 * 总之得到bean的实例之后要做的第一步就是调用这个方法来检测一下正确性，其实就是检测当前的
+	 * bean是否是FactoryBean类型的bean，如果是，那么需要调用该 bean 对应的 FactoryBean
+	 * 实例中的 getObject() 作为返回值。
 	 * Get the object for the given bean instance, either the bean
 	 * instance itself or its created object in case of a FactoryBean.
 	 * @param beanInstance the shared bean instance
@@ -1771,7 +1775,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			// Caches object obtained from FactoryBean if it is a singleton.
 			if (mbd == null && containsBeanDefinition(beanName)) {
 				/**
-				 * 将存储Xml配置文件的 GernericBeanDefinition 转换为 RootBeanDefinition
+				 * 将存储Xml配置文件的 GenericBeanDefinition 转换为 RootBeanDefinition
 				 * 如果指定BeanName是子 Bean 的话同时会合并父类的相关属性
 				 */
 				mbd = getMergedLocalBeanDefinition(beanName);

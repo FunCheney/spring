@@ -236,7 +236,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 			 * singleton 就是复用以前创建的Bean，这一步是必须的
 			 */
 			Object singletonObject = this.singletonObjects.get(beanName);
-			// 如果为空 才可以进行 singleton 的初始化
+			/** 如果为空 才可以进行 singleton 的初始化 */
 			if (singletonObject == null) {
 				if (this.singletonsCurrentlyInDestruction) {
 					throw new BeanCreationNotAllowedException(beanName,
@@ -249,6 +249,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 				/**
 				 * 把beanName添加到 singletonsCurrentlyInCreation 的set集合中
 				 * 表示beanName正在创建中
+				 * 加载单例前记录加载状态
 				 */
 				beforeSingletonCreation(beanName);
 				boolean newSingleton = false;
@@ -257,7 +258,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					this.suppressedExceptions = new LinkedHashSet<>();
 				}
 				try {
-					// 初始话 bean
+					/** 初始化 bean */
 					singletonObject = singletonFactory.getObject();
 					newSingleton = true;
 				}
@@ -281,10 +282,14 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					if (recordSuppressedExceptions) {
 						this.suppressedExceptions = null;
 					}
+					/** 加载单例后初始方法的调用*/
 					afterSingletonCreation(beanName);
 				}
 				if (newSingleton) {
-					// 加入缓存
+					/**
+					 * 加入缓存
+					 * 将结果记录至缓存并删除加载 bean 过程中所记录的各种辅助状态
+					 */
 					addSingleton(beanName, singletonObject);
 				}
 			}
