@@ -437,14 +437,21 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 
 	private InjectionMetadata buildAutowiringMetadata(final Class<?> clazz) {
 		List<InjectionMetadata.InjectedElement> elements = new ArrayList<>();
+		// 需要处理的目标类
 		Class<?> targetClass = clazz;
 
 		do {
 			final List<InjectionMetadata.InjectedElement> currElements = new ArrayList<>();
 
+			/**
+			 * 通过反射获取该类所有的字段，并遍历每一个字段，并通过
+			 * 方法 findAutowiredAnnotation() 遍历每一个字段的
+			 * 所用注解并如果用autowired修饰了，则返回auotowired相关属性
+			 */
 			ReflectionUtils.doWithLocalFields(targetClass, field -> {
 				AnnotationAttributes ann = findAutowiredAnnotation(field);
 				if (ann != null) {
+					/** autowired注解是否用在了static方法上*/
 					if (Modifier.isStatic(field.getModifiers())) {
 						if (logger.isInfoEnabled()) {
 							logger.info("Autowired annotation is not supported on static fields: " + field);
