@@ -1,4 +1,32 @@
+## Spring IoC容器的依赖注入
+&ensp;&ensp;依赖注入的过程是用户第一次向IoC容器索要Bean的时候触发的，当然也有例外，当容器中的
+Bean通过 `Lazy-init`属性让容器完成对bean的预实例化的时候，这个预实例化也是一个完成依赖注入的
+过程，是在IoC容器初始化的时候完成的。
+
+&ensp;&ensp;当用户想容器中索要Bean的时候后是通过`getBean()`的方法来完成的，该方法定义在`BeanFactory`中。
+这个接口的实现就是触发依赖注入发生的地方。
+
+&ensp;&ensp;从 `DefaultListableBeanFactory` 的基类 `AbstractBeanFactory` 中来看看`getBean()`的过程。
+
 ### `getBean()`方法
+&ensp;&ensp;这里是对`BeanFactory` 接口的实现，比如`getBean()`接口方法，可以看出这些方法最终都是
+通过 `doGetBean()` 来实现的。
+```
+@Override
+public Object getBean(String name) throws BeansException {
+    return doGetBean(name, null, null, false);
+}
+
+@Override
+public <T> T getBean(String name, Class<T> requiredType) throws BeansException {
+    return doGetBean(name, requiredType, null, false);
+}
+
+@Override
+public Object getBean(String name, Object... args) throws BeansException {
+    return doGetBean(name, null, args, false);
+}
+```
 
 ```
 protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredType,

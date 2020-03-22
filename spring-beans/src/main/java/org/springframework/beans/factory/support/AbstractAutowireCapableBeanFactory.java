@@ -498,7 +498,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Make sure bean class is actually resolved at this point, and
 		// clone the bean definition in case of a dynamically resolved Class
 		// which cannot be stored in the shared merged bean definition.
-		// 判断需要创建的Bean是否可以实例化，这个类是否可以通过类装载器载入
+		/** 判断需要创建的Bean是否可以实例化，这个类是否可以通过类装载器载入 */
 		Class<?> resolvedClass = resolveBeanClass(mbd, beanName);
 		if (resolvedClass != null && !mbd.hasBeanClass() && mbd.getBeanClassName() != null) {
 			mbdToUse = new RootBeanDefinition(mbd);
@@ -507,7 +507,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		// Prepare method overrides.
 		try {
-			//处理lockup-method 和 replace-method配置，spring将这两个方法统称为 method overrides
+			/**
+			 * 处理lockup-method 和 replace-method配置，spring将这两个方法统称为 method overrides
+			 */
 			mbdToUse.prepareMethodOverrides();
 		}
 		catch (BeanDefinitionValidationException ex) {
@@ -575,7 +577,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 		if (instanceWrapper == null) {
 			/**
-			 * 通过createBeanInstance 来完成Bean的创建。
+			 * 通过createBeanInstance 来完成Bean所包含的java对象的创建。
 			 * 对象的生成有很多种不同的方式，可以通过工厂方法生成，
 			 * 也可以通过容器的autowire特性生成，这些生成方式都是由BeanDefinition来指定的
 			 */
@@ -1190,6 +1192,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	}
 
 	/**
+	 *
 	 * Create a new instance for the specified bean, using an appropriate instantiation strategy:
 	 * factory method, constructor autowiring, or simple instantiation.
 	 * @param beanName the name of the bean

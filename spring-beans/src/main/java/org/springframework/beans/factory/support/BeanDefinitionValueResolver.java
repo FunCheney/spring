@@ -299,7 +299,10 @@ class BeanDefinitionValueResolver {
 	private Object resolveReference(Object argName, RuntimeBeanReference ref) {
 		try {
 			Object bean;
-			// 从RuntimeBeanReference中取得reference的名字，这个RuntimeBeanReference是在载入BeanDefinition时根据配置生成的
+			/**
+			 * 从RuntimeBeanReference中取得reference的名字，
+			 * 这个RuntimeBeanReference是在载入BeanDefinition时根据配置生成的
+			 */
 			String refName = ref.getBeanName();
 			refName = String.valueOf(doEvaluate(refName));
 			// 如果ref 是在双亲的容器中，那就到双亲的容器中去获取
@@ -313,7 +316,10 @@ class BeanDefinitionValueResolver {
 				bean = this.beanFactory.getParentBeanFactory().getBean(refName);
 			}
 			else {
-				//在当前容器中去获取Bean，触发一个getBean()的过程，如果依赖注入没有发生，这里会触发相应的依赖注入发生
+				/**
+				 * 在当前容器中去获取Bean，触发一个getBean()的过程，
+				 * 如果依赖注入没有发生，这里会触发相应的依赖注入发生
+				 */
 				bean = this.beanFactory.getBean(refName);
 				this.beanFactory.registerDependentBean(refName, this.beanName);
 			}
