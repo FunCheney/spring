@@ -113,6 +113,10 @@ public class MyTestStart {
 
 #### 3、BeanDefinition的注册
 
+#### 4、spring中的依赖注入
+
+##### [spring中的依赖注入脉络图]
+
 
 ## 三、spring AOP
 ### AOP
@@ -175,6 +179,9 @@ file --> class --> byte[] --> object(class)
 [AnnotatedGenericBeanDefinition]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/beanDefinition/AnnotatedGenericBeanDefinition.md
 [ScannedGenericBeanDefinition]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/beanDefinition/AnnotatedGenericBeanDefinition.md
 
+
+
+[spring中的依赖注入脉络图]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/Spring%E4%B9%8B%E4%BE%9D%E8%B5%96%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E7%9A%84%E8%84%89%E7%BB%9C.md
 
 [BeanDefinitionHolder]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/Spring%E4%B8%AD%E7%9A%84BeanDefinitionHolder.md
 
