@@ -2,7 +2,6 @@ package com.fchen.demo;
 
 import com.fchen.service.XmlBeanFactoryService;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 
 /**

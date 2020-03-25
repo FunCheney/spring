@@ -8,6 +8,8 @@
 #### `getBean()`的大致过程
 
 ##### 1.时序图
-
+<div align="center">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/AnntionConfigApplicationContext_class_relation.jpg">
+ </div>
 
 
