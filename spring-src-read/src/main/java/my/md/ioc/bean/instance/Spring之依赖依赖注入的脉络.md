@@ -15,6 +15,31 @@
  &ensp;&ensp;这里大概介绍一下上述流程中每个方法大致的功能，至于每个里面的代码细节，采取逐个击破的策略，一个一个的来
  拿下。。
 
+①：`getBean()`方法是依赖注入的起点，都是通过用户向容器中索取 Bean 的时候封装的方法，  
+这个方法定义在IoC容器的顶级接口 `BeanFactory`中。这里是对该方法的重写。
+
+②：`doGetBean()`方法是真正获取Bean的方法，通过学习Spring的源码，不难发现，这是Spring的一种分割，在
+Spring中真正做事情的方式都是以 `doXXXX`来实现的。
+
+③：`createBean()`方法，创建singleton bean的实例。
+
+④：`doCreateBean()`方法，是真正创建Bean的方法。
+
+⑤：`createBeanInstance()`方法，生成 `BeanWrapper` 对象，来完成Bean所包含的java对象的创建。
+
+⑥：`instantiateBean()`方法，通过默认的无参构造方法进行实例化。
+
+⑦：`instantiate()`方法，根据不同的实例化策略对Bean进行实例。
+
+⑧：`populateBean()`方法，Bean的依赖关系处理过程。
+
+⑨：`applyPropertyValues()`方法，完成属性的注入。
+
+⑩：`resolveValueIfNecessary()`方法，对bean的Reference解析。
+
+
+
+
 
 
 
