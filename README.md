@@ -115,9 +115,9 @@ public class MyTestStart {
 
 #### 4、spring中的依赖注入
 
-##### [spring中的依赖注入脉络图]
+[spring中的依赖注入脉络图]
 
-&ensp;&ensp;[Springy依赖注入之getBean()]
+&ensp;&ensp;**1.**[Springy依赖注入之getBean()]
 
 ## 三、spring AOP
 ### AOP
