@@ -117,7 +117,7 @@ public class MyTestStart {
 
 [spring中的依赖注入脉络图]
 
-&ensp;&ensp;**1.**[Springy依赖注入之getBean()]
+&ensp;&ensp;**1.**[Spring依赖注入之getBean()]
 
 ## 三、spring AOP
 ### AOP
@@ -183,7 +183,7 @@ file --> class --> byte[] --> object(class)
 
 
 [spring中的依赖注入脉络图]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/Spring%E4%B9%8B%E4%BE%9D%E8%B5%96%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E7%9A%84%E8%84%89%E7%BB%9C.md
-[Springy依赖注入之getBean()]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/Springy%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B9%8BgetBean().md
+[Spring依赖注入之getBean()]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/Springy%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B9%8BgetBean().md
 
 
 
