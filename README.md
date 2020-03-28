@@ -63,7 +63,7 @@ public class MyTestStart {
 &ensp;&ensp;[FileSystemXmlApplicationContext使用]
 #### AnnotationConfigApplicationContext
 &ensp;&ensp;[AnnotationConfigApplicationContext使用]
-&ensp;&ensp;[AnnotationConfigApplicationContext源码解析一]
+&ensp;&ensp;&ensp;&ensp;[AnnotationConfigApplicationContext源码解析一]
 
 &ensp;&ensp;[AnnotationConfigApplicationContext源码解析二]
 &ensp;&ensp;[AnnotationConfigApplicationContext源码解析三]
