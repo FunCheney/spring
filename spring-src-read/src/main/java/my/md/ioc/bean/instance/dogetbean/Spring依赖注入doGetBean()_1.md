@@ -25,6 +25,7 @@ public static String transformedBeanName(String name) {
 }
 ```
 #### 1.1`FactoryBean` 的使用
+[见文章]
 
 #### 1.2区分 `FactoryBean` 与 `BeanFactory`
 
@@ -71,4 +72,8 @@ protected Object getSingleton(String beanName, boolean allowEarlyReference) {
     return singletonObject;
 }
 ```
+
+
+[见文章]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BFactoryBean%E7%9A%84%E4%BD%BF%E7%94%A8.md
+
 
