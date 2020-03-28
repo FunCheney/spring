@@ -113,7 +113,7 @@ com.fchen.bean.biz.FactoryBeanTest@55a1c291
 &ensp;&ensp;我们可以看到通过方式一，与方式三获取的是`FactoryBeanTest`的实例，断点调试发现，在获取Bean时，
 `beanName`是以"&"开始的，如下图：
 <div align="center">
-    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/bean/BeanDefinition_class.jpg">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/bean/Spring%E4%B9%8BFactoryBean%E7%9A%84%E8%8E%B7%E5%8F%96.png">
  </div>
 
 &ensp;&ensp;通过方式二，`ann.getBean("factoryBeanTest")`时，Spring通过反射机制发现 FactoryBeanTest 实现了
