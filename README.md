@@ -93,7 +93,7 @@ public class MyTestStart {
 &ensp;&ensp;[ScannedGenericBeanDefinition]
 
 #### BeanDefinition的封装
-&ensp;&ensp;BeanDefinitionHolder
+&ensp;&ensp;[BeanDefinitionHolder]
 
 
 
@@ -115,12 +115,15 @@ public class MyTestStart {
 
 #### 4、spring中的依赖注入
 
-[spring中的依赖注入脉络图]
+&ensp;&ensp;[spring中的依赖注入脉络图]
 
-&ensp;&ensp;**1.** [Spring依赖注入之getBean()]
+&ensp;&ensp;&ensp;&ensp;**1.** [Spring依赖注入之getBean()]
 
-&ensp;&ensp;&ensp;&ensp;[getBean()之doGetBean源码阅读一]
-&ensp;&ensp;&ensp;&ensp;[getBean()之doGetBean源码阅读二]
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;[getBean()之doGetBean源码阅读一]
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;[getBean()之doGetBean源码阅读二]
+
+&ensp;&ensp;&ensp;&ensp;**2.** Spring依赖注入之createBean()
+
 
 
 ## 三、spring AOP
@@ -176,6 +179,7 @@ file --> class --> byte[] --> object(class)
 [Spring容器之Resource 和 ResourceLoader]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BResource%E4%B8%8EResourceLoader.md
 
 [Spring中Bean的描述BeanDefinition]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/Spring%E4%B9%8B%E5%AF%B9%E8%B1%A1%E6%8F%8F%E8%BF%B0BeanDefinition.md
+[BeanDefinitionHolder]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/Spring%E4%B8%AD%E7%9A%84BeanDefinitionHolder.md
 
 [AbstractBeanDefinition]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/beanDefinition/AbstractBeanDefinition.md
 [RootBeanDefinition]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/beanDefinition/RootBeanDefinition.md
@@ -192,7 +196,6 @@ file --> class --> byte[] --> object(class)
 [getBean()之doGetBean源码阅读二]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/dogetbean/Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5doGetBean()_2.md
 
 
-[BeanDefinitionHolder]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/Spring%E4%B8%AD%E7%9A%84BeanDefinitionHolder.md
 
 
 
