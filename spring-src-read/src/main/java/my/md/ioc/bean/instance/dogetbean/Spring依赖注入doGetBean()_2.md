@@ -190,7 +190,7 @@ protected void checkMergedBeanDefinition(RootBeanDefinition mbd, String beanName
     }
 }
 ```
-### 4.依赖检查
+### 5.依赖检查
 isDependent() 是校验该依赖是否已经注册给当前 bean。
 
 ```java
