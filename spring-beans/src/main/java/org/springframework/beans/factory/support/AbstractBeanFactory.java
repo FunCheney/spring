@@ -1115,9 +1115,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
+	 * 返回指定的原型bean是否正在创建
 	 * Return whether the specified prototype bean is currently in creation
 	 * (within the current thread).
-	 * @param beanName the name of the bean
+	 * @param beanName bean 的名称
 	 */
 	protected boolean isPrototypeCurrentlyInCreation(String beanName) {
 		Object curVal = this.prototypesCurrentlyInCreation.get();
