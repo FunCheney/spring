@@ -109,9 +109,11 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	private final Map<String, Set<String>> containedBeanMap = new ConcurrentHashMap<>(16);
 
 	/** Map between dependent bean names: bean name to Set of dependent bean names. */
+	/** 指定的bean与目前已经注册的依赖这个指定的bean的所有依赖关系的缓存（我依赖的）*/
 	private final Map<String, Set<String>> dependentBeanMap = new ConcurrentHashMap<>(64);
 
 	/** Map between depending bean names: bean name to Set of bean names for the bean's dependencies. */
+    /** 指定bean与目前已经注册的创建这个bean所需依赖的所有bean的依赖关系的缓存（依赖我的) */
 	private final Map<String, Set<String>> dependenciesForBeanMap = new ConcurrentHashMap<>(64);
 
 
@@ -443,6 +445,13 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	public void registerDependentBean(String beanName, String dependentBeanName) {
 		String canonicalName = canonicalName(beanName);
 
+		/**
+		 * dependentBeanMap中存储的是目前已经注册的依赖这个bean的所有bean,
+		 * 这里从这个集合中获取目前所有已经注册的依赖beanName的bean集合,
+		 * 然后看这个集合中是否包含dependentBeanName,即是否已经注册,
+		 * 如果包含则表示已经注册,则直接返回;
+		 * 否则,将bean依赖关系添加到两个map缓存即完成注册.
+		 */
 		synchronized (this.dependentBeanMap) {
 			Set<String> dependentBeans =
 					this.dependentBeanMap.computeIfAbsent(canonicalName, k -> new LinkedHashSet<>(8));
@@ -475,14 +484,19 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		if (alreadySeen != null && alreadySeen.contains(beanName)) {
 			return false;
 		}
+		// 获取规范的 beanName
 		String canonicalName = canonicalName(beanName);
+		// 获取当前 beanName 的依赖集合
 		Set<String> dependentBeans = this.dependentBeanMap.get(canonicalName);
+		// 不存在依赖，返回false
 		if (dependentBeans == null) {
 			return false;
 		}
+		// 存在，则证明存在已经注册的依赖
 		if (dependentBeans.contains(dependentBeanName)) {
 			return true;
 		}
+		// 递归检测依赖
 		for (String transitiveDependency : dependentBeans) {
 			if (alreadySeen == null) {
 				alreadySeen = new HashSet<>();

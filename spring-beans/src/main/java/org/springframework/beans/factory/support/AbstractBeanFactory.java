@@ -327,9 +327,11 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			 * 如果当前的双亲工厂中取不到，就顺着双亲BeanFactory 链一直向上查找
 			 */
 			BeanFactory parentBeanFactory = getParentBeanFactory();
+			// parentBeanFactory 不为空 且  beanDefinitionMap 中不存在该name的 BeanDefinition
 			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {
-				// Not found -> check parent.
+				// 确定原始 beanName
 				String nameToLookup = originalBeanName(name);
+				// 若为 AbstractBeanFactory 类型，委托父类处理
 				if (parentBeanFactory instanceof AbstractBeanFactory) {
 					return ((AbstractBeanFactory) parentBeanFactory).doGetBean(
 							nameToLookup, requiredType, args, typeCheckOnly);
@@ -348,6 +350,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 			}
 
+			// 类型检查
 			if (!typeCheckOnly) {
 				// 添加到 alreadyCreated 集合中
 				markBeanAsCreated(beanName);
@@ -360,18 +363,18 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				 * 根据bean的名字 获取 BeanDefinition
 				 */
 				final RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
+
+				checkMergedBeanDefinition(mbd, beanName, args);
+
 				/**
 				 * 获取当前Bean的所有依赖Bean，在getBean()时递归调用。
 				 * 直到取到一个没有任何依赖的Bean为止
 				 */
-				checkMergedBeanDefinition(mbd, beanName, args);
-
-				// Guarantee initialization of beans that the current bean depends on.
-				// 获取当前Bean的所有依赖
 				String[] dependsOn = mbd.getDependsOn();
 				if (dependsOn != null) {
 					// 如从在依赖则需要递归实例化依赖的Bean
 					for (String dep : dependsOn) {
+						// 检验依赖的bean 是否已经注册给当前 bean 获取其他传递依赖bean
 						if (isDependent(beanName, dep)) {
 							throw new BeanCreationException(mbd.getResourceDescription(), beanName,
 									"Circular depends-on relationship between '" + beanName + "' and '" + dep + "'");
@@ -1221,13 +1224,17 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
+	 * 确定原始bean的名称，将定义的别名解析成规范的名称
 	 * Determine the original bean name, resolving locally defined aliases to canonical names.
 	 * @param name the user-specified name
 	 * @return the original bean name
 	 */
 	protected String originalBeanName(String name) {
+		// 是对 name 进行转换，获取真正的 beanName
 		String beanName = transformedBeanName(name);
+		// 判断name 是不是 FactoryBean, 以 "&" 开始
 		if (name.startsWith(FACTORY_BEAN_PREFIX)) {
+			// 将 beanName 还原成 FactoryBean 的形式
 			beanName = FACTORY_BEAN_PREFIX + beanName;
 		}
 		return beanName;
@@ -1300,11 +1307,15 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 * @throws BeanDefinitionStoreException in case of an invalid bean definition
 	 */
 	protected RootBeanDefinition getMergedLocalBeanDefinition(String beanName) throws BeansException {
-		// Quick check on the concurrent map first, with minimal locking.
+		// 从缓存中获取，如果不为空，则返回
 		RootBeanDefinition mbd = this.mergedBeanDefinitions.get(beanName);
 		if (mbd != null) {
 			return mbd;
 		}
+		/*
+		 * getBeanDefinition(beanName)  获取 RootBeanDefinition
+		 * 如果返回的 BeanDefinition 是子类 bean 的话，则合并父类相关属性
+		 */
 		return getMergedBeanDefinition(beanName, getBeanDefinition(beanName));
 	}
 
@@ -1337,6 +1348,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			throws BeanDefinitionStoreException {
 
 		synchronized (this.mergedBeanDefinitions) {
+			// 准备一个RootBeanDefinition变量引用，用于记录要构建和最终要返回的BeanDefinition.
 			RootBeanDefinition mbd = null;
 
 			// Check with full lock now in order to enforce the same merged instance.
@@ -1346,7 +1358,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 			if (mbd == null) {
 				if (bd.getParentName() == null) {
-					// Use copy of given root bean definition.
+					// bd不是一个ChildBeanDefinition的情况,换句话讲，这 bd应该是 :
+					// 1. 一个独立的 GenericBeanDefinition 实例，parentName 属性为null
+					// 2. 或者是一个 RootBeanDefinition 实例，parentName 属性为null
+					// 此时mbd直接使用一个bd的复制品
 					if (bd instanceof RootBeanDefinition) {
 						mbd = ((RootBeanDefinition) bd).cloneBeanDefinition();
 					}
@@ -1355,7 +1370,13 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					}
 				}
 				else {
-					// Child bean definition: needs to be merged with parent.
+					// bd是一个ChildBeanDefinition的情况,
+					// 这种情况下，需要将bd和其parent bean definition 合并到一起，
+					// 形成最终的 mbd
+					// 下面是获取bd的 parent bean definition 的过程，最终结果记录到 pbd，
+					// 并且可以看到该过程中递归使用了getMergedBeanDefinition(), 为什么呢?
+					// 因为 bd 的 parent bd 可能也是个ChildBeanDefinition，所以该过程
+					// 需要递归处理
 					BeanDefinition pbd;
 					try {
 						String parentBeanName = transformedBeanName(bd.getParentName());
@@ -1378,7 +1399,12 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 						throw new BeanDefinitionStoreException(bd.getResourceDescription(), beanName,
 								"Could not resolve parent bean definition '" + bd.getParentName() + "'", ex);
 					}
-					// Deep copy with overridden values.
+					// 现在已经获取 bd 的parent bd到pbd，从上面的过程可以看出，这个pbd
+					// 也是已经"合并"过的。
+					// 这里根据pbd创建最终的mbd，然后再使用bd覆盖一次，
+					// 这样就相当于mbd来自两个BeanDefinition:
+					// 当前 BeanDefinition 及其合并的("Merged")双亲 BeanDefinition,
+					// 然后mbd就是针对当前bd的一个MergedBeanDefinition(合并的BeanDefinition)了。
 					mbd = new RootBeanDefinition(pbd);
 					mbd.overrideFrom(bd);
 				}
@@ -1663,12 +1689,16 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 * @param beanName the name of the bean
 	 */
 	protected void markBeanAsCreated(String beanName) {
+		// 没有创建
 		if (!this.alreadyCreated.contains(beanName)) {
+			// 通过 synchronized 保证只有一个线程创建
 			synchronized (this.mergedBeanDefinitions) {
+				// 再次检查 没有创建
 				if (!this.alreadyCreated.contains(beanName)) {
-					// Let the bean definition get re-merged now that we're actually creating
-					// the bean... just in case some of its metadata changed in the meantime.
+					// 从 mergedBeanDefinitions 中删除 beanName，
+					// 并在下次访问时重新创建它
 					clearMergedBeanDefinition(beanName);
+					// 添加到已创建bean 集合中
 					this.alreadyCreated.add(beanName);
 				}
 			}
