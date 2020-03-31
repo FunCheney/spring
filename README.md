@@ -92,7 +92,7 @@ public class MyTestStart {
 
 &ensp;&ensp;[ScannedGenericBeanDefinition]
 
-#### BeanDefinition的封装
+##### BeanDefinition的封装
 &ensp;&ensp;[BeanDefinitionHolder]
 
 

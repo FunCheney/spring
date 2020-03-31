@@ -295,6 +295,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					addSingleton(beanName, singletonObject);
 				}
 			}
+			// 返回处理结果
 			return singletonObject;
 		}
 	}
