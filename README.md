@@ -124,7 +124,11 @@ public class MyTestStart {
 
 &ensp;&ensp;&ensp;&ensp;**2.** Spring依赖注入之createBean()
 
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; [`singleton` Bean的实例化过程]
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; [`prototype` Bean的实例化过程]
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; [`scope` Bean的实例化过程]
 
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; [createBean()过程]
 
 ## 三、spring AOP
 ### AOP
@@ -195,7 +199,9 @@ file --> class --> byte[] --> object(class)
 [getBean()之doGetBean源码阅读一]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/dogetbean/Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5doGetBean()_1.md
 [getBean()之doGetBean源码阅读二]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/dogetbean/Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5doGetBean()_2.md
 
-
-
+[`singleton` Bean的实例化过程]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/create/Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B9%8BcreateBean().md
+[`prototype` Bean的实例化过程]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/create/Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B9%8BcreateBean()_1.md
+[`scope` Bean的实例化过程]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/create/Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B9%8BcreateBean()_2.md
+[createBean()过程]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/create/Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B9%8BcreateBean()_3.md
 
 
