@@ -581,14 +581,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			instanceWrapper = this.factoryBeanInstanceCache.remove(beanName);
 		}
 		if (instanceWrapper == null) {
-			/**
+			/*
 			 * 通过createBeanInstance 来完成Bean所包含的java对象的创建。
 			 * 对象的生成有很多种不同的方式，可以通过工厂方法生成，
 			 * 也可以通过容器的autowire特性生成，这些生成方式都是由BeanDefinition来指定的
 			 */
 			instanceWrapper = createBeanInstance(beanName, mbd, args);
 		}
-		/** getWrappedInstance() 获得原生对象*/
+		/* getWrappedInstance() 获得原生对象*/
 		final Object bean = instanceWrapper.getWrappedInstance();
 		Class<?> beanType = instanceWrapper.getWrappedClass();
 		if (beanType != NullBean.class) {
@@ -611,7 +611,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		// Eagerly cache singletons to be able to resolve circular references
 		// even when triggered by lifecycle interfaces like BeanFactoryAware.
-		/**
+		/*
 		 * 是否需要提前曝光：单例 & 允许循环依赖& 当前的bean正在创建中，检测循环依赖
 		 */
 		boolean earlySingletonExposure = (mbd.isSingleton() && this.allowCircularReferences &&
@@ -621,7 +621,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				logger.trace("Eagerly caching bean '" + beanName +
 						"' to allow for resolving potential circular references");
 			}
-			/**
+			/*
 			 * setter 方法注入的Bean，通过提前暴露一个单例工厂方法
 			 * 从而能够使其他Bean引用到该Bean，注意通过setter方法注入的
 			 * Bean 必须是单例的才会到这里来。
@@ -638,15 +638,15 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		// Initialize the bean instance.
-		/**
+		/*
 		 * 将原生对象复制一份 到 exposedObject，这个exposedObject在初始化完成处理之后
 		 * 会作为依赖注入完成后的Bean
 		 */
 		Object exposedObject = bean;
 		try {
-			/** Bean的依赖关系处理过程*/
+			/* Bean的依赖关系处理过程*/
 			populateBean(beanName, mbd, instanceWrapper);
-			/** 将原生对象变成代理对象*/
+			/* 将原生对象变成代理对象*/
 			exposedObject = initializeBean(beanName, exposedObject, mbd);
 		}
 		catch (Throwable ex) {
@@ -674,7 +674,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 							actualDependentBeans.add(dependentBean);
 						}
 					}
-					/**
+					/*
 					 * 因为Bean创建后其所依赖的Bean一定是已经创建的，
 					 * actualDependentBeans 不为空则表示当前bean创建后其依赖的Bean却没有全部创建完，
 					 * 也就是说存在循环依赖
