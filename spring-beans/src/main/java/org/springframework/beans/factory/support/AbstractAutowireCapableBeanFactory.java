@@ -484,6 +484,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	/**
 	 * Central method of this class: creates a bean instance,
 	 * populates the bean instance, applies post-processors, etc.
+	 * 该函数完成的具体步骤即功能：
+	 * ①：根据设置的 class 属性或者根据 className 来解析 Class;
+	 * ②：对 override 属性进行标记处理及验证;
+	 * ③：应用初始换前的后置处理器，解析指定 bean 是否存在初始化前的短路操作;
+	 * ④：创建bean
 	 * @see #doCreateBean
 	 */
 	@Override
