@@ -1,7 +1,10 @@
 ## Spring依赖注入之createBean()
 
 ### `doCreateBean()`
-
+&ensp;&ensp;当经过`resolveBeforeInstantiation()`方法的处理之后，spring的处理方式有
+两种，如果创建了代理或者重写了 `InstantiationAwareBeanPostProcessor`的
+`postProcessBeforeInstantiation()`方法并在改方法中改变了
+`bean`，则直接返回。否则就要进入到下面的 `doCreateBean()`中进行创建。
 ```java
 protected Object doCreateBean(final String beanName, final RootBeanDefinition mbd, final @Nullable Object[] args)
 			throws BeanCreationException {
@@ -136,4 +139,34 @@ protected Object doCreateBean(final String beanName, final RootBeanDefinition mb
     return exposedObject;
 }
 ```
+&ensp;&ensp;上述方法的处理过程大体总结如下：
+
+①：如果是单例首先需要清除缓存
+
+②：实例化 bean，将 BeanDefinition 转化为 BeanWrapper
+
+&ensp;&ensp;Bean的实例化，是一个及其负载的过程，首先做一个总结，详细介绍[见文章1]。总结如下：
+
+* 如果存在工厂方法，则使用工厂方法初始化；
+* 如果一个类有多个构造函数，每个构造函数都有不同的参数，需要根据参数锁定构造函数并进行初始化。
+* 如果即不存在工厂方法也不存在带有参数的构造方法，使用默认的构造函数进行初始化。
+
+③：MergedBeanDefinitionPostProcessor 的应用
+
+&ensp;&ensp; `bean`合并后的处理，Autowired注解正是通过此方法实现，如类型的预解析。
+
+④：依赖处理
+
+⑤：属性填充
+
+⑥：循环依赖处理
+
+⑦：注册 DisposableBean
+
+&ensp;&ensp;如果配置了 `destroy-method`，这里需要注册，以便在销毁的时候调用。
+
+⑧：完成创建并返回
+
+[见文章1]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/create/Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B9%8BcreateBean()_5.md
+
 

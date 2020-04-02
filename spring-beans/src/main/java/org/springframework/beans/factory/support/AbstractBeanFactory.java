@@ -1130,8 +1130,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
+	 * 创建原型 bean 之前回调
 	 * Callback before prototype creation.
 	 * <p>The default implementation register the prototype as currently in creation.
+	 * 默认实现将原型 bean 注册为当前正在创建
 	 * @param beanName the name of the prototype about to be created
 	 * @see #isPrototypeCurrentlyInCreation
 	 */
@@ -1154,6 +1156,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
+	 * 原型 bean 创建后的回调
 	 * Callback after prototype creation.
 	 * <p>The default implementation marks the prototype as not in creation anymore.
 	 * @param beanName the name of the prototype that has been created

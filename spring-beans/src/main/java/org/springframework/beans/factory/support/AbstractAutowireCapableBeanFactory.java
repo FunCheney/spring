@@ -570,6 +570,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 * @see #instantiateBean
 	 * @see #instantiateUsingFactoryMethod
 	 * @see #autowireConstructor
+	 * ①：如果是单例首先需要清除缓存
+	 * ②：实例化 bean，将 BeanDefinition 转化为 BeanWrapper
+	 * ③：MergedBeanDefinitionPostProcessor 的应用
+	 * ④：依赖处理
+	 * ⑤：属性填充
+	 * ⑥：循环依赖处理
+	 * ⑦：注册 DisposableBean
+	 * ⑧：完成创建并返回
 	 */
 	protected Object doCreateBean(final String beanName, final RootBeanDefinition mbd, final @Nullable Object[] args)
 			throws BeanCreationException {
