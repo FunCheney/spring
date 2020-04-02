@@ -1,4 +1,4 @@
 ## Spring依赖注入之createBean()
-### `initializeBean()` 方法
+### MergedBeanDefinitionPostProcessor 的应用
 
 
