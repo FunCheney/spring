@@ -157,9 +157,15 @@ protected Object doCreateBean(final String beanName, final RootBeanDefinition mb
 
 ④：依赖处理
 
-⑤：属性填充
+&ensp;&ensp;在Spring中会处理循环依赖的情况。如果从在循环依赖，且`bean`都是单例的，那么Spring
+处理的方式就是当创建Bean时，通过放入缓存中ObjectFactory来创建实例，这样来解决循环依赖。
+
+⑤：属性填充。将属性填充到bean的实例中。
 
 ⑥：循环依赖处理
+
+&ensp;&ensp;对于property的bean，Spring不会去解决循环依赖，直接抛出异常。单例的Bean，spring会解决
+循环依赖的问题。
 
 ⑦：注册 DisposableBean
 
