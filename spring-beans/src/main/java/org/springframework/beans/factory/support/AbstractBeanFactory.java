@@ -382,6 +382,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 						// 缓存依赖调用
 						registerDependentBean(dep, beanName);
 						try {
+							// 触发新的依赖
 							getBean(dep);
 						}
 						catch (NoSuchBeanDefinitionException ex) {
