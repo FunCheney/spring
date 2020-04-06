@@ -62,16 +62,20 @@ public class MyTestStart {
 #### FileSystemXmlApplicationContext
 &ensp;&ensp;[FileSystemXmlApplicationContext使用]
 #### AnnotationConfigApplicationContext
-&ensp;&ensp;[AnnotationConfigApplicationContext使用]
-&ensp;&ensp;&ensp;&ensp;[AnnotationConfigApplicationContext源码解析一]
 
-&ensp;&ensp;[AnnotationConfigApplicationContext源码解析二]
-&ensp;&ensp;[AnnotationConfigApplicationContext源码解析三]
+* [AnnotationConfigApplicationContext使用]
 
-&ensp;&ensp;[AnnotationConfigApplicationContext源码解析四]
-&ensp;&ensp;[AnnotationConfigApplicationContext源码解析五]
+* [AnnotationConfigApplicationContext源码解析一]
 
-&ensp;&ensp;[AnnotationConfigApplicationContext源码解析六]
+* [AnnotationConfigApplicationContext源码解析二]
+
+* [AnnotationConfigApplicationContext源码解析三]
+
+* [AnnotationConfigApplicationContext源码解析四]
+
+* [AnnotationConfigApplicationContext源码解析五]
+
+* [AnnotationConfigApplicationContext源码解析六]
 
 
 ### 3、Spring中的一些概念
@@ -80,22 +84,20 @@ public class MyTestStart {
 &ensp;&ensp;[Spring中Bean的描述BeanDefinition]
 
 ##### BeanDefinition 的子类
-&ensp;&ensp;[AbstractBeanDefinition]
+* [AbstractBeanDefinition]
 
-&ensp;&ensp;[RootBeanDefinition]
+* [RootBeanDefinition]
 
-&ensp;&ensp;[ChildBeanDefinition]
+* [ChildBeanDefinition]
 
-&ensp;&ensp;[GenericBeanDefinition]
+* [GenericBeanDefinition]
 
-&ensp;&ensp;[AnnotatedGenericBeanDefinition]
+* [AnnotatedGenericBeanDefinition]
 
-&ensp;&ensp;[ScannedGenericBeanDefinition]
+* [ScannedGenericBeanDefinition]
 
 ##### BeanDefinition的封装
 &ensp;&ensp;[BeanDefinitionHolder]
-
-
 
 #### Resource(资源) 和 ResourceLoader(资源解析)
 
