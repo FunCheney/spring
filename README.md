@@ -135,9 +135,8 @@ public class MyTestStart {
 
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp; [通过构造器的方式注入对象]
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp; [默认的实例化 `instantiateBean()`]
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
-[MergedBeanDefinitionPostProcessor 的应用]
 
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;[MergedBeanDefinitionPostProcessor 的应用]
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp; [Bean的依赖关系处理]
 
 
