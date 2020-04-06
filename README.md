@@ -119,25 +119,25 @@ public class MyTestStart {
 
 &ensp;&ensp;**1.** [Spring依赖注入之getBean()]
 
-   * [getBean()之doGetBean源码阅读一]
-   * [getBean()之doGetBean源码阅读二]
+   - [ ]  [getBean()之doGetBean源码阅读一]
+   - [ ]  [getBean()之doGetBean源码阅读二]
 
 &ensp;&ensp;**2.** Spring依赖注入之createBean()
 
-   * [`singleton` Bean的实例化过程]
+   - [ ]  [`singleton` Bean的实例化过程]
 
-   * [`prototype` Bean的实例化过程]
+   - [ ]  [`prototype` Bean的实例化过程]
 
-   * [`scope` Bean的实例化过程]
+   - [ ]  [`scope` Bean的实例化过程]
 
-   * [准备创建 bean]
-        - [doCreateBean预览]
-        - [createBeanInstance实现]
-        - [使用工厂方法对Bean进行实例化]
-        - [通过构造器的方式注入对象]
-        - [默认的实例化 `instantiateBean()`]
-        - [MergedBeanDefinitionPostProcessor 的应用]
-        - [Bean的依赖关系处理]
+   - [ ]  [准备创建 bean]
+        - [ ] [doCreateBean预览]
+        - [ ] [createBeanInstance实现]
+        - [ ] [使用工厂方法对Bean进行实例化]
+        - [ ] [通过构造器的方式注入对象]
+        - [ ] [默认的实例化 `instantiateBean()`]
+        - [ ] [MergedBeanDefinitionPostProcessor 的应用]
+        - [ ] [Bean的依赖关系处理]
 
 
 ## 三、spring AOP
