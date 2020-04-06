@@ -115,39 +115,29 @@ public class MyTestStart {
 
 #### 4、spring中的依赖注入
 
- [spring中的依赖注入脉络图]
+&ensp;&ensp;[spring中的依赖注入脉络图]
 
 &ensp;&ensp;**1.** [Spring依赖注入之getBean()]
 
-&ensp;&ensp;&ensp;&ensp; * [getBean()之doGetBean源码阅读一]
-
-&ensp;&ensp;&ensp;&ensp; * [getBean()之doGetBean源码阅读二]
+   * [getBean()之doGetBean源码阅读一]
+   * [getBean()之doGetBean源码阅读二]
 
 &ensp;&ensp;**2.** Spring依赖注入之createBean()
 
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; * [`singleton` Bean的实例化过程]
+   * [`singleton` Bean的实例化过程]
 
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; * [`prototype` Bean的实例化过程]
+   * [`prototype` Bean的实例化过程]
 
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; * [`scope` Bean的实例化过程]
+   * [`scope` Bean的实例化过程]
 
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; * [准备创建 bean]
-
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;- [doCreateBean预览]
-
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;-
-[createBeanInstance实现]
-
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;-
-[使用工厂方法对Bean进行实例化]
-
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;- [通过构造器的方式注入对象]
-
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;- [默认的实例化 `instantiateBean()`]
-
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;- [MergedBeanDefinitionPostProcessor 的应用]
-
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;- [Bean的依赖关系处理]
+   * [准备创建 bean]
+        - [doCreateBean预览]
+        - [createBeanInstance实现]
+        - [使用工厂方法对Bean进行实例化]
+        - [通过构造器的方式注入对象]
+        - [默认的实例化 `instantiateBean()`]
+        - [MergedBeanDefinitionPostProcessor 的应用]
+        - [Bean的依赖关系处理]
 
 
 ## 三、spring AOP
