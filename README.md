@@ -131,7 +131,14 @@ public class MyTestStart {
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp; [准备创建 bean]
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp; [doCreateBean预览]
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp; [createBeanInstance实现]
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; [使用工厂方法对Bean进行实例化]
 
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; [通过构造器的方式注入对象]
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; [默认的实例化 `instantiateBean()`]
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+[MergedBeanDefinitionPostProcessor 的应用]
+
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; [Bean的依赖关系处理]
 
 
 ## 三、spring AOP
@@ -210,3 +217,9 @@ file --> class --> byte[] --> object(class)
 
 [doCreateBean预览]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/create/Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B9%8BcreateBean()_4.md
 [createBeanInstance实现]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/create/Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B9%8BcreateBean()_5.md
+
+[使用工厂方法对Bean进行实例化]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/create/Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B9%8BcreateBean()_6.md
+[通过构造器的方式注入对象]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/create/Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B9%8BcreateBean()_7.md
+[默认的实例化 `instantiateBean()`]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/create/Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B9%8BcreateBean()_8.md
+[MergedBeanDefinitionPostProcessor 的应用]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/create/Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B9%8BcreateBean()_9.md
+[Bean的依赖关系处理]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/create/Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B9%8BcreateBean()_10.md
