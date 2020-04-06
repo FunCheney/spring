@@ -115,15 +115,16 @@ public class MyTestStart {
 
 #### 4、spring中的依赖注入
 
-&ensp;&ensp;[spring中的依赖注入脉络图]
+[spring中的依赖注入脉络图]
 
-&ensp;&ensp;&ensp;&ensp;**1.** [Spring依赖注入之getBean()]
+&ensp;&ensp;**1.** [Spring依赖注入之getBean()]
 
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;[getBean()之doGetBean源码阅读一]
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;[getBean()之doGetBean源码阅读二]
+&ensp;&ensp;&ensp;&ensp;
+* [getBean()之doGetBean源码阅读一]
+&ensp;&ensp;&ensp;&ensp;
+* [getBean()之doGetBean源码阅读二]
 
 &ensp;&ensp;&ensp;&ensp;**2.** Spring依赖注入之createBean()
-
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
 *   [`singleton` Bean的实例化过程] &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
 *   [`prototype` Bean的实例化过程] &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
