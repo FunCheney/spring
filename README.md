@@ -119,13 +119,13 @@ public class MyTestStart {
 
 &ensp;&ensp;&ensp;[spring中的依赖注入脉络图]
 
-&ensp;**1.** [Spring依赖注入之getBean()]
+&ensp;**1.** &ensp;[Spring依赖注入之getBean()]
 
    *  [getBean()之doGetBean源码阅读一]
 
    *  [getBean()之doGetBean源码阅读二]
 
-&ensp;**2.** Spring依赖注入之createBean()
+&ensp;**2.** &ensp;Spring依赖注入之createBean()
 
    *  [`singleton` Bean的实例化过程]
 
