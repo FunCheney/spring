@@ -26,8 +26,7 @@ public class IocTest {
 &ensp;&ensp;首先看一下DefaultListableBeanFactory的类关系的继承图：
 
 <div align="center">
-    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/DefaultListableFactory_class_relation.jpg
-">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/DefaultListableFactory_class_relation.jpg">
  </div> 
  
  **new DefaultListableBeanFactory() 调用关系**
