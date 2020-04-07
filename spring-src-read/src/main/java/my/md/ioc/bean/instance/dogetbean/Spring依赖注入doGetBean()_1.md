@@ -267,6 +267,8 @@ private Object doGetObjectFromFactoryBean(final FactoryBean<?> factory, final St
     return object;
 }
 ```
+&ensp;&ensp;这里返回的已经是作为工厂的FactoryBean生产的产品，而不是FactoryBean本身。这种FactoryBean的机制
+可以提供一个很好的封装机制，比如封装Proxy，RMI，JNDI等。通过对FactoryBean实现过程的原理进行分析
 
 #### 3.2 `postProcessObjectFromFactoryBean()`
 **AbstractAutowireCapableBeanFactory#postProcessObjectFromFactoryBean()**

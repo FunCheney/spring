@@ -148,6 +148,8 @@ public class MyTestStart {
 
        -  [Bean的依赖关系处理]
 
+           +  [自动装配的实现]
+
        -  [将原生对象变成代理对象]
 
 ## 三、spring AOP
@@ -233,3 +235,6 @@ file --> class --> byte[] --> object(class)
 [MergedBeanDefinitionPostProcessor 的应用]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/create/Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B9%8BcreateBean()_9.md
 [Bean的依赖关系处理]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/create/Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B9%8BcreateBean()_10.md
 [将原生对象变成代理对象]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/create/Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B9%8BcreateBean()_11.md
+[自动装配的实现]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/instance/create/Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B9%8BcreateBean()_12.md
+
+

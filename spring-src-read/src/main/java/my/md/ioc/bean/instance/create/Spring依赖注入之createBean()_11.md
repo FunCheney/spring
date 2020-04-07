@@ -41,7 +41,8 @@ protected Object initializeBean(final String beanName, final Object bean, @Nulla
     return wrappedBean;
 }
 ```
-
+&ensp;&ensp;在调用Bean的初始化方法之前，会调用一系列的aware接口实现，把相关的BeanName，BeanClassLoader，
+以及BeanFactory注入到Bean中去。
 ```java
 private void invokeAwareMethods(final String beanName, final Object bean) {
     if (bean instanceof Aware) {
@@ -60,7 +61,7 @@ private void invokeAwareMethods(final String beanName, final Object bean) {
     }
 }
 ```
-
+&ensp;&ensp;在invokeInitMethods的调用，会对afterPropertiesSet()进行处理，这里是一个Bean的回调。
 ```java
 protected void invokeInitMethods(String beanName, final Object bean, @Nullable RootBeanDefinition mbd)
 			throws Throwable {
@@ -104,7 +105,8 @@ protected void invokeInitMethods(String beanName, final Object bean, @Nullable R
     }
 }
 ```
-
+&ensp;&ensp;最后，还会判断Bean是否配置有initMethod，如果有，那么通过invokeCustomInitMethod方法来直接
+调用，最终完成Bean的初始化。
 ```java
 protected void invokeCustomInitMethod(String beanName, final Object bean, RootBeanDefinition mbd)
 			throws Throwable {
@@ -167,6 +169,8 @@ protected void invokeCustomInitMethod(String beanName, final Object bean, RootBe
     }
 }
 ```
+&ensp;&ensp;在这个对initMethod的调用中，可以看到首先需要得到Bean定义的initMethod，然后通过JDK
+的反射机制得到Method对象，直接调用在Bean定义中声明的初始化方法。
 
 
 
