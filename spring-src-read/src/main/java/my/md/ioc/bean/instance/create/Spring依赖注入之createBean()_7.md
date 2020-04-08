@@ -256,6 +256,54 @@ public BeanWrapper autowireConstructor(String beanName, RootBeanDefinition mbd,
     return bw;
 }
 ```
+&ensp;&ensp;上述方法，主要通过以下几个部分的考虑来完成代码逻辑的实现，一一做以总结：
+
+①：构造函数的参数的确定
+
++ 根据explicitArgs 参数判断
+
+&ensp;&ensp;如果传入的参数 explicitArgs 不为空，那么可以直接确定参数，应为
+explicitArgs 参数是在条用 Bean 的时候用户指定的，在 BeanFactory
+类中存在这样的方法：
+>    Object getBean(String name, Object... args) throws BeansException;
+
+&ensp;&ensp;在获取 bean 的时候，用户不但可以指定 bean 的名称还可以指定 bean 所对应类的构造
+函数或者工厂方法的方法参数，主要用于静态工厂的调用，而这里是需要给定完全匹配的参数的，所以，便可以判断，
+如果传入参数 explicitArgs 不为空，则可以确定构造函数参数就是它。
+
++ 缓存中获取
+
+&ensp;&ensp;初次之外，确定参数的办法如果之前以及分析过，也就是说构造函数参数已经记录在缓存中，那么便可
+以直接拿来使用。而且，这里要提到的是，在缓存中缓存的可能是参数的最终类型也可能是参数最初的类型，例如：构造函数
+参数要求的int类型，但是原始的参数值可能是String类型的，那么即使在缓存中得到了参数，也需要经过类型转换器的过滤
+以确保参数类型与对应的构造函数参数类型完全对应。
+
++ 配置文件中获取
+
+&ensp;&ensp;如果不能根据传入的参数 explicitArgs 确定构造函数的参数也无法在缓存中得到相关信息。那么只能
+开始新一轮的分析了。
+
+&ensp;&ensp;分析从配置文件中配置的构造函数信息开始，经过之前的分析，我们知道，Spring中配置文件中的信息经过
+转换都会通过 BeanDefinition 来承载，也就是参数 mbd 中包含，那么可以通过 `mbd.getConstructorArgumentValues()`
+来获取对应的参数信息了，获取参数值的信息包括直接指定值，如：直接指定构造函数中某个值为原始类型 String 类型，或者是一个对其他
+bean 的引用，而这一处理委托给 resolveConstructorArguments 方法，并返回能解析到的参数个数。
+
+②：构造函数的确定
+
+&ensp;&ensp;根据构造函数参数在所有构造函数中锁定对应的构造函数，匹配的方法，就是根据参数的个数匹配，所以在匹配之前需要
+先对构造函数按照public构造函数优先参数数量降序、非public构造函数参数数量降序。这样可以在遍历的情况下迅速的判断在后面的
+构造函数参数个数是否符合条件。
+
+③：根据确定的构造函数转换对应的类型参数
+
+&ensp;&ensp;主要使用Spring中提供的类型转换器或用户自定义的类型转换器进行转换。
+
+④：构造函数不确定性的验证
+
+
+⑤：根据实例化策略以及得到的构造参数及构造参数实例化 Bean。
+
+
 
 
 
