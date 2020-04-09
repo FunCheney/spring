@@ -146,6 +146,9 @@ public class MyTestStart {
 
        -  [MergedBeanDefinitionPostProcessor 的应用]
 
+          + `@Autowired` 处理
+          + `@PostConstruct` & `PreDestroy` & `@Resource` 处理
+
        -  [Bean的依赖关系处理]
 
            +  [自动装配的实现]
