@@ -31,9 +31,11 @@ import org.springframework.lang.Nullable;
 public interface MethodBeforeAdvice extends BeforeAdvice {
 
 	/**
+	 * 回调函数，before 方法的实现在 Advice 中被配置到目标方法后，
+	 * 会在调用目标方法时被回调。
 	 * Callback before a given method is invoked.
-	 * @param method method being invoked
-	 * @param args arguments to the method
+	 * @param method 目标方法的反射对象
+	 * @param args 对象数组，包含目标方法的输入参数
 	 * @param target target of the method invocation. May be {@code null}.
 	 * @throws Throwable if this object wishes to abort the call.
 	 * Any exception thrown will be returned to the caller if it's
