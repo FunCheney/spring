@@ -106,6 +106,10 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	 */
 	protected List<Advisor> findCandidateAdvisors() {
 		Assert.state(this.advisorRetrievalHelper != null, "No BeanFactoryAdvisorRetrievalHelper available");
+		/*
+		  当使用注解方式配置Aop 的时候并不是丢弃了对 xml 配置的支持，
+		  这里强调父类方法加载配置文件中的 Aop 声明
+		 */
 		return this.advisorRetrievalHelper.findAdvisorBeans();
 	}
 
