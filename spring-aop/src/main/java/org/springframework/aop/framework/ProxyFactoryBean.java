@@ -249,7 +249,9 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	@Override
 	@Nullable
 	public Object getObject() throws BeansException {
+		// 初始化通知器链
 		initializeAdvisorChain();
+		// 这里对 singleton 和 prototype 的类型进行区分，生成对应的 proxy
 		if (isSingleton()) {
 			return getSingletonInstance();
 		}
@@ -425,6 +427,7 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	}
 
 	/**
+	 * 初始化 advisor 配置链
 	 * Create the advisor (interceptor) chain. Advisors that are sourced
 	 * from a BeanFactory will be refreshed each time a new prototype instance
 	 * is added. Interceptors added programmatically through the factory API

@@ -103,6 +103,7 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 				new CompositeComponentDefinition(element.getTagName(), parserContext.extractSource(element));
 		parserContext.pushContainingComponent(compositeDef);
 
+		// 是否生成代理类
 		configureAutoProxyCreator(parserContext, element);
 
 		List<Element> childElts = DomUtils.getChildElements(element);

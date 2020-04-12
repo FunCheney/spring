@@ -4,6 +4,7 @@ import com.fchen.bean.biz.FactoryBeanTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 /**
  * @author: Fchen
@@ -12,10 +13,13 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan("com.fchen")
+@EnableAspectJAutoProxy
 public class MyConfig {
 
 	@Bean("factoryBeanTest")
 	public FactoryBeanTest userFactoryBean() {
 		return new FactoryBeanTest();
 	}
+
+
 }
