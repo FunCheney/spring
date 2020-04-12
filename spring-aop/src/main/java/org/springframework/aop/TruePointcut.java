@@ -26,10 +26,14 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 final class TruePointcut implements Pointcut, Serializable {
 
+	/**
+	 * 暴露一个静态的变量来持有单件实例
+	 */
 	public static final TruePointcut INSTANCE = new TruePointcut();
 
 	/**
 	 * Enforce Singleton pattern.
+	 * 构造函数私有化。
 	 */
 	private TruePointcut() {
 	}

@@ -30,6 +30,7 @@ public class CountingAfterReturningAdvice extends MethodCounter implements After
 
 	@Override
 	public void afterReturning(Object o, Method m, Object[] args, Object target) throws Throwable {
+		// MethodCounter 中的count() 放啊
 		count(m);
 	}
 
