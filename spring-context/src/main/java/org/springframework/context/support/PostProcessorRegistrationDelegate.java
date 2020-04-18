@@ -241,6 +241,9 @@ final class PostProcessorRegistrationDelegate {
 		 * 便会打印出 BeanPostProcessorChecker 中设定的值
 		 */
 		int beanProcessorTargetCount = beanFactory.getBeanPostProcessorCount() + 1 + postProcessorNames.length;
+		// new BeanPostProcessorChecker(beanFactory, beanProcessorTargetCount)
+		// 创建一个 默认的 PostProcessorRegistrationDelegate, BeanPostProcessorChecker 是 PostProcessorRegistrationDelegate
+		// 中的一个静态的内部类 且实现了 BeanPostProcessor 接口
 		beanFactory.addBeanPostProcessor(new BeanPostProcessorChecker(beanFactory, beanProcessorTargetCount));
 
 		// Separate between BeanPostProcessors that implement PriorityOrdered,
