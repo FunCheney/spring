@@ -104,65 +104,60 @@ public class MyTestStart {
 &ensp;&ensp;[Spring容器之Resource 和 ResourceLoader]
 
 ### 4、IoC容器的初始化
-#### 初始化的秘密
+\nabla 初始化的秘密
   * 容器中的五壮士
   * 自定义配置文件的加入
-  * 
-#### 一些不为人知的总结
+  * BeanDefinition的定位
+  * BeanDefinition的加载
+  * BeanDefinition的注册
+
+\nabla 一些不为人知的总结
   * spring 的扩展点
   * [你不知道的BeanFactoryPostProcessor]
 
-#### 1、BeanDefinition的定位
 
-##### 注解方式定义的BeanDefinition的定位
+\nabla spring中的依赖注入
 
-##### xml方式定义的BeanDefinition的定位
+ * [spring中的依赖注入脉络图]
 
-#### 2、BeanDefinition的加载
+ * [Spring依赖注入之getBean()]
 
-#### 3、BeanDefinition的注册
+   -  [getBean()之doGetBean源码阅读一]
 
-#### 4、spring中的依赖注入
+   -  [getBean()之doGetBean源码阅读二]
 
-&ensp;&ensp;&ensp;[spring中的依赖注入脉络图]
+ * Spring依赖注入之createBean()
 
-&ensp;**1.** &ensp;[Spring依赖注入之getBean()]
+   -  [`singleton` Bean的实例化过程]
 
-   *  [getBean()之doGetBean源码阅读一]
+   -  [`prototype` Bean的实例化过程]
 
-   *  [getBean()之doGetBean源码阅读二]
+   -  [`scope` Bean的实例化过程]
 
-&ensp;**2.** &ensp;Spring依赖注入之createBean()
+   -  [准备创建 bean]
+       +  [doCreateBean预览]
 
-   *  [`singleton` Bean的实例化过程]
-
-   *  [`prototype` Bean的实例化过程]
-
-   *  [`scope` Bean的实例化过程]
-
-   *  [准备创建 bean]
-       -  [doCreateBean预览]
-
-       -  [createBeanInstance实现]
+       +  [createBeanInstance实现]
 
           +  [使用工厂方法对Bean进行实例化]
 
-          +  [通过构造器的方式注入对象]
+          \triangleright [通过构造器的方式注入对象]
 
-          +  [默认的实例化 `instantiateBean()`]
+          \triangleright [默认的实例化 `instantiateBean()`]
 
-       -  [MergedBeanDefinitionPostProcessor 的应用]
+       +  [MergedBeanDefinitionPostProcessor 的应用]
 
-          + `@Autowired` 处理
-          + `@PostConstruct` & `PreDestroy` & `@Resource` 处理
+          \triangleright `@Autowired` 处理
 
-       -  [Bean的依赖关系处理]
+          \triangleright `@PostConstruct` & `PreDestroy` & `@Resource` 处理
 
-           +  [自动装配的实现]
+       +  [Bean的依赖关系处理]
 
-           +  [applyPropertyValues]
+           \triangleright [自动装配的实现]
 
-       -  [将原生对象变成代理对象]
+           \triangleright [applyPropertyValues]
+
+       +  [将原生对象变成代理对象]
 
 ## 三、spring AOP
 ### AOP
