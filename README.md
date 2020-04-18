@@ -104,19 +104,19 @@ public class MyTestStart {
 &ensp;&ensp;[Spring容器之Resource 和 ResourceLoader]
 
 ### 4、IoC容器的初始化
-\nabla; 初始化的秘密
+#### 初始化的秘密
   * 容器中的五壮士
   * 自定义配置文件的加入
   * BeanDefinition的定位
   * BeanDefinition的加载
   * BeanDefinition的注册
 
-\nabla; 一些不为人知的总结
+#### 一些不为人知的总结
   * spring 的扩展点
   * [你不知道的BeanFactoryPostProcessor]
 
 
-\nabla; spring中的依赖注入
+#### spring中的依赖注入
 
  * [spring中的依赖注入脉络图]
 
@@ -141,21 +141,21 @@ public class MyTestStart {
 
           +  [使用工厂方法对Bean进行实例化]
 
-          \triangleright; [通过构造器的方式注入对象]
+             - [通过构造器的方式注入对象]
 
-          \triangleright; [默认的实例化 `instantiateBean()`]
+             - [默认的实例化 `instantiateBean()`]
 
        +  [MergedBeanDefinitionPostProcessor 的应用]
 
-          \triangleright; `@Autowired` 处理
+             - `@Autowired` 处理
 
-          \triangleright; `@PostConstruct` & `PreDestroy` & `@Resource` 处理
+             - `@PostConstruct` & `PreDestroy` & `@Resource` 处理
 
        +  [Bean的依赖关系处理]
 
-           \triangleright; [自动装配的实现]
+             - [自动装配的实现]
 
-           \triangleright; [applyPropertyValues]
+             - [applyPropertyValues]
 
        +  [将原生对象变成代理对象]
 
