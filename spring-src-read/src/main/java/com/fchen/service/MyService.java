@@ -16,12 +16,9 @@ public class MyService {
 
 	private Logger log = LoggerFactory.getLogger(MyService.class);
 
+	@Autowired
 	MyTest myTest;
 
-	@Autowired
-	public MyService(MyTest myTest){
-		this.myTest = myTest;
-	}
 	public void test(){
 		System.out.println("hello test");
 		myTest.test();

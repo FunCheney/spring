@@ -13,7 +13,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  */
 @Configuration
 @ComponentScan("com.fchen")
-@EnableAspectJAutoProxy
+//@EnableAspectJAutoProxy
 public class MyConfig {
 
 	@Bean("factoryBeanTest")
