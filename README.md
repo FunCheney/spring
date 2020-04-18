@@ -104,6 +104,7 @@ public class MyTestStart {
 &ensp;&ensp;[Spring容器之Resource 和 ResourceLoader]
 
 ### 4、IoC容器的初始化
+  * [你不知道的BeanFactoryPostProcessor]
 
 #### 1、BeanDefinition的定位
 
@@ -215,11 +216,12 @@ file --> class --> byte[] --> object(class)
 [AnnotationConfigApplicationContext源码解析六]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BAnnotationConfigApplicationContext_7.md
 
 
+[你不知道的BeanFactoryPostProcessor]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/processor/%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84BeanFactoryPostProcessor.md
+
 [Spring容器之Resource 和 ResourceLoader]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/impl/Spring%E5%AE%B9%E5%99%A8%E4%B9%8BResource%E4%B8%8EResourceLoader.md
 
 [Spring中Bean的描述BeanDefinition]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/Spring%E4%B9%8B%E5%AF%B9%E8%B1%A1%E6%8F%8F%E8%BF%B0BeanDefinition.md
 [BeanDefinitionHolder]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/Spring%E4%B8%AD%E7%9A%84BeanDefinitionHolder.md
-
 [AbstractBeanDefinition]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/beanDefinition/AbstractBeanDefinition.md
 [RootBeanDefinition]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/beanDefinition/RootBeanDefinition.md
 [ChildBeanDefinition]:https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/md/ioc/bean/beanDefinition/ChildBeanDefinition.md
