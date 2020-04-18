@@ -104,6 +104,12 @@ public class MyTestStart {
 &ensp;&ensp;[Spring容器之Resource 和 ResourceLoader]
 
 ### 4、IoC容器的初始化
+#### 初始化的秘密
+  * 容器中的五壮士
+  * 自定义配置文件的加入
+  * 
+#### 一些不为人知的总结
+  * spring 的扩展点
   * [你不知道的BeanFactoryPostProcessor]
 
 #### 1、BeanDefinition的定位
