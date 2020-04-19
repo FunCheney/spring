@@ -130,7 +130,9 @@ public abstract class AbstractAspectJAdvisorFactory implements AspectJAdvisorFac
 	@SuppressWarnings("unchecked")
 	@Nullable
 	protected static AspectJAnnotation<?> findAspectJAnnotationOnMethod(Method method) {
+		// 设置敏感的注解类
 		for (Class<?> clazz : ASPECTJ_ANNOTATION_CLASSES) {
+			// 使用指定方法上的注解使用 AspectJAnnotation 封装
 			AspectJAnnotation<?> foundAnnotation = findAnnotation(method, (Class<Annotation>) clazz);
 			if (foundAnnotation != null) {
 				return foundAnnotation;
