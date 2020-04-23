@@ -340,14 +340,13 @@ public abstract class AopUtils {
 	public static Object invokeJoinpointUsingReflection(@Nullable Object target, Method method, Object[] args)
 			throws Throwable {
 
-		// Use reflection to invoke the method.
+		// 这里是使用反射调用 target 对象的方法
 		try {
 			ReflectionUtils.makeAccessible(method);
 			return method.invoke(target, args);
 		}
 		catch (InvocationTargetException ex) {
-			// Invoked method threw a checked exception.
-			// We must rethrow it. The client won't see the interceptor.
+            // 抛出 Aop 异常，对异常进行装换
 			throw ex.getTargetException();
 		}
 		catch (IllegalArgumentException ex) {

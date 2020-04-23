@@ -470,8 +470,7 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 				}
 
 				else {
-					// If we get here, we need to add a named interceptor.
-					// We must check if it's a singleton or prototype.
+					// 需要对 bean 的类型进行判断，是 singleton 还是 prototype
 					Object advice;
 					if (this.singleton || this.beanFactory.isSingleton(name)) {
 						// Add the real Advisor/Advice to the chain.
