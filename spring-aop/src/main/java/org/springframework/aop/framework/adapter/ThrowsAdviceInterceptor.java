@@ -76,13 +76,14 @@ public class ThrowsAdviceInterceptor implements MethodInterceptor, AfterAdvice {
 		Assert.notNull(throwsAdvice, "Advice must not be null");
 		this.throwsAdvice = throwsAdvice;
 
+		// 配置 ThrowsAdvice 的回调方法
 		Method[] methods = throwsAdvice.getClass().getMethods();
 		for (Method method : methods) {
 			if (method.getName().equals(AFTER_THROWING) &&
 					(method.getParameterCount() == 1 || method.getParameterCount() == 4)) {
 				Class<?> throwableParam = method.getParameterTypes()[method.getParameterCount() - 1];
 				if (Throwable.class.isAssignableFrom(throwableParam)) {
-					// An exception handler to register...
+					// 配置异常处理
 					this.exceptionHandlerMap.put(throwableParam, method);
 					if (logger.isDebugEnabled()) {
 						logger.debug("Found exception handler method on throws advice: " + method);
@@ -108,6 +109,10 @@ public class ThrowsAdviceInterceptor implements MethodInterceptor, AfterAdvice {
 
 	@Override
 	public Object invoke(MethodInvocation mi) throws Throwable {
+		/**
+		 * 把目标对象的方法调用放入 try/catch 中，并在 catch 中触发
+		 * ThrowsAdvice 的回调，把异常接着向外抛出，不做过多处理
+		 */
 		try {
 			return mi.proceed();
 		}
@@ -142,6 +147,9 @@ public class ThrowsAdviceInterceptor implements MethodInterceptor, AfterAdvice {
 		return handler;
 	}
 
+	/**
+	 * 通过反射启动对 ThrowsAdvice 回调方法的调用
+	 */
 	private void invokeHandlerMethod(MethodInvocation mi, Throwable ex, Method method) throws Throwable {
 		Object[] handlerArgs;
 		if (method.getParameterCount() == 1) {
