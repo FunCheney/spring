@@ -39,7 +39,7 @@ public interface Pointcut {
 	ClassFilter getClassFilter();
 
 	/**
-	 * 返回一个 MethodMatchers, 对于 Point 的判断是邮它来完成的。
+	 * 返回一个 MethodMatchers, 对于 Point 的判断是由它来完成的。
 	 * Return the MethodMatcher for this pointcut.
 	 * @return the MethodMatcher (never {@code null})
 	 */
