@@ -18,11 +18,11 @@ public class MyTestStart {
 		MyService myService = ann.getBean(MyService.class);
 		myService.test();
 
-		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
-		ctx.register(MyConfig.class);
-		//手动添加程序员自定义 且 未交给spring 管理的 BeanFactoryPostProcessor
-		ctx.addBeanFactoryPostProcessor(new MyFactoryPostProcessor());
-		ctx.refresh();
-		MyService myService1 = ctx.getBean(MyService.class);
+//		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
+//		ctx.register(MyConfig.class);
+//		//手动添加程序员自定义 且 未交给spring 管理的 BeanFactoryPostProcessor
+//		ctx.addBeanFactoryPostProcessor(new MyFactoryPostProcessor());
+//		ctx.refresh();
+//		MyService myService1 = ctx.getBean(MyService.class);
 	}
 }
