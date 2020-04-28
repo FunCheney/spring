@@ -51,6 +51,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * 在 Ioc 容器中完成申明式配置
  * {@link org.springframework.beans.factory.FactoryBean} implementation that builds an
  * AOP proxy based on beans in Spring {@link org.springframework.beans.factory.BeanFactory}.
  *
@@ -103,6 +104,9 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	@Nullable
+	/**
+	 * 通过 interceptorNames 属性来配置 已经定义好的通知器 Advisor
+	 */
 	private String[] interceptorNames;
 
 	@Nullable
