@@ -1,4 +1,16 @@
 ### Spring 之 IOC
+
+#### Spring 实现IoC 的思路和方法
+
+&ensp;IoC 统一集中处理对象之间的依赖关系。`Spring`实现IOC的思路是提供一些配置信息用来描述类之间的依赖关系，然后有容器去解析这些配置信息，继而维护对象之间的依赖关系，前提是对象之间的依赖关系必须在类中定义好。
+
+方法：
+
+1. 应用程序中提供类，提供依赖关系(属性或者构造方法)
+2. 把需要交给容器管理的对象通过配置信息告诉容器(xml，annotation、javaconfig)
+3. 把各个类之间的依赖关系通过配置信息告诉容器
+
+
 &ensp;&ensp;IOC可以理解为一种设计思想、设计模式用来解耦组件之间的复杂关系。在Spring 中，
 Spring IOC 就是对这种设计模式的实现，Spring IoC提供了一个基本的javaBean容器，通过IoC
 模式管理依赖关系，并通过依赖注入和AOP切面增强了为JavaBean这样的POJO对象赋予事务管理、生命
@@ -21,7 +33,23 @@ Spring IOC 就是对这种设计模式的实现，Spring IoC提供了一个基�
 
 #### Spring IoC 容器的设计与实现
 
-
+<div align="center">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/bean/BeanDefinition_class.jpg">
+ </div>
+ 
+ &ensp;&ensp;上述图片中标注出两条BeanFactory接口的设计路径，一条是蓝色线条表示，一条红色线条表示。
+ 
+* 从接口 `BeanFactory` 到 `HierarchicalBeanFactory`，再到 `ConfigurableBeanFactory`，是一条 `BeanFactory`
+  设计路径。在 `BeanFactory` 中定义了最基本的 IoC 容器的功能，包含有 `getBean()` IoC 中最基础的方法;
+  在 `HierarchicalBeanFactory` 中继承了 `BeanFactory` 接口，并增加了 `getParentBeanFactory()`的接口功能，
+  使 `BeanFactory` 具备了双亲 IoC 容器的管理功能；在 `ConfigurableBeanFactory` 接口中，定义了一些 `BeanFactory`
+  的配置功能，比如 `setParentBeanFactory()` 设置双亲IoC容器，通过 `addBeanPostProcessor()` 配置 Bean 后置处理
+  器，等等。
+  
+* 从 `BeanFactory` 到 `ListableBeanFactory`，再到 `ApplicationContext`。这条路径是另一条主要的设路径。`ListableBeanFactory` 和 `HierarchicalBeanFactory`
+两个接口连接 `BeanFactory` 接口定义和 `ApplicationContext` 应用上线文的接口定义。在 `ListableBeanFactory` 中
+细化了许多 `BeanFactory` 的功能，如 `getBeanDefinitionNames()` 接口方法；`HierarchicalBeanFactory` 如上所述。
+ 
 
 
 ### IoC容器的初始化过程
