@@ -31,10 +31,19 @@ Spring IOC 就是对这种设计模式的实现，Spring IoC提供了一个基�
 &ensp;&ensp;通过构造器来完成成员变量的注入，就是驱动Spring在底层以反射的方式执行带指定参数的构造器，当执行带
 参数的构造器时，就可以利用构造器参数对成员变量执行初始化。
 
+
+|构造函数注入|setter 注入|
+
+没有部分注入|有部分注入
+不会覆盖 setter 属性|会覆盖 setter 属性
+任意修改都会创建一个新实例|任意修改不会创建一个新实例
+适用于设置很多属性|适用于设置少量属性
+
+
 #### Spring IoC 容器的设计与实现
 
 <div align="center">
-    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/bean/BeanDefinition_class.jpg">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/BeanFactory%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1%E8%B7%AF%E5%BE%84.jpg">
  </div>
  
  &ensp;&ensp;上述图片中标注出两条BeanFactory接口的设计路径，一条是蓝色线条表示，一条红色线条表示。
@@ -46,11 +55,14 @@ Spring IOC 就是对这种设计模式的实现，Spring IoC提供了一个基�
   的配置功能，比如 `setParentBeanFactory()` 设置双亲IoC容器，通过 `addBeanPostProcessor()` 配置 Bean 后置处理
   器，等等。
   
-* 从 `BeanFactory` 到 `ListableBeanFactory`，再到 `ApplicationContext`。这条路径是另一条主要的设路径。`ListableBeanFactory` 和 `HierarchicalBeanFactory`
-两个接口连接 `BeanFactory` 接口定义和 `ApplicationContext` 应用上线文的接口定义。在 `ListableBeanFactory` 中
-细化了许多 `BeanFactory` 的功能，如 `getBeanDefinitionNames()` 接口方法；`HierarchicalBeanFactory` 如上所述。
+* 从 `BeanFactory` 到 `ListableBeanFactory`，再到 `ApplicationContext`。这条路径是另一条主要的设路径。`ListableBeanFactory`
+ 和 `HierarchicalBeanFactory`两个接口连接 `BeanFactory` 接口定义和 `ApplicationContext` 应用上线文的接口定义。
+ 在 `ListableBeanFactory` 中细化了许多 `BeanFactory` 的功能，如 `getBeanDefinitionNames()` 接口方法；`HierarchicalBeanFactory` 如上所述。
  
-
+从上图中可以看到 `BeanFactory`是 IoC 容器的最基本的实现，是所有 IoC 容器实现的基类，其中规范的 IoC 容器
+最基本的功能。 反观 `ApplicationContext` 是 IoC 容器的一种接口，是 `BeanFactory` 的子接口，但是他继承了 `ResourcePatternResolver`、
+`EnvironmentCapable`、`MessageSource`、`ApplicationEventPublisher` 接口，在 `BeanFactory` 的基础上添加
+一些功能，使得容器可以支持一些更高级的特性。
 
 ### IoC容器的初始化过程
 &ensp;&ensp;IoC容器的启动包括以下的三个过程，具体来说，这个启动包括BeanDefinition的Resource定位、
