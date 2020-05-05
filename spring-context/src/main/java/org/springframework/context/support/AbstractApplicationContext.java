@@ -237,6 +237,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @param parent the parent context
 	 */
 	public AbstractApplicationContext(@Nullable ApplicationContext parent) {
+		// 通过调用 this() 方法 初始化资源模式解析器
 		this();
 		setParent(parent);
 	}
@@ -458,7 +459,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see org.springframework.core.io.support.PathMatchingResourcePatternResolver
 	 */
 	protected ResourcePatternResolver getResourcePatternResolver() {
-		System.out.println("getResourcePatternResolver into");
+		System.out.println("getResourcePatternResolver into:-->" + this);
+		// 这里的 this 是指 AbstractApplicationContext 它是 DefaultResourceLoader 的子类
 		return new PathMatchingResourcePatternResolver(this);
 	}
 
