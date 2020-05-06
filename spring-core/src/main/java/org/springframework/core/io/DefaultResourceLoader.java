@@ -56,6 +56,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 
 
 	/**
+	 * 创建默认的 ClassLoader
 	 * Create a new DefaultResourceLoader.
 	 * <p>ClassLoader access will happen using the thread context class loader
 	 * at the time of this ResourceLoader's initialization.
@@ -98,6 +99,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 	}
 
 	/**
+	 * 添加protocolResolvers
 	 * Register the given resolver with this resource loader, allowing for
 	 * additional protocols to be handled.
 	 * <p>Any such resolver will be invoked ahead of this loader's standard
@@ -150,6 +152,8 @@ public class DefaultResourceLoader implements ResourceLoader {
 		Assert.notNull(location, "Location must not be null");
 
 		for (ProtocolResolver protocolResolver : getProtocolResolvers()) {
+			// 看有没有自定义的ProtocolResolver，
+			// 如果有则先根据自定义的ProtocolResolver解析location得到Resource
 			Resource resource = protocolResolver.resolve(location, this);
 			if (resource != null) {
 				return resource;
@@ -202,9 +206,11 @@ public class DefaultResourceLoader implements ResourceLoader {
 	/**
 	 * ClassPathResource that explicitly expresses a context-relative path
 	 * through implementing the ContextResource interface.
+	 * 通过实现ContextResource接口 明确表示下文相关路径的ClassPathResource，此方法重点在于实现ContextResource
 	 */
 	protected static class ClassPathContextResource extends ClassPathResource implements ContextResource {
 
+		// 通过调用父类的构造方法创建
 		public ClassPathContextResource(String path, @Nullable ClassLoader classLoader) {
 			super(path, classLoader);
 		}
