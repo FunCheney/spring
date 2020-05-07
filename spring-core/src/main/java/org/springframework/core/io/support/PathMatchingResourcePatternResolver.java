@@ -321,6 +321,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	 */
 	protected Resource[] findAllClassPathResources(String location) throws IOException {
 		String path = location;
+		// 路径中以 "/" 开头 将 "/" 去掉
 		if (path.startsWith("/")) {
 			path = path.substring(1);
 		}
@@ -341,15 +342,19 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	 */
 	protected Set<Resource> doFindAllClassPathResources(String path) throws IOException {
 		Set<Resource> result = new LinkedHashSet<>(16);
+		// 获取 classLoader
 		ClassLoader cl = getClassLoader();
+		// //通过classloader来加载资源目录，这里也会去找寻classpath路径下的jar包或者zip包
 		Enumeration<URL> resourceUrls = (cl != null ? cl.getResources(path) : ClassLoader.getSystemResources(path));
 		while (resourceUrls.hasMoreElements()) {
 			URL url = resourceUrls.nextElement();
+			// 将找到的路径转化为 Resource 对象并添加到 Set 集合中
 			result.add(convertClassLoaderURL(url));
 		}
 		if ("".equals(path)) {
 			// The above result is likely to be incomplete, i.e. only containing file system references.
 			// We need to have pointers to each of the jar files on the classpath as well...
+			// 加载jar协议的资源
 			addAllClassLoaderJarRoots(cl, result);
 		}
 		return result;
@@ -503,6 +508,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 		Resource[] rootDirResources = getResources(rootDirPath);
 		Set<Resource> result = new LinkedHashSet<>(16);
 		for (Resource rootDirResource : rootDirResources) {
+			//判断是否含有协议为bundle的资源，没有则返回原值
 			rootDirResource = resolveRootDirResource(rootDirResource);
 			URL rootDirUrl = rootDirResource.getURL();
 			if (equinoxResolveMethod != null && rootDirUrl.getProtocol().startsWith("bundle")) {
@@ -512,9 +518,11 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 				}
 				rootDirResource = new UrlResource(rootDirUrl);
 			}
+			//vfs协议
 			if (rootDirUrl.getProtocol().startsWith(ResourceUtils.URL_PROTOCOL_VFS)) {
 				result.addAll(VfsResourceMatchingDelegate.findMatchingResources(rootDirUrl, subPattern, getPathMatcher()));
 			}
+			// jar
 			else if (ResourceUtils.isJarURL(rootDirUrl) || isJarResource(rootDirResource)) {
 				result.addAll(doFindPathMatchingJarResources(rootDirResource, rootDirUrl, subPattern));
 			}
@@ -706,6 +714,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 
 		File rootDir;
 		try {
+			//获取绝对路径对应的file
 			rootDir = rootDirResource.getFile().getAbsoluteFile();
 		}
 		catch (FileNotFoundException ex) {
@@ -713,6 +722,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 				logger.debug("Cannot search for matching files underneath " + rootDirResource +
 						" in the file system: " + ex.getMessage());
 			}
+			// 异常则返回空的集合
 			return Collections.emptySet();
 		}
 		catch (Exception ex) {
@@ -738,9 +748,11 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 		if (logger.isTraceEnabled()) {
 			logger.trace("Looking for matching resources in directory tree [" + rootDir.getPath() + "]");
 		}
+		// 真实的调用方法
 		Set<File> matchingFiles = retrieveMatchingFiles(rootDir, subPattern);
 		Set<Resource> result = new LinkedHashSet<>(matchingFiles.size());
 		for (File file : matchingFiles) {
+			// 对查找到的资源包装为FileSystemResource对象
 			result.add(new FileSystemResource(file));
 		}
 		return result;
@@ -756,6 +768,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	 * @throws IOException if directory contents could not be retrieved
 	 */
 	protected Set<File> retrieveMatchingFiles(File rootDir, String pattern) throws IOException {
+		// 根目录不存在 返回空集合
 		if (!rootDir.exists()) {
 			// Silently skip non-existing directories.
 			if (logger.isDebugEnabled()) {
@@ -763,6 +776,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 			}
 			return Collections.emptySet();
 		}
+		// 不是目录 返回空集合
 		if (!rootDir.isDirectory()) {
 			// Complain louder if it exists but is no directory.
 			if (logger.isInfoEnabled()) {
@@ -770,6 +784,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 			}
 			return Collections.emptySet();
 		}
+		// 目录不可读 返回空集合
 		if (!rootDir.canRead()) {
 			if (logger.isInfoEnabled()) {
 				logger.info("Skipping search for matching files underneath directory [" + rootDir.getAbsolutePath() +
@@ -777,10 +792,12 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 			}
 			return Collections.emptySet();
 		}
+		// 转换根目录全路径为标准的查找路径
 		String fullPattern = StringUtils.replace(rootDir.getAbsolutePath(), File.separator, "/");
 		if (!pattern.startsWith("/")) {
 			fullPattern += "/";
 		}
+		// 查找类型为.class文件
 		fullPattern = fullPattern + StringUtils.replace(pattern, File.separator, "/");
 		Set<File> result = new LinkedHashSet<>(8);
 		doRetrieveMatchingFiles(fullPattern, rootDir, result);
@@ -801,8 +818,11 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 			logger.trace("Searching directory [" + dir.getAbsolutePath() +
 					"] for files matching pattern [" + fullPattern + "]");
 		}
+		// 从很目录开始罗列文件集合
 		for (File content : listDirectory(dir)) {
+			// 获取当前文件路径
 			String currPath = StringUtils.replace(content.getAbsolutePath(), File.separator, "/");
+			// 查找到的子文件仍是目录且以根目录为开头
 			if (content.isDirectory() && getPathMatcher().matchStart(fullPattern, currPath + "/")) {
 				if (!content.canRead()) {
 					if (logger.isDebugEnabled()) {
@@ -811,9 +831,11 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 					}
 				}
 				else {
+					// 递归调用查找所有的文件
 					doRetrieveMatchingFiles(fullPattern, content, result);
 				}
 			}
+			// 查看当前文件路径是否满足**/*.class格式，满足则添加
 			if (getPathMatcher().match(fullPattern, currPath)) {
 				result.add(content);
 			}
