@@ -27,7 +27,7 @@ public class ClassPathApplicationContextTest {
 	</bean>
 </beans>
 ```
-new ClassPathXmlApplicationContext("spring-bean.xml")
+#### new ClassPathXmlApplicationContext("spring-bean.xml")
 
 ```java
 public ClassPathXmlApplicationContext(
@@ -57,7 +57,59 @@ public ClassPathXmlApplicationContext(
 从上图可以看到，都是一层一层的调用父类的方法，最后在 `AbstractApplicationContext` 的构造方法中通过 `this.resourcePatternResolver = getResourcePatternResolver();` 
 来完成 `ResourcePatternResolver resourcePatternResolver` 初始化。这里的 `getResourcePatternResolver()` 通过不同的策略来完成初始初始化
 涉及到的策略类如下图所示：
+<div align="center">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/ClassPathXmlApplication%20/getResourcePatternResolver%E7%AD%96%E7%95%A5%E7%B1%BB.png">
+ </div>
+ 
+ #### setConfigLocations(configLocations)
+ ```java
+public void setConfigLocations(@Nullable String... locations) {
+    if (locations != null) {
+        Assert.noNullElements(locations, "Config locations must not be null");
+        this.configLocations = new String[locations.length];
+        for (int i = 0; i < locations.length; i++) {
+            // 解析给定路径
+            this.configLocations[i] = resolvePath(locations[i]).trim();
+        }
+    }
+    else {
+        this.configLocations = null;
+    }
+}
+```
+其中：resolvePath(locations[i]) 的调用流程如下：
+①：AbstractRefreshableConfigApplicationContext.resolvePath()
 
+②：AbstractPropertyResolver.resolveRequiredPlaceholders()
+
+③：AbstractPropertyResolver.doResolvePlaceholders()
+
+④：PropertyPlaceholderHelper.replacePlaceholders(String, PlaceholderResolver)
+
+⑤：PropertyPlaceholderHelper.parseStringValue()
+
+&ensp;&ensp;首先看一下 `resolveRequiredPlaceholders()`方法，的执行，这里会调用 `this.strictHelper = createPlaceholderHelper(false);`
+
+<div align="center">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/ClassPathXmlApplication%20/resolveRequiredPlaceholders.png">
+ </div>
+
+&ensp;&ensp;通过 `createPlaceholderHelper` 完成对 `strictHelper` 的初始化。
+
+```java
+private PropertyPlaceholderHelper createPlaceholderHelper(boolean ignoreUnresolvablePlaceholders) {
+    return new PropertyPlaceholderHelper(this.placeholderPrefix, this.placeholderSuffix,
+            this.valueSeparator, ignoreUnresolvablePlaceholders);
+}
+```
+ 
+
+&ensp;&ensp;从上述流程可以看出最终的调用方法是 `parseStringValue()` 方法，下面看一下该方法的具体实现：
+
+
+
+
+ 
 
 
 
