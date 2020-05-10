@@ -20,7 +20,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ResourceUtils;
 
 /**
- * 加载资源的策略接口
+ * 加载资源的策略接口，主要用于根据给定的资源文件地址返回对应的 Resource
  * Strategy interface for loading resources (e.. class path or file system
  * resources). An {@link org.springframework.context.ApplicationContext}
  * is required to provide this functionality, plus extended

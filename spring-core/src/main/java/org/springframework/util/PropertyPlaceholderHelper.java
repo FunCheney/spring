@@ -146,17 +146,24 @@ public class PropertyPlaceholderHelper {
 					throw new IllegalArgumentException(
 							"Circular placeholder reference '" + originalPlaceholder + "' in property definitions");
 				}
-				// Recursive invocation, parsing placeholders contained in the placeholder key.
+				// Recursive invocation, parsing placeholders contained in the placeholder key
+				// 如果有占位符，则去掉占位符递归调用本方法，即key=${abc},处理成key=abc的形式试图获取value
 				placeholder = parseStringValue(placeholder, placeholderResolver, visitedPlaceholders);
 				// Now obtain the value for the fully resolved key...
+				// 真正的从key-value集合中获得key对应的value
 				String propVal = placeholderResolver.resolvePlaceholder(placeholder);
+				// 如果没有找到，则试图按照${key:default}的形式解析
 				if (propVal == null && this.valueSeparator != null) {
 					int separatorIndex = placeholder.indexOf(this.valueSeparator);
 					if (separatorIndex != -1) {
+						// 获得：之前的内容，即真正的key
 						String actualPlaceholder = placeholder.substring(0, separatorIndex);
+						// 获得:之后的内容，即默认值
 						String defaultValue = placeholder.substring(separatorIndex + this.valueSeparator.length());
+						// 再次尝试从key-value集合中获得内容，因为如果真的是key-value的形式，按照全名是肯定找不到的
 						propVal = placeholderResolver.resolvePlaceholder(actualPlaceholder);
 						if (propVal == null) {
+							// 如果找到了就按照配置的走，如果没有找到则附上默认值
 							propVal = defaultValue;
 						}
 					}
@@ -164,7 +171,9 @@ public class PropertyPlaceholderHelper {
 				if (propVal != null) {
 					// Recursive invocation, parsing placeholders contained in the
 					// previously resolved placeholder value.
+					// 如果找到了这个value，则再次递归调用自己，避免value也是占位符的情况
 					propVal = parseStringValue(propVal, placeholderResolver, visitedPlaceholders);
+					// 将获得的结果替换掉
 					result.replace(startIndex, endIndex + this.placeholderSuffix.length(), propVal);
 					if (logger.isTraceEnabled()) {
 						logger.trace("Resolved placeholder '" + placeholder + "'");
