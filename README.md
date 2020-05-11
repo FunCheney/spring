@@ -116,8 +116,10 @@ public class MyTestStart {
   * BeanDefinition的注册
 
 #### 一些不为人知的总结
-  * spring 的扩展点
+##### spring 的扩展点
   * [你不知道的BeanFactoryPostProcessor]
+  * [ImportSelector]
+  * [ImportBeanDefinitionRegistrar]
 
 
 #### spring中的依赖注入

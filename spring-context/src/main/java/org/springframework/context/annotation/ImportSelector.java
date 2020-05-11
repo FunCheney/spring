@@ -48,6 +48,8 @@ import org.springframework.core.type.AnnotationMetadata;
 public interface ImportSelector {
 
 	/**
+	 *当在@Configuration标注的Class上使用@Import引入了一个ImportSelector实现类后，
+	 *会把实现类中返回的Class名称都定义为bean。
 	 * Select and return the names of which class(es) should be imported based on
 	 * the {@link AnnotationMetadata} of the importing @{@link Configuration} class.
 	 */
