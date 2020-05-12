@@ -1,10 +1,7 @@
 package com.fchen.config;
 
 import com.fchen.bean.biz.FactoryBeanTest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.*;
 
 /**
  * @author: Fchen
@@ -13,7 +10,8 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  */
 @Configuration
 @ComponentScan("com.fchen")
-@EnableAspectJAutoProxy
+//@EnableAspectJAutoProxy
+@Import(MyScanConfig.class)
 public class MyConfig {
 
 	@Bean("factoryBeanTest")
