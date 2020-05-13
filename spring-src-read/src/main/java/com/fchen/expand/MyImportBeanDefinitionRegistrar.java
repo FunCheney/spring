@@ -4,6 +4,7 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.core.type.filter.AnnotationTypeFilter;
 
 import java.util.Map;
 
@@ -28,8 +29,8 @@ public class MyImportBeanDefinitionRegistrar implements ImportBeanDefinitionRegi
 		}
 
 		ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(registry, false);
-//		TypeFilter helloServiceFilter = new AssignableTypeFilter(HelloService.class);
-//		scanner.addIncludeFilter(helloServiceFilter);
+        // 这一行必须要加
+		scanner.addIncludeFilter(new AnnotationTypeFilter(MyScan.class));
 		scanner.scan(basePackages);
 	}
 }

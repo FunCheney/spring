@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 /**
  * @author: Fchen
  * @date: 2020/5/12 11:27 下午
- * @desc: TODO
+ * @desc: MyScanner 测试类
  */
 @Service
 public class MyScannerService {

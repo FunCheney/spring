@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service;
 @MyScan
 public class MyMapper {
 	public void myScan(){
-		System.out.println("testMyScan");
+		System.out.println("testMyScan into...");
 	}
 }
