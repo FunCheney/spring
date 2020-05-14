@@ -1,5 +1,6 @@
 package com.fchen.expand;
 
+import com.fchen.service.MySelectImportService;
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.type.AnnotationMetadata;
 
@@ -11,6 +12,6 @@ import org.springframework.core.type.AnnotationMetadata;
 public class MyImportSelector implements ImportSelector {
 	@Override
 	public String[] selectImports(AnnotationMetadata importingClassMetadata) {
-		return new String[0];
+		return new String[]{MySelectImportService.class.getName()};
 	}
 }

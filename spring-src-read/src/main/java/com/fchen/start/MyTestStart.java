@@ -2,7 +2,10 @@ package com.fchen.start;
 
 import com.fchen.bean.factory.post.processor.MyFactoryPostProcessor;
 import com.fchen.config.MyConfig;
+import com.fchen.config.MySelectorImportConfig;
+import com.fchen.expand.MyImportSelector;
 import com.fchen.service.MyScannerService;
+import com.fchen.service.MySelectImportService;
 import com.fchen.service.MyService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -15,11 +18,11 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class MyTestStart {
 	public static void main(String[] args) {
 
-		ApplicationContext ann = new AnnotationConfigApplicationContext(MyConfig.class);
+//		ApplicationContext ann = new AnnotationConfigApplicationContext(MyConfig.class);
 //		MyService myService = ann.getBean(MyService.class);
 //		myService.test();
-		MyScannerService myScannerService = ann.getBean(MyScannerService.class);
-		myScannerService.testMyScan();
+//		MyScannerService myScannerService = ann.getBean(MyScannerService.class);
+//		myScannerService.testMyScan();
 
 //		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
 //		ctx.register(MyConfig.class);
@@ -27,5 +30,9 @@ public class MyTestStart {
 //		ctx.addBeanFactoryPostProcessor(new MyFactoryPostProcessor());
 //		ctx.refresh();
 //		MyService myService1 = ctx.getBean(MyService.class);
+		ApplicationContext ann = new AnnotationConfigApplicationContext(MySelectorImportConfig.class);
+		MySelectImportService bean = ann.getBean(MySelectImportService.class);
+		bean.test();
+
 	}
 }
