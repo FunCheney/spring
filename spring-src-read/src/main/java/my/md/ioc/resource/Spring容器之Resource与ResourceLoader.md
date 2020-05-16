@@ -8,8 +8,8 @@
 &ensp;&ensp;在这篇文章中，对Spring中的资源，与资源的加载做一个统一学习。
 
 ### Resource
-
-#### ClassPathResource 的类关系图
+&ensp;&ensp;Spring把其资源做了一个抽象，底层使用统一的资源访问接口来访问Spring的所有资源。
+也就是说，不管什么格式的文件，也不管文件在哪里，到Spring 底层，都只有一个访问接口，Resource。
 <div align="center">
     <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/resource/Resource.jpg">
  </div>
@@ -21,6 +21,11 @@
 - ByteArrayResource 对字节数组提供的数据的封装。
 - FileSystemResource 文件相关。
 - UrlResource url资源的加载。
+
+#### ClassPathResource 的类关系图
+<div align="center">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/resource/ClassPathResource_class_relation.jpg">
+ </div>
 
 #### AbstractResource 源码实现：
 ```java
@@ -186,9 +191,9 @@ public abstract class AbstractResource implements Resource {
 ```
 
 ### ResourceLoader
-&ensp;&ensp; 通过`new PathMatchingResourcePatternResolver()`来完成`ResourceLoader`实例化。我们还是从`ResourceLoader`的类图入手，
-可以看到 `DefaultResourceLoader` 为 `ResourceLoader` 默认实现。然后 `ResourceLoader` 为所有 `Spring` IoC 容器的父接口。
-
+。我们还是从`ResourceLoader`的类图入手，
+可以看到 `DefaultResourceLoader` 为 `ResourceLoader` 默认实现。然后 `ResourceLoader` 为所有 `Spring` IoC 容器的父接口。这也就说明
+所有的 IOC 容器都是具有加载资源的能力。
 <div align="center">
     <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/resource/ResourceLoader_class.png">
  </div>
