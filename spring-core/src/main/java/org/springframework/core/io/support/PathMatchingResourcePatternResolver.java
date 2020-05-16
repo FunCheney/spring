@@ -274,6 +274,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 
 	@Override
 	public Resource getResource(String location) {
+		// 委托给Resource 获取资源
 		return getResourceLoader().getResource(location);
 	}
 

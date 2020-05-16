@@ -7,11 +7,13 @@
 
 &ensp;&ensp;在这篇文章中，对Spring中的资源，与资源的加载做一个统一学习。
 
-### new ClassPathResource("xxx") 做了什么
+### Resource
 
 #### ClassPathResource 的类关系图
-
-
+<div align="center">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/resource/Resource.jpg">
+ </div>
+ 
 其中AbstractResource 为 Resource的默认实现。
 - InputStreamSource 封装任何返货 InputStream 的类，比如File，Classpath下的资源和Byte，Array等。
 - Resource 接口抽象了所有Spring内部使用到的底层资源：File，URL，Classpath等。
@@ -20,7 +22,7 @@
 - FileSystemResource 文件相关。
 - UrlResource url资源的加载。
 
-AbstractResource 源码如下：
+#### AbstractResource 源码实现：
 ```java
 public abstract class AbstractResource implements Resource {
 
@@ -187,10 +189,12 @@ public abstract class AbstractResource implements Resource {
 &ensp;&ensp; 通过`new PathMatchingResourcePatternResolver()`来完成`ResourceLoader`实例化。我们还是从`ResourceLoader`的类图入手，
 可以看到 `DefaultResourceLoader` 为 `ResourceLoader` 默认实现。然后 `ResourceLoader` 为所有 `Spring` IoC 容器的父接口。
 
-ResourceLoader_class.png
+<div align="center">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/resource/ResourceLoader_class.png">
+ </div>
 
 下面再来看看 `ResourceLoader` 与 `DefaultResourceLoader` 中的代码：
-
+#### ResourceLoader 源码方法
 ```java
 public interface ResourceLoader {
 
@@ -211,6 +215,7 @@ public interface ResourceLoader {
 
 }
 ```
+#### ResourceLoader 默认实现
 ```java
 public class DefaultResourceLoader implements ResourceLoader {
 
@@ -224,41 +229,22 @@ public class DefaultResourceLoader implements ResourceLoader {
 
 	/**
 	 * 创建默认的 ClassLoader
-	 * Create a new DefaultResourceLoader.
-	 * <p>ClassLoader access will happen using the thread context class loader
-	 * at the time of this ResourceLoader's initialization.
-	 * @see java.lang.Thread#getContextClassLoader()
 	 */
 	public DefaultResourceLoader() {
 		this.classLoader = ClassUtils.getDefaultClassLoader();
 	}
 
 	/**
-	 * Create a new DefaultResourceLoader.
-	 * @param classLoader the ClassLoader to load class path resources with, or {@code null}
-	 * for using the thread context class loader at the time of actual resource access
+	 * 创建默认的 ClassLoader，将传入的 ClassLoader 赋值给变量
 	 */
 	public DefaultResourceLoader(@Nullable ClassLoader classLoader) {
 		this.classLoader = classLoader;
 	}
 
-
-	/**
-	 * Specify the ClassLoader to load class path resources with, or {@code null}
-	 * for using the thread context class loader at the time of actual resource access.
-	 * <p>The default is that ClassLoader access will happen using the thread context
-	 * class loader at the time of this ResourceLoader's initialization.
-	 */
 	public void setClassLoader(@Nullable ClassLoader classLoader) {
 		this.classLoader = classLoader;
 	}
 
-	/**
-	 * Return the ClassLoader to load class path resources with.
-	 * <p>Will get passed to ClassPathResource's constructor for all
-	 * ClassPathResource objects created by this resource loader.
-	 * @see ClassPathResource
-	 */
 	@Override
 	@Nullable
 	public ClassLoader getClassLoader() {
@@ -267,47 +253,24 @@ public class DefaultResourceLoader implements ResourceLoader {
 
 	/**
 	 * 添加protocolResolvers
-	 * Register the given resolver with this resource loader, allowing for
-	 * additional protocols to be handled.
-	 * <p>Any such resolver will be invoked ahead of this loader's standard
-	 * resolution rules. It may therefore also override any default rules.
-	 * @since 4.3
-	 * @see #getProtocolResolvers()
 	 */
 	public void addProtocolResolver(ProtocolResolver resolver) {
 		Assert.notNull(resolver, "ProtocolResolver must not be null");
 		this.protocolResolvers.add(resolver);
 	}
 
-	/**
-	 * Return the collection of currently registered protocol resolvers,
-	 * allowing for introspection as well as modification.
-	 * @since 4.3
-	 */
 	public Collection<ProtocolResolver> getProtocolResolvers() {
 		return this.protocolResolvers;
 	}
 
-	/**
-	 * Obtain a cache for the given value type, keyed by {@link Resource}.
-	 * @param valueType the value type, e.g. an ASM {@code MetadataReader}
-	 * @return the cache {@link Map}, shared at the {@code ResourceLoader} level
-	 * @since 5.0
-	 */
 	@SuppressWarnings("unchecked")
 	public <T> Map<Resource, T> getResourceCache(Class<T> valueType) {
 		return (Map<Resource, T>) this.resourceCaches.computeIfAbsent(valueType, key -> new ConcurrentHashMap<>());
 	}
 
-	/**
-	 * Clear all resource caches in this resource loader.
-	 * @since 5.0
-	 * @see #getResourceCache
-	 */
 	public void clearResourceCaches() {
 		this.resourceCaches.clear();
 	}
-
 
 	/**
 	 * 取得Resource 的具体过程
@@ -330,20 +293,20 @@ public class DefaultResourceLoader implements ResourceLoader {
 		if (location.startsWith("/")) {
 			return getResourceByPath(location);
 		}
-		/**处理带有classpath 表示的Resource*/
+		/* 处理带有classpath 表示的Resource*/
 		else if (location.startsWith(CLASSPATH_URL_PREFIX)) {
 			return new ClassPathResource(location.substring(CLASSPATH_URL_PREFIX.length()), getClassLoader());
 		}
 		else {
 			try {
 				// Try to parse the location as a URL...
-				/** 处理URL 标识的Resource 定位*/
+				/* 处理URL 标识的Resource 定位*/
 				URL url = new URL(location);
 				return (ResourceUtils.isFileURL(url) ? new FileUrlResource(url) : new UrlResource(url));
 			}
 			catch (MalformedURLException ex) {
 				// No URL -> resolve as resource path.
-				/**
+				/*
 				 * 如果既不是classpath，也不是URL标识的Resource定位，则把getResource的
 				 * 重任交给getResourcePath()，这个是一个 protected 的方法，默认的实现是
 				 * 得到一个 ClassPathContextResource，这个方法常常会用子类来实现
@@ -354,25 +317,12 @@ public class DefaultResourceLoader implements ResourceLoader {
 		}
 	}
 
-	/**
-	 * Return a Resource handle for the resource at the given path.
-	 * <p>The default implementation supports class path locations. This should
-	 * be appropriate for standalone implementations but can be overridden,
-	 * e.g. for implementations targeted at a Servlet container.
-	 * @param path the path to the resource
-	 * @return the corresponding Resource handle
-	 * @see ClassPathResource
-	 * @see org.springframework.context.support.FileSystemXmlApplicationContext#getResourceByPath
-	 * @see org.springframework.web.context.support.XmlWebApplicationContext#getResourceByPath
-	 */
 	protected Resource getResourceByPath(String path) {
 		return new ClassPathContextResource(path, getClassLoader());
 	}
 
 
 	/**
-	 * ClassPathResource that explicitly expresses a context-relative path
-	 * through implementing the ContextResource interface.
 	 * 通过实现ContextResource接口 明确表示下文相关路径的ClassPathResource，此方法重点在于实现ContextResource
 	 */
 	protected static class ClassPathContextResource extends ClassPathResource implements ContextResource {
@@ -395,15 +345,110 @@ public class DefaultResourceLoader implements ResourceLoader {
 	}
 }
 ```
+#### ResourceLoader 的扩展
+&ensp;&ensp;`ResourceLoader` 用来加载Spring定义的资源,`DefaultResourceLoader` 是`ResourceLoader`默认的实现 `ResourcePatternResolver`
+ 是 `ResourceLoader` 的扩展，它支持根据指定的资源路径匹配模式每次返回多个 Resource 实例。`PathMatchingResourcePatternResolver` 为 
+ `ResourcePatternResolver` 最常用的子类，它除了支持 `ResourceLoader` 和 `ResourcePatternResolver` 新增的 classpath*: 前缀外，
+ 还支持 Ant 风格的路径匹配模式（类似于 **/*.xml）。
+ 
+ &ensp;&ensp; `PathMatchingResourcePatternResolver` 是`ResourceLoader` 的子类实现，同样他的作用是用来加载资源`Resource`。通过 `PathMatchingResourcePatternResolver`
+ 的构造方法可以看出，`ResourceLoader`的初始化，如果与传入则用传入对象完成初始化。没有传入则采用默认的子类实现。代码如下：
+ ```java
+	public PathMatchingResourcePatternResolver() {
+		// 使用无参 构造器 指定使用DefaultResourceLoader
+		this.resourceLoader = new DefaultResourceLoader();
+	}
 
+	public PathMatchingResourcePatternResolver(ResourceLoader resourceLoader) {
+		Assert.notNull(resourceLoader, "ResourceLoader must not be null");
+		// 若指定了 ResourceLoader 则使用指定的
+		this.resourceLoader = resourceLoader;
+	}
 
-#### PathMatchingResourcePatternResolver 的类关系图
+	public PathMatchingResourcePatternResolver(@Nullable ClassLoader classLoader) {
+		// 指定类加载器的 通过给定的类加载器完成 ResourceLoader 的实例化
+		this.resourceLoader = new DefaultResourceLoader(classLoader);
+	}
+```
+&ensp;&ensp; `PathMatchingResourcePatternResolver` 是用来加载资源的，通过下面的代码来看看，它是如何得到 `Resource`的：
 
-
-- ResourceLoader 用来加载Spring定义的资源
-- DefaultResourceLoader ResourceLoader默认的实现
-- ResourcePatternResolver ResourcePatternResolver 是 ResourceLoader 的扩展，它支持根据指定的资源路径匹配模式每次返回多个 Resource 实例。
-- PathMatchingResourcePatternResolver 为 ResourcePatternResolver 最常用的子类，它除了支持 ResourceLoader 和 ResourcePatternResolver 新增的 classpath*: 前缀外，还支持 Ant 风格的路径匹配模式（类似于 **/*.xml）。 
+&ensp;&ensp;通过初始化话的 `ResourceLoader` 获取单个 `Resource`。
+```java
+@Override
+	public Resource getResource(String location) {
+		// 委托给初始化的ResourceLoader 获取资源
+		return getResourceLoader().getResource(location);
+	}
+```
+&ensp;&ensp;下面这个方法获取到的是 `Resource[]`:
+```java
+	@Override
+	public Resource[] getResources(String locationPattern) throws IOException {
+		Assert.notNull(locationPattern, "Location pattern must not be null");
+		// 以 classpath*: 开头
+		if (locationPattern.startsWith(CLASSPATH_ALL_URL_PREFIX)) {
+			// 路径包含通配符
+			if (getPathMatcher().isPattern(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()))) {
+				// a class path resource pattern
+				return findPathMatchingResources(locationPattern);
+			}
+			else {
+				// 路径不包含通配符
+				return findAllClassPathResources(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()));
+			}
+		}
+		else {
+			int prefixEnd = (locationPattern.startsWith("war:") ? locationPattern.indexOf("*/") + 1 :
+					locationPattern.indexOf(':') + 1);
+			// 路径包含通配符
+			if (getPathMatcher().isPattern(locationPattern.substring(prefixEnd))) {
+				return findPathMatchingResources(locationPattern);
+			}
+			else {
+				// a single resource with the given name
+				return new Resource[] {getResourceLoader().getResource(locationPattern)};
+			}
+		}
+	}
+```
+&ensp;&ensp;找到 classes 路径下和所有 jar 包中的所有相匹配的资源
+```java
+	protected Resource[] findAllClassPathResources(String location) throws IOException {
+		String path = location;
+		// 路径中以 "/" 开头 将 "/" 去掉
+		if (path.startsWith("/")) {
+			path = path.substring(1);
+		}
+		// 这里是真正的方法
+		Set<Resource> result = doFindAllClassPathResources(path);
+		if (logger.isTraceEnabled()) {
+			logger.trace("Resolved classpath location [" + location + "] to resources " + result);
+		}
+		return result.toArray(new Resource[0]);
+	}
+```
+&ensp;&ensp;真正加载 `Resource`的地方，这也符合Spring一以贯之的风格，真正做事的方法都是 `doXXX`来完成的。
+```java
+	protected Set<Resource> doFindAllClassPathResources(String path) throws IOException {
+		Set<Resource> result = new LinkedHashSet<>(16);
+		// 获取 classLoader
+		ClassLoader cl = getClassLoader();
+		// //通过classloader来加载资源目录，这里也会去找寻classpath路径下的jar包或者zip包
+		Enumeration<URL> resourceUrls = (cl != null ? cl.getResources(path) : ClassLoader.getSystemResources(path));
+		while (resourceUrls.hasMoreElements()) {
+			URL url = resourceUrls.nextElement();
+			// 将找到的路径转化为 Resource 对象并添加到 Set 集合中
+			result.add(convertClassLoaderURL(url));
+		}
+		if ("".equals(path)) {
+			// The above result is likely to be incomplete, i.e. only containing file system references.
+			// We need to have pointers to each of the jar files on the classpath as well...
+			// 加载jar协议的资源
+			addAllClassLoaderJarRoots(cl, result);
+		}
+		return result;
+	}
+```
 
 
 
