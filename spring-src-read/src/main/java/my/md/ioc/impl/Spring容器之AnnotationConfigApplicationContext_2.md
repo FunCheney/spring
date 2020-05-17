@@ -6,7 +6,7 @@
 通过这行代码，开始我们的晕车之旅。。。
 
 涉及代码如下：
-```
+```java
 public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
     /**
      * 调用默认的构造方法，由于该类有父类，

@@ -35,7 +35,7 @@ import org.springframework.util.Assert;
 
 /**
  * Convenient adapter for programmatic registration of bean classes.
- *
+ * 给通过编程的方式注册 Bean 提供一个方便的适配器
  * <p>This is an alternative to {@link ClassPathBeanDefinitionScanner}, applying
  * the same resolution of annotations but for explicitly registered classes only.
  *
@@ -48,6 +48,7 @@ import org.springframework.util.Assert;
  */
 public class AnnotatedBeanDefinitionReader {
 
+	/** 用来注册 BeanDefinition */
 	private final BeanDefinitionRegistry registry;
 
 	private BeanNameGenerator beanNameGenerator = new AnnotationBeanNameGenerator();
