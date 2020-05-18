@@ -33,16 +33,6 @@ import org.springframework.lang.Nullable;
  * 在配置文件中可以定义父<bean><bean/> 和 子<bean><bean/>，其中父<bean>用RootBeanDefinition表示
  *   子<bean> 用 ChildBeanDefinition 表示，没有父<bean>的bean就用ChildBeanDefinition表示
  *
- * <p>This is just a minimal interface: The main intention is to allow a
- * {@link BeanFactoryPostProcessor} such as {@link PropertyPlaceholderConfigurer}
- * to introspect and modify property values and other bean metadata.
- *
- * @author Juergen Hoeller
- * @author Rob Harrop
- * @since 19.03.2004
- * @see ConfigurableListableBeanFactory#getBeanDefinition
- * @see org.springframework.beans.factory.support.RootBeanDefinition
- * @see org.springframework.beans.factory.support.ChildBeanDefinition
  */
 public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 

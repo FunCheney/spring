@@ -18,18 +18,18 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class MyTestStart {
 	public static void main(String[] args) {
 
-//		ApplicationContext ann = new AnnotationConfigApplicationContext(MyConfig.class);
-//		MyService myService = ann.getBean(MyService.class);
-//		myService.test();
+		ApplicationContext ann = new AnnotationConfigApplicationContext(MyConfig.class);
+		MyService myService = ann.getBean(MyService.class);
+		myService.test();
 //		MyScannerService myScannerService = ann.getBean(MyScannerService.class);
 //		myScannerService.testMyScan();
 
-		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
+//		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
 //		ctx.register(MyConfig.class);
-		ctx.scan("com.fchen");
-		ctx.refresh();
-		MyService myService = ctx.getBean(MyService.class);
-		myService.test();
+//		ctx.scan("com.fchen");
+//		ctx.refresh();
+//		MyService myService = ctx.getBean(MyService.class);
+//		myService.test();
 //		//手动添加程序员自定义 且 未交给spring 管理的 BeanFactoryPostProcessor
 //		ctx.addBeanFactoryPostProcessor(new MyFactoryPostProcessor());
 //		ctx.refresh();
