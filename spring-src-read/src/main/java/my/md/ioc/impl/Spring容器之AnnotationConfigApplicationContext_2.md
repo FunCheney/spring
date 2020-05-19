@@ -53,32 +53,139 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
  - `GenericApplicationContext` 中完成了默认 `BeanFactory` 的实现 `DefaultListableBeanFactory` 的初始化，容器默认的实现。
 
 #### 2. new AnnotationConfigApplicationContext() 的调用逻辑
-&ensp;&ensp;在调用 `new` 方法的时候，完成类的初始化，先会调用父类的构造方法，
-- ①：AnnotationConfigApplicationContext#AnnotationConfigApplicationContext(Class<?>... componentClasses)
-- ②：AnnotationConfigApplicationContext#AnnotationConfigApplicationContext()
-- ③：GenericApplicationContext#GenericApplicationContext()
-- ④：AbstractApplicationContext#AbstractApplicationContext()
-- ⑤：AbstractApplicationContext#getResourcePatternResolver()
-- ⑥：PathMatchingResourcePatternResolver#PathMatchingResourcePatternResolver()
-- ⑦：DefaultResourceLoader#DefaultResourceLoader()
-- ⑧：ClassUtils.getDefaultClassLoader()
-- ⑨：DefaultListableBeanFactory#DefaultListableBeanFactory()
-- ⑩: AnnotatedBeanDefinitionReader#AnnotatedBeanDefinitionReader(BeanDefinitionRegistry registry, Environment environment)
-- ⑪: AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry)
-- ⑫: ClassPathBeanDefinitionScanner(BeanDefinitionRegistry registry, boolean useDefaultFilters, Environment environment)
-			
-&ensp;&ensp;在上述的步骤中在第⑥ ~ ⑧中，可以看到，是获取资源加载器ResourceLoader的过程；然后第⑨步，
-是实例化IoC容器的过程，这里也是默认实现 DefaultListableBeanFactory，期间也包含一些对IoC容器的操作，
-如ignoreDependencyInterface()的功能，忽略给定接口的自动装配功能；再然后第⑩、⑪是实例化被注解的类对应
-在Spring中的Bean的描述文件BeanDefinition的读取器 AnnotatedBeanDefinitionReader 的过程，*(这部分
-比较复杂，后续专门学习)*。最后，第⑫步是实例化扫描器 ClassPathBeanDefinitionScanner 的过程，该扫描器
-能够扫描一个类，并转换为 spring当中bean的描述文件。这里要注意，这个扫描器是Spring显示的提供出来，供开发
-人员使用的。
+&ensp;&ensp;在调用 `new` 方法的时候，完成类的初始化，先会调用父类的构造方法，对用调用的方法如下：
+* ①：`AnnotationConfigApplicationContext#AnnotationConfigApplicationContext(Class<?>... componentClasses
+)` 调用有参构造函数，里边做了三件事：
+```java
+public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
+    /**
+     * 调用默认的构造方法，由于该类有父类，
+     * 故而先调用父类的构造方法，在调用自己的构造方法
+     * 在自己的构造方法中初始一个读取器和一个扫描器
+     */
+    this();
+    /**
+     * 向spring 的容器中注册bean
+     */
+    register(componentClasses);
+    /**
+     * 初始化spring的环境
+     */
+    refresh();
+}
+```
+* ②：`AnnotationConfigApplicationContext#AnnotationConfigApplicationContext()` 有参构造函数里面的第一件事，通过`this()`调用无惨的构成函数
+初始化 `reader` 和 `scanner`
+```java
+public AnnotationConfigApplicationContext() {
+    /**
+     * 实例化 读取器
+     * 将spring中加了注解的类转化为 一个 spring当中bean的描述文件
+     */
+    this.reader = new AnnotatedBeanDefinitionReader(this);
+    /**
+     * 实例化 扫描器
+     * 能够扫描一个类，并转换为 spring当中bean的描述文件
+     * 不通过显示的调用scanner的方法的情况下，spring中的包不是由该scanner扫描
+     * 而是由Spring 在实例化 AnnotatedBeanDefinitionReader时
+     *   自己new的一个 ClasspathBeanDefinitionScanner 对象扫描完成的
+     * 即：这里初始化的扫描器通过程序员显示的调用才会生效。
+     */
+    this.scanner = new ClassPathBeanDefinitionScanner(this);
+}
+```
 
-#### 3. 时序图
+   - 2.1: `AnnotatedBeanDefinitionReader#AnnotatedBeanDefinitionReader(BeanDefinitionRegistry registry, Environment
+    environment)`
+   ```java
+       public AnnotatedBeanDefinitionReader(BeanDefinitionRegistry registry) {
+             this(registry, getOrCreateEnvironment(registry));
+       }
+   ```
+   ```java
+       public AnnotatedBeanDefinitionReader(BeanDefinitionRegistry registry, Environment environment) {
+           Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
+           Assert.notNull(environment, "Environment must not be null");
+           this.registry = registry;
+           this.conditionEvaluator = new ConditionEvaluator(registry, environment, null);
+           /**
+           * 通过AnnotationConfigUtils.registerAnnotationConfigProcessors()
+           * 获取所有BeanPostProcessor 的bean
+           */
+           AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
+       }
+   ```
+   + 2.1.1: `AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry)`
+   ```java
+      public static void registerAnnotationConfigProcessors(BeanDefinitionRegistry registry) {
+          registerAnnotationConfigProcessors(registry, null);
+      }
+    ```
+   - 2.2: `ClassPathBeanDefinitionScanner(BeanDefinitionRegistry registry, boolean useDefaultFilters, Environment
+      environment)`
+   ```java
+       public ClassPathBeanDefinitionScanner(BeanDefinitionRegistry registry, boolean useDefaultFilters,
+               Environment environment, @Nullable ResourceLoader resourceLoader) {
+ 
+           Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
+           this.registry = registry;
+ 
+           if (useDefaultFilters) {
+               registerDefaultFilters();
+           }
+           setEnvironment(environment);
+           setResourceLoader(resourceLoader);
+       }
+   ```
+* ③：`GenericApplicationContext#GenericApplicationContext()` 调用父类的构造方法
+```java
+public GenericApplicationContext() {
+    /** 实例化beanFactory */
+    this.beanFactory = new DefaultListableBeanFactory();
+}
+```
+   - 3.1：`DefaultListableBeanFactory#DefaultListableBeanFactory()`
+   ```java
+    public DefaultListableBeanFactory() {
+          /** 调用父类的构造方法*/
+          super();
+    }
+   ```
+* ④：`AbstractApplicationContext#AbstractApplicationContext()` 调用父类的构造方法
+```java
+public AbstractApplicationContext() {
+    // 这里根据不同的实现调用 不同的初始化方法
+    this.resourcePatternResolver = getResourcePatternResolver();
+}
+```
+   - 4.1：`AbstractApplicationContext#getResourcePatternResolver()`
+   ```java
+        protected ResourcePatternResolver getResourcePatternResolver() {
+            // 这里的 this 是指 AbstractApplicationContext 它是 DefaultResourceLoader 的子类
+           return new PathMatchingResourcePatternResolver(this);
+        }
+   ```
+   + 4.1.1：`PathMatchingResourcePatternResolver#PathMatchingResourcePatternResolver()`
+   ```java
+         public PathMatchingResourcePatternResolver(ResourceLoader resourceLoader) {
+             Assert.notNull(resourceLoader, "ResourceLoader must not be null");
+             // 若指定了 ResourceLoader 则使用指定的
+              this.resourceLoader = resourceLoader;
+         }
+   ```
+* ⑤：`DefaultResourceLoader#DefaultResourceLoader()`调用父类的构造方法
+```java
+public DefaultResourceLoader() {
+    this.classLoader = ClassUtils.getDefaultClassLoader();
+}
+```
+- 5.1：`ClassUtils.getDefaultClassLoader()`
+
+
+#### 3. 调用过程时序图
 
  <div align="center">
-    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/AnnotationConfigApplicationContext_init_sequence.jpg">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/annotionConfigApplication/AnnotationConfigApplicationContext_init_sequence.jpg">
  </div>
 
 &ensp;&ensp;上述时序图中涉及资源加载器的初始化，DefaultListableBeanFactory 的初始化，以及AnnotatedBeanDefinitionReader
