@@ -54,7 +54,7 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 
 #### 2. new AnnotationConfigApplicationContext() 的调用逻辑
 &ensp;&ensp;在调用 `new` 方法的时候，完成类的初始化，先会调用父类的构造方法，对用调用的方法如下：
-* ①：`AnnotationConfigApplicationContext#AnnotationConfigApplicationContext(Class<?>... componentClasses
+* 1.：`AnnotationConfigApplicationContext#AnnotationConfigApplicationContext(Class<?>... componentClasses
 )` 调用有参构造函数，里边做了三件事：
 ```java
 public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
@@ -74,7 +74,7 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
     refresh();
 }
 ```
-* ②：`AnnotationConfigApplicationContext#AnnotationConfigApplicationContext()` 有参构造函数里面的第一件事，通过`this()`调用无惨的构成函数
+* 2.：`AnnotationConfigApplicationContext#AnnotationConfigApplicationContext()` 有参构造函数里面的第一件事，通过`this()`调用无惨的构成函数
 初始化 `reader` 和 `scanner`
 ```java
 public AnnotationConfigApplicationContext() {
@@ -121,23 +121,23 @@ public AnnotationConfigApplicationContext() {
           registerAnnotationConfigProcessors(registry, null);
       }
     ```
-   - 2.2: `ClassPathBeanDefinitionScanner(BeanDefinitionRegistry registry, boolean useDefaultFilters, Environment
+
+  - 2.2: `ClassPathBeanDefinitionScanner(BeanDefinitionRegistry registry, boolean useDefaultFilters, Environment
       environment)`
-   ```java
-       public ClassPathBeanDefinitionScanner(BeanDefinitionRegistry registry, boolean useDefaultFilters,
-               Environment environment, @Nullable ResourceLoader resourceLoader) {
+  ```java
+     public ClassPathBeanDefinitionScanner(BeanDefinitionRegistry registry, boolean useDefaultFilters,
+             Environment environment, @Nullable ResourceLoader resourceLoader) {
+	     Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
+	     this.registry = registry;
  
-           Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
-           this.registry = registry;
- 
-           if (useDefaultFilters) {
-               registerDefaultFilters();
-           }
-           setEnvironment(environment);
-           setResourceLoader(resourceLoader);
-       }
-   ```
-* ③：`GenericApplicationContext#GenericApplicationContext()` 调用父类的构造方法
+	     if (useDefaultFilters) {
+	     	registerDefaultFilters();
+	     }
+	     setEnvironment(environment);
+	     setResourceLoader(resourceLoader);
+     }
+  ```
+* 3.：`GenericApplicationContext#GenericApplicationContext()` 调用父类的构造方法
 ```java
 public GenericApplicationContext() {
     /** 实例化beanFactory */
@@ -151,7 +151,7 @@ public GenericApplicationContext() {
           super();
     }
    ```
-* ④：`AbstractApplicationContext#AbstractApplicationContext()` 调用父类的构造方法
+* 4.：`AbstractApplicationContext#AbstractApplicationContext()` 调用父类的构造方法
 ```java
 public AbstractApplicationContext() {
     // 这里根据不同的实现调用 不同的初始化方法
@@ -173,7 +173,7 @@ public AbstractApplicationContext() {
               this.resourceLoader = resourceLoader;
          }
    ```
-* ⑤：`DefaultResourceLoader#DefaultResourceLoader()`调用父类的构造方法
+* 5.：`DefaultResourceLoader#DefaultResourceLoader()`调用父类的构造方法
 ```java
 public DefaultResourceLoader() {
     this.classLoader = ClassUtils.getDefaultClassLoader();
