@@ -97,61 +97,68 @@ public AnnotationConfigApplicationContext() {
 
    - 2.1: `AnnotatedBeanDefinitionReader#AnnotatedBeanDefinitionReader(BeanDefinitionRegistry registry, Environment
     environment)`
-   ```java
-       public AnnotatedBeanDefinitionReader(BeanDefinitionRegistry registry) {
-             this(registry, getOrCreateEnvironment(registry));
-       }
-   ```
-   ```java
-       public AnnotatedBeanDefinitionReader(BeanDefinitionRegistry registry, Environment environment) {
-           Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
-           Assert.notNull(environment, "Environment must not be null");
-           this.registry = registry;
-           this.conditionEvaluator = new ConditionEvaluator(registry, environment, null);
-           /**
-           * 通过AnnotationConfigUtils.registerAnnotationConfigProcessors()
-           * 获取所有BeanPostProcessor 的bean
-           */
-           AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
-       }
-   ```
+    
+```java
+   public AnnotatedBeanDefinitionReader(BeanDefinitionRegistry registry) {
+         this(registry, getOrCreateEnvironment(registry));
+   }
+```
+```java
+   public AnnotatedBeanDefinitionReader(BeanDefinitionRegistry registry, Environment environment) {
+       Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
+       Assert.notNull(environment, "Environment must not be null");
+       this.registry = registry;
+       this.conditionEvaluator = new ConditionEvaluator(registry, environment, null);
+       /**
+       * 通过AnnotationConfigUtils.registerAnnotationConfigProcessors()
+       * 获取所有BeanPostProcessor 的bean
+       */
+       AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
+   }
+```
    + 2.1.1: `AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry)`
-   ```java
-      public static void registerAnnotationConfigProcessors(BeanDefinitionRegistry registry) {
-          registerAnnotationConfigProcessors(registry, null);
-      }
-    ```
+   
+```java
+public static void registerAnnotationConfigProcessors(BeanDefinitionRegistry registry) {
+  registerAnnotationConfigProcessors(registry, null);
+}
+```
 
   - 2.2: `ClassPathBeanDefinitionScanner(BeanDefinitionRegistry registry, boolean useDefaultFilters, Environment
       environment)`
-  ```java
-     public ClassPathBeanDefinitionScanner(BeanDefinitionRegistry registry, boolean useDefaultFilters,
-             Environment environment, @Nullable ResourceLoader resourceLoader) {
-	     Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
-	     this.registry = registry;
  
-	     if (useDefaultFilters) {
-	     	registerDefaultFilters();
-	     }
-	     setEnvironment(environment);
-	     setResourceLoader(resourceLoader);
+```java
+ public ClassPathBeanDefinitionScanner(BeanDefinitionRegistry registry, boolean useDefaultFilters,
+         Environment environment, @Nullable ResourceLoader resourceLoader) {
+     Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
+     this.registry = registry;
+
+     if (useDefaultFilters) {
+        registerDefaultFilters();
      }
-  ```
+     setEnvironment(environment);
+     setResourceLoader(resourceLoader);
+ }
+```
 * 3.：`GenericApplicationContext#GenericApplicationContext()` 调用父类的构造方法
+
 ```java
 public GenericApplicationContext() {
     /** 实例化beanFactory */
     this.beanFactory = new DefaultListableBeanFactory();
 }
+
 ```
    - 3.1：`DefaultListableBeanFactory#DefaultListableBeanFactory()`
-   ```java
-    public DefaultListableBeanFactory() {
-          /** 调用父类的构造方法*/
-          super();
-    }
-   ```
+   
+```java
+public DefaultListableBeanFactory() {
+      /** 调用父类的构造方法*/
+      super();
+}
+```
 * 4.：`AbstractApplicationContext#AbstractApplicationContext()` 调用父类的构造方法
+
 ```java
 public AbstractApplicationContext() {
     // 这里根据不同的实现调用 不同的初始化方法
@@ -159,27 +166,31 @@ public AbstractApplicationContext() {
 }
 ```
    - 4.1：`AbstractApplicationContext#getResourcePatternResolver()`
-   ```java
-        protected ResourcePatternResolver getResourcePatternResolver() {
-            // 这里的 this 是指 AbstractApplicationContext 它是 DefaultResourceLoader 的子类
-           return new PathMatchingResourcePatternResolver(this);
-        }
-   ```
+   
+```java
+    protected ResourcePatternResolver getResourcePatternResolver() {
+        // 这里的 this 是指 AbstractApplicationContext 它是 DefaultResourceLoader 的子类
+       return new PathMatchingResourcePatternResolver(this);
+    }
+```
    + 4.1.1：`PathMatchingResourcePatternResolver#PathMatchingResourcePatternResolver()`
-   ```java
-         public PathMatchingResourcePatternResolver(ResourceLoader resourceLoader) {
-             Assert.notNull(resourceLoader, "ResourceLoader must not be null");
-             // 若指定了 ResourceLoader 则使用指定的
-              this.resourceLoader = resourceLoader;
-         }
-   ```
+   
+```java
+ public PathMatchingResourcePatternResolver(ResourceLoader resourceLoader) {
+     Assert.notNull(resourceLoader, "ResourceLoader must not be null");
+     // 若指定了 ResourceLoader 则使用指定的
+      this.resourceLoader = resourceLoader;
+ }
+```
 * 5.：`DefaultResourceLoader#DefaultResourceLoader()`调用父类的构造方法
+
 ```java
 public DefaultResourceLoader() {
     this.classLoader = ClassUtils.getDefaultClassLoader();
 }
 ```
-- 5.1：`ClassUtils.getDefaultClassLoader()`
+
+   - 5.1：`ClassUtils.getDefaultClassLoader()`
 
 
 #### 3. 调用过程时序图
