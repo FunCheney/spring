@@ -52,9 +52,9 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
   完成初始化，所有的 IoC 容器的的实现都是 `ResourceLoader` 的子类。
  - `GenericApplicationContext` 中完成了默认 `BeanFactory` 的实现 `DefaultListableBeanFactory` 的初始化，容器默认的实现。
 
-#### 2. new AnnotationConfigApplicationContext() 的调用逻辑
+#### 3. new AnnotationConfigApplicationContext() 的调用逻辑
 &ensp;&ensp;在调用 `new` 方法的时候，完成类的初始化，先会调用父类的构造方法，对用调用的方法如下：
-* 1.：`AnnotationConfigApplicationContext#AnnotationConfigApplicationContext(Class<?>... componentClasses
+* 1. `AnnotationConfigApplicationContext#AnnotationConfigApplicationContext(Class<?>... componentClasses
 )` 调用有参构造函数，里边做了三件事：
 ```java
 public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
@@ -74,7 +74,7 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
     refresh();
 }
 ```
-* 2.：`AnnotationConfigApplicationContext#AnnotationConfigApplicationContext()` 有参构造函数里面的第一件事，通过`this()`调用无惨的构成函数
+* 2. `AnnotationConfigApplicationContext#AnnotationConfigApplicationContext()` 有参构造函数里面的第一件事，通过`this()`调用无惨的构成函数
 初始化 `reader` 和 `scanner`
 ```java
 public AnnotationConfigApplicationContext() {
@@ -95,7 +95,7 @@ public AnnotationConfigApplicationContext() {
 }
 ```
 
-   - 2.1: `AnnotatedBeanDefinitionReader#AnnotatedBeanDefinitionReader(BeanDefinitionRegistry registry, Environment
+   - 2.1 `AnnotatedBeanDefinitionReader#AnnotatedBeanDefinitionReader(BeanDefinitionRegistry registry, Environment
     environment)`
     
 ```java
@@ -116,7 +116,7 @@ public AnnotationConfigApplicationContext() {
        AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
    }
 ```
-   + 2.1.1: `AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry)`
+   + 2.1.1 `AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry)`
    
 ```java
 public static void registerAnnotationConfigProcessors(BeanDefinitionRegistry registry) {
@@ -124,7 +124,7 @@ public static void registerAnnotationConfigProcessors(BeanDefinitionRegistry reg
 }
 ```
 
-  - 2.2: `ClassPathBeanDefinitionScanner(BeanDefinitionRegistry registry, boolean useDefaultFilters, Environment
+  - 2.2 `ClassPathBeanDefinitionScanner(BeanDefinitionRegistry registry, boolean useDefaultFilters, Environment
       environment)`
  
 ```java
@@ -140,7 +140,7 @@ public static void registerAnnotationConfigProcessors(BeanDefinitionRegistry reg
      setResourceLoader(resourceLoader);
  }
 ```
-* 3.：`GenericApplicationContext#GenericApplicationContext()` 调用父类的构造方法
+* 3. `GenericApplicationContext#GenericApplicationContext()` 调用父类的构造方法
 
 ```java
 public GenericApplicationContext() {
@@ -149,7 +149,7 @@ public GenericApplicationContext() {
 }
 
 ```
-   - 3.1：`DefaultListableBeanFactory#DefaultListableBeanFactory()`
+   - 3.1 `DefaultListableBeanFactory#DefaultListableBeanFactory()`
    
 ```java
 public DefaultListableBeanFactory() {
@@ -157,7 +157,7 @@ public DefaultListableBeanFactory() {
       super();
 }
 ```
-* 4.：`AbstractApplicationContext#AbstractApplicationContext()` 调用父类的构造方法
+* 4. `AbstractApplicationContext#AbstractApplicationContext()` 调用父类的构造方法
 
 ```java
 public AbstractApplicationContext() {
@@ -165,7 +165,7 @@ public AbstractApplicationContext() {
     this.resourcePatternResolver = getResourcePatternResolver();
 }
 ```
-   - 4.1：`AbstractApplicationContext#getResourcePatternResolver()`
+   - 4.1 `AbstractApplicationContext#getResourcePatternResolver()`
    
 ```java
     protected ResourcePatternResolver getResourcePatternResolver() {
@@ -173,7 +173,7 @@ public AbstractApplicationContext() {
        return new PathMatchingResourcePatternResolver(this);
     }
 ```
-   + 4.1.1：`PathMatchingResourcePatternResolver#PathMatchingResourcePatternResolver()`
+   + 4.1.1 `PathMatchingResourcePatternResolver#PathMatchingResourcePatternResolver()`
    
 ```java
  public PathMatchingResourcePatternResolver(ResourceLoader resourceLoader) {
@@ -182,7 +182,7 @@ public AbstractApplicationContext() {
       this.resourceLoader = resourceLoader;
  }
 ```
-* 5.：`DefaultResourceLoader#DefaultResourceLoader()`调用父类的构造方法
+* 5. `DefaultResourceLoader#DefaultResourceLoader()`调用父类的构造方法
 
 ```java
 public DefaultResourceLoader() {
@@ -190,10 +190,10 @@ public DefaultResourceLoader() {
 }
 ```
 
-   - 5.1：`ClassUtils.getDefaultClassLoader()`
+   - 5.1 `ClassUtils.getDefaultClassLoader()`
 
 
-#### 3. 调用过程时序图
+#### 4. 调用过程时序图
 
  <div align="center">
     <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/annotionConfigApplication/AnnotationConfigApplicationContext_init_sequence.jpg">
@@ -202,3 +202,9 @@ public DefaultResourceLoader() {
 &ensp;&ensp;上述时序图中涉及资源加载器的初始化，DefaultListableBeanFactory 的初始化，以及AnnotatedBeanDefinitionReader
 和ClassPathBeanDefinitionScanner的初始化化，其中AnnotatedBeanDefinitionReader涉及的东西较多，需要一点一点详细的分析。
 
+
+#### 5. 容器形成图
+
+ <div align="center">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/annotionConfigApplication/spring_ioc.jpg">
+ </div>
