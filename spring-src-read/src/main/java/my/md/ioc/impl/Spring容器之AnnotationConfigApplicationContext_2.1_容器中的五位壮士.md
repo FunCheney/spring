@@ -140,3 +140,9 @@ public static Set<BeanDefinitionHolder> registerAnnotationConfigProcessors(
 这个类及其的重要，后面会多次提到这个类。
 
 &ensp;&ensp;至此，上述`涉及代码`中的`第①部分！！！`对应的`this()`方法部分已经，全部结束咯...
+
+#### 容器形成图
+
+<div align="center">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/annotionConfigApplication/spring_ioc_contains_1.jpg">
+ </div>
