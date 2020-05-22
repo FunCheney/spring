@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 /**
  * @author: Fchen
  * @date: 2020/1/5 9:23 上午
@@ -16,11 +18,14 @@ public class MyService {
 
 	private Logger log = LoggerFactory.getLogger(MyService.class);
 
+	MyTest xxxx;
 	@Autowired
-	MyTest myTest;
+	public void setxxx(MyTest xxxx) {
+		this.xxxx = xxxx;
+	}
 
 	public void test(){
 		System.out.println("hello test");
-		myTest.test();
+//		myTest.test();
 	}
 }
