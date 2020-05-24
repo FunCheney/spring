@@ -1,7 +1,6 @@
-## Spring IoC 容器中的五壮士
+## Spring IoC 初始化之先发五虎 
 &ensp;&ensp;接上文所述，源码分析来到了 `AnnotationConfigApplicationContext()` 方法中的 `new AnnotatedBeanDefinitionReader(this)`
- 方法。下面就从 `new AnnotatedBeanDefinitionReader(this)`这一行代码开始。首先解释this，这里this指的
-是当前类，也即 AnnotationConfigApplicationContext。
+ 方法。下面就从 `new AnnotatedBeanDefinitionReader(this)`这一行代码开始。首先解释`this`，这里`this`指的是当前类，也即 AnnotationConfigApplicationContext。
 ### 1. 代码入口
 ```java
 /**
@@ -28,7 +27,7 @@ public AnnotatedBeanDefinitionReader(BeanDefinitionRegistry registry, Environmen
 &ensp;&ensp;看到这里，你可能觉得篇文章的题目是在吸引眼球，到目前为止五壮士的一点毛信息都没有。请不要着急，请相信，我们一定会一点一点的揭开这五位壮士的神秘面纱的。来不及了，
 快上车。。。
 
-&ensp;&ensp; `registerAnnotationConfigProcessors` 中通过给定的注册器，注册所有注解相关的 后置处理器。
+&ensp;&ensp; `registerAnnotationConfigProcessors` 中通过给定的注册器，注册所有注解相关的后置处理器。
 ```java
 public static void registerAnnotationConfigProcessors(BeanDefinitionRegistry registry) {
     registerAnnotationConfigProcessors(registry, null);
@@ -113,7 +112,32 @@ public static Set<BeanDefinitionHolder> registerAnnotationConfigProcessors(
     return beanDefs;
 }
 ``` 
+&ensp;&ensp;在上述的方法中，都通过 `registerPostProcessor` 中调用 `registerBeanDefinition` 方法将 `definition` 放置到 `Map`当中。可以看到放到`Map`中的这个对象都是Spring内部自己定义的。这说明在容器初始化的时候，加载程序员自定义的`Bean` 的时候，已经有一部分对象呗加载到容器中了，通过这些对象来完成后续其他对象的加载。
+```java
+/**
+ * 往BeanDefinitionMap中注册
+ * @param registry
+ * @param definition
+ * @param beanName
+ * @return 返回一个 BeanDefinitionHolder 对象
+ */
+private static BeanDefinitionHolder registerPostProcessor(
+        BeanDefinitionRegistry registry, RootBeanDefinition definition, String beanName) {
 
+    definition.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
+    /**
+     * 将bean放入Map中
+     */
+    registry.registerBeanDefinition(beanName, definition);
+    // 返回 BeanDefinitionHolder
+    return new BeanDefinitionHolder(definition, beanName);
+}
+```
+&ensp;&ensp;关于 `registerBeanDefinition` 后面在Spring `Bean` 的注册中会详细介绍，这里暂不做介绍。但是这看到有一个 `BeanDefinitionHolder`
+对象。从上述代码来看 `BeanDefinitionHolder` 是对 `BeanDefinition` 和 `beanName` 的封装。
+
+&ensp;&ensp; `BeanDefinition` 是 Spring 中对 基于注解，或者通过`xml`方式定义的Bean的封装。这里只做概念上的描述，后续会对 `BeanDefinition`
+有一个系统性的认识。
 
 
 #### 1. 时序图 
@@ -125,7 +149,8 @@ public static Set<BeanDefinitionHolder> registerAnnotationConfigProcessors(
 &ensp;&ensp;在上述的时序图中，提到有一个极其重要的过程，在此过程中向IoC容器中的beanDefinitionMap中put了
 5个Spring内置的对象，这五个对象对应的Spring 的Bean的描述文件为RootBeanDefinition。
 
-&ensp;&ensp;这5个对象在Spring中对应的常量，对应Spring中的类，以及注解。其对应关系如下:
+&ensp;&ensp;这些类的实现方式都是对Spring后置处理器的应用，关于Spring的扩展点以及扩展点的应用，在以后都会介绍到。
+这里我们先抓住主要矛盾，**容器的初始化**。这5个对象在Spring中对应的常量，对应Spring中的类，以及注解。其对应关系如下:
 
 | 常量  | 对应的BeanPostProcessor	| 对应的注解	| 
 |---|---|---|
