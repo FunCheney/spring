@@ -1,4 +1,5 @@
-## AnnotationConfigApplicationContext 源码解析
+## AnnotationConfigApplicationContext 源码解析 注册配置类
+### 入口代码展示
 ```
 public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
     /**
@@ -21,7 +22,111 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 }
 ```
 &ensp;&ensp;这里将要解析上述代码中的`register(componentClasses)`这一部分的代码。。。
-### register(componentClasses);
+### 注册配置类
+
+```java
+/**
+ * 注册单个bean给容器
+ * 比如有新加的类可以用这个方法
+ * 但是注册之后需要手动调用refresh()方法触发容器解释注释
+ *
+ * 可以注册一个配置类
+ * 也可以注册一个bean
+ */
+@Override
+public void register(Class<?>... componentClasses) {
+    Assert.notEmpty(componentClasses, "At least one component class must be specified");
+    this.reader.register(componentClasses);
+}
+```
+&ensp;&ensp; 上述代码中通过 `this.reader.register(componentClasses)` 完成了配置类的注册，这里的 `reader` 对象就是上一篇文章中提到的
+bean的读取器 `AnnotatedBeanDefinitionReader`。
+```java
+public void register(Class<?>... componentClasses) {
+    for (Class<?> componentClass : componentClasses) {
+        registerBean(componentClass);
+    }
+}
+```
+### 初识 Spring 的 doXXX方法
+&ensp;&ensp;在Spring当中真正的做事情的方法都是通过 `do` 来开头完成的。在后续的方法中，会看到很多这类的方法。这里首先看看 `doRegisterBean()`
+方法实现：
+```java
+<T> void doRegisterBean(Class<T> beanClass, @Nullable Supplier<T> instanceSupplier, @Nullable String name,
+        @Nullable Class<? extends Annotation>[] qualifiers, BeanDefinitionCustomizer... definitionCustomizers) {
+    /*
+     * 根据指定的bean创建一个AnnotatedGenericBeanDefinition
+     * 这个AnnotatedGenericBeanDefinition可以理解为一个数据结构，
+     * 该结构中包含了类的一些描述信息。比如scope，lazy等等
+     */
+    AnnotatedGenericBeanDefinition abd = new AnnotatedGenericBeanDefinition(beanClass);
+    if (this.conditionEvaluator.shouldSkip(abd.getMetadata())) {
+        return;
+    }
+
+    abd.setInstanceSupplier(instanceSupplier);
+    ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(abd);
+    /*
+     * 设置类的作用域
+     */
+    abd.setScope(scopeMetadata.getScopeName());
+    /*
+     * 通过beanNameGenerator生成一个beanName
+     */
+    String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
+
+    /*
+     * 处理类当中的通用注解
+     * 处理完的数据 存放在 abd 中
+     */
+    AnnotationConfigUtils.processCommonDefinitionAnnotations(abd);
+
+    /*
+     * 当 qualifiers 不为null 时，处理qualifiers
+     */
+    if (qualifiers != null) {
+        for (Class<? extends Annotation> qualifier : qualifiers) {
+            /** 如果设置了 @Primary 则将其值设置为true */
+            if (Primary.class == qualifier) {
+                abd.setPrimary(true);
+            }
+            else if (Lazy.class == qualifier) {
+                /** 如果设置了 @Lazy 则将其值设置为true */
+                abd.setLazyInit(true);
+            }
+            else {
+                /**
+                 * 使用了其他注解，则为该bean添加一个根据名字自动装配的限定符
+                 */
+                abd.addQualifier(new AutowireCandidateQualifier(qualifier));
+            }
+        }
+    }
+    for (BeanDefinitionCustomizer customizer : definitionCustomizers) {
+        customizer.customize(abd);
+    }
+
+    /*
+     * BeanDefinitionHolder 也是一种数据结构
+     * 将beanName 与 abd 关联
+     */
+    BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(abd, beanName);
+
+    /*
+     * ScopedProxyMode 结合web去理解
+     */
+    definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
+    /*
+     * 将definitionHolder 注册给 registry
+     * registry 是 AnnotationConfigApplicationContext
+     * AnnotationConfigApplicationContext 在初始化的时候通过调用父类的构造方法实例化一个 DefaultListableBeanFactory
+     *
+     *   registerBeanDefinition 就是将 definitionHolder 注册到 DefaultListableBeanFactory中
+     */
+    BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, this.registry);
+}
+```
+### doRegisterBean 时序图 
 <div align="center">
     <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/AnnotationConfigApplicationContext_register.jpg">
  </div>
@@ -32,3 +137,8 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 <div align="center">
     <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/beanDefinitionMap_six_object.jpg">
  </div>
+ 
+ 
+ ### 容器形成图
+ 
+ 

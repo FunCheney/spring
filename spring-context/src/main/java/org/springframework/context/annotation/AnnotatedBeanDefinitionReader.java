@@ -51,6 +51,7 @@ public class AnnotatedBeanDefinitionReader {
 	/** 用来注册 BeanDefinition */
 	private final BeanDefinitionRegistry registry;
 
+	/** 初始化 beanName 生成策略*/
 	private BeanNameGenerator beanNameGenerator = new AnnotationBeanNameGenerator();
 
 	private ScopeMetadataResolver scopeMetadataResolver = new AnnotationScopeMetadataResolver();
@@ -220,7 +221,7 @@ public class AnnotatedBeanDefinitionReader {
 	 */
 	<T> void doRegisterBean(Class<T> beanClass, @Nullable Supplier<T> instanceSupplier, @Nullable String name,
 			@Nullable Class<? extends Annotation>[] qualifiers, BeanDefinitionCustomizer... definitionCustomizers) {
-		/**
+		/*
 		 * 根据指定的bean创建一个AnnotatedGenericBeanDefinition
 		 * 这个AnnotatedGenericBeanDefinition可以理解为一个数据结构，
 		 * 该结构中包含了类的一些描述信息。比如scope，lazy等等
@@ -232,24 +233,23 @@ public class AnnotatedBeanDefinitionReader {
 
 		abd.setInstanceSupplier(instanceSupplier);
 		ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(abd);
-		/**
+		/*
 		 * 设置类的作用域
 		 */
 		abd.setScope(scopeMetadata.getScopeName());
-		/**
+		/*
 		 * 通过beanNameGenerator生成一个beanName
 		 */
 		String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
 
-		/**
+		/*
 		 * 处理类当中的通用注解
 		 * 处理完的数据 存放在 abd 中
 		 */
 		AnnotationConfigUtils.processCommonDefinitionAnnotations(abd);
 
-		/**
+		/*
 		 * 当 qualifiers 不为null 时，处理qualifiers
-		 *
 		 */
 		if (qualifiers != null) {
 			for (Class<? extends Annotation> qualifier : qualifiers) {
@@ -273,17 +273,17 @@ public class AnnotatedBeanDefinitionReader {
 			customizer.customize(abd);
 		}
 
-		/**
+		/*
 		 * BeanDefinitionHolder 也是一种数据结构
 		 * 将beanName 与 abd 关联
 		 */
 		BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(abd, beanName);
 
-		/**
+		/*
 		 * ScopedProxyMode 结合web去理解
 		 */
 		definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
-		/**
+		/*
 		 * 将definitionHolder 注册给 registry
 		 * registry 是 AnnotationConfigApplicationContext
 		 * AnnotationConfigApplicationContext 在初始化的时候通过调用父类的构造方法实例化一个 DefaultListableBeanFactory
