@@ -8,7 +8,7 @@ import org.springframework.context.annotation.*;
  * @date: 2020/1/5 9:22 上午
  * @desc: 配置类
  */
-@Configuration
+@Configuration(value = "testConfig")
 @ComponentScan("com.fchen")
 //@EnableAspectJAutoProxy
 @Import(MyScanConfig.class)

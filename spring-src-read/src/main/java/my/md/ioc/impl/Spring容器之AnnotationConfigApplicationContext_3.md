@@ -140,5 +140,77 @@ public void register(Class<?>... componentClasses) {
  
  
  ### 容器形成图
+<div align="center">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/annotionConfigApplication/spring_ioc_contains_1.jpg">
+ </div>
  
+ &ensp;&ensp;通过上述过程发现，定义的配置类被加载到了容器之中，这样一来容器中的对象又多了一个。这里对容器中对象的名称，
+ 即 `BeanDefinitionMap` 中的 `key` 做一个简要的说明。
+ 
+ * Spring 内部的 `BeanDefinition` 的 `name` 是在Spring 内部写死的，对应的 `BeanDefinition` 的实现是 `RootBeanDefinition` 。
+ * 注入的配置类，如果有指定的名称，则使用指定的名称，如果没有指定，则使用类名。对应的代码如下：
+ 
+ ```java
+public String generateBeanName(BeanDefinition definition, BeanDefinitionRegistry registry) {
+    if (definition instanceof AnnotatedBeanDefinition) {
+        // 通过注接确定 bean 的名称
+        String beanName = determineBeanNameFromAnnotation((AnnotatedBeanDefinition) definition);
+        if (StringUtils.hasText(beanName)) {
+            // Explicit bean name found.
+            return beanName;
+        }
+    }
+    // 生成一个默认的唯一的beanName
+    return buildDefaultBeanName(definition, registry);
+}
+```
+
+```java
+protected String determineBeanNameFromAnnotation(AnnotatedBeanDefinition annotatedDef) {
+    // 获取类上的注解
+    AnnotationMetadata amd = annotatedDef.getMetadata();
+    // 获取注解的类型
+    Set<String> types = amd.getAnnotationTypes();
+    String beanName = null;
+    for (String type : types) {
+        AnnotationAttributes attributes = AnnotationConfigUtils.attributesFor(amd, type);
+        if (attributes != null && isStereotypeWithNameValue(type, amd.getMetaAnnotationTypes(type), attributes)) {
+            // 获取value属性
+            Object value = attributes.get("value");
+            // 如果是 字符串 则beanName 就是指定的，否则为 null
+            if (value instanceof String) {
+                String strVal = (String) value;
+                if (StringUtils.hasLength(strVal)) {
+                    if (beanName != null && !strVal.equals(beanName)) {
+                        throw new IllegalStateException("Stereotype annotations suggest inconsistent " +
+                                "component names: '" + beanName + "' versus '" + strVal + "'");
+                    }
+                    beanName = strVal;
+                }
+            }
+        }
+    }
+    return beanName;
+}
+```
+&ensp;&ensp;下面是生成一个默认的 `beanName`:
+```java
+protected String buildDefaultBeanName(BeanDefinition definition) {
+    String beanClassName = definition.getBeanClassName();
+    Assert.state(beanClassName != null, "No bean class name set");
+    String shortClassName = ClassUtils.getShortName(beanClassName);
+    return Introspector.decapitalize(shortClassName);
+}
+```
+
+&ensp;&ensp;在上述图中有两个对象， `beanNameGenerator` 和 `scopeMetadataResolver` 分别为 `beanName` 生成器和 `bean` 定义范围解析器。
+在Spring中这两个对象对应两个 `BeanNameGenerator` 和 `ScopeMetadataResolver` 策略接口。真正的处理逻辑在实现类中完成，这里对应策略的获取，
+都是通过 `new` 实现类的方式来完成的。在 `AnnotatedBeanDefinitionReader` 中对应的代码如下：
+```java
+private BeanNameGenerator beanNameGenerator = new AnnotationBeanNameGenerator();
+
+private ScopeMetadataResolver scopeMetadataResolver = new AnnotationScopeMetadataResolver();
+```
+
+
  
