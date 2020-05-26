@@ -138,10 +138,94 @@ public void register(Class<?>... componentClasses) {
     <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/beanDefinitionMap_six_object.jpg">
  </div>
  
+ #### 处理通用注解
+ ```java
+/**
+ *  处理类的通用注解
+ * @param abd spring中bean的描述类
+ * @param metadata 通过spring中bean的描述类获取 bean的元数据信息
+ *
+ *       处理完通用注解后的信息 放回到 spring中bean的描述类(AnnotatedBeanDefinition)
+ */
+static void processCommonDefinitionAnnotations(AnnotatedBeanDefinition abd, AnnotatedTypeMetadata metadata) {
+    /**
+     * 处理 @Lazy 注解
+     */
+    AnnotationAttributes lazy = attributesFor(metadata, Lazy.class);
+    if (lazy != null) {
+        /** 设置bean的懒加载信息*/
+        abd.setLazyInit(lazy.getBoolean("value"));
+    }
+    else if (abd.getMetadata() != metadata) {
+        lazy = attributesFor(abd.getMetadata(), Lazy.class);
+        if (lazy != null) {
+            abd.setLazyInit(lazy.getBoolean("value"));
+        }
+    }
+
+    /**
+     * 处理 @Primary 注解
+     */
+    if (metadata.isAnnotated(Primary.class.getName())) {
+        abd.setPrimary(true);
+    }
+
+    /**
+     * 处理 @DependsOn 注解
+     */
+    AnnotationAttributes dependsOn = attributesFor(metadata, DependsOn.class);
+    if (dependsOn != null) {
+        abd.setDependsOn(dependsOn.getStringArray("value"));
+    }
+
+    /**
+     * 处理 @Role 注解
+     */
+    AnnotationAttributes role = attributesFor(metadata, Role.class);
+    if (role != null) {
+        abd.setRole(role.getNumber("value").intValue());
+    }
+
+    /**
+     * 处理 @Description注解
+     */
+    AnnotationAttributes description = attributesFor(metadata, Description.class);
+    if (description != null) {
+        abd.setDescription(description.getString("value"));
+    }
+}
+```
+
+#### 将 `definitionHolder` 注册给 `registry`
+&ensp;&ensp;`registry` 是 `AnnotationConfigApplicationContext`，因为 `AnnotationConfigApplicationContext
+` 是 `BeanDefinitionRegistry` 的实现类。
+```java
+public static void registerBeanDefinition(
+        BeanDefinitionHolder definitionHolder, BeanDefinitionRegistry registry)
+        throws BeanDefinitionStoreException {
+
+    // Register bean definition under primary name.
+    /** 获取beanName */
+    String beanName = definitionHolder.getBeanName();
+    /**
+     * 注册 beanDefinition, beanName 与 BeanDefinition 放入Map 中
+     */
+    registry.registerBeanDefinition(beanName, definitionHolder.getBeanDefinition());
+
+    // Register aliases for bean name, if any.
+    /** 处理别名 */
+    String[] aliases = definitionHolder.getAliases();
+    if (aliases != null) {
+        for (String alias : aliases) {
+            registry.registerAlias(beanName, alias);
+        }
+    }
+}
+```
  
  ### 容器形成图
 <div align="center">
-    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/annotionConfigApplication/spring_ioc_contains_1.jpg">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/annotionConfigApplication/spring_ioc_contains_2.jpg">
  </div>
  
  &ensp;&ensp;通过上述过程发现，定义的配置类被加载到了容器之中，这样一来容器中的对象又多了一个。这里对容器中对象的名称，
