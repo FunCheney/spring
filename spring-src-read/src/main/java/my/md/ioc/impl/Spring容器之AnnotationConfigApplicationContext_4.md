@@ -21,7 +21,99 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 }
 ```
 &ensp;&ensp;这里将要解析上述代码中的`refresh()`这一部分的代码。。。
-### refresh();
+### refresh()方法实现
+```java
+public void refresh() throws BeansException, IllegalStateException {
+    synchronized (this.startupShutdownMonitor) {
+        // Prepare this context for refreshing.
+        /**
+         * 准备工作包括设置启动时间，是否激活标识位
+         * 初始化属性源（property source）配置
+         */
+        prepareRefresh();
+
+        // Tell the subclass to refresh the internal bean factory.
+        /**
+         * 获取 DefaultListableBeanFactory 对象，后续会对BeanFactory设置
+         * 在子类中启动refreshBeanFactory()的地方
+         */
+        ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
+
+        // Prepare the bean factory for use in this context.
+        /**
+         * 准备BeanFactory
+         */
+        prepareBeanFactory(beanFactory);
+
+        try {
+            // Allows post-processing of the bean factory in context subclasses.
+            /** 当前未写任何代码，是一个空方法*/
+            postProcessBeanFactory(beanFactory);
+
+            // Invoke factory processors registered as beans in the context.
+            /**
+             * 在spring的环境中 执行已经被注册的 BeanFactoryPostProcessors
+             * 设置执行自定义的 ProcessorBeanFactory
+             * 这里是重点代码
+             */
+            invokeBeanFactoryPostProcessors(beanFactory);
+
+            // Register bean processors that intercept bean creation.
+            /** 注册spring Bean 的后置处理器*/
+            registerBeanPostProcessors(beanFactory);
+
+            // Initialize message source for this context.
+            /** 对上下文中的消息源进行初始化*/
+            initMessageSource();
+
+            // Initialize event multicaster for this context.
+            /** 初始化上下文中的事件机制*/
+            initApplicationEventMulticaster();
+
+            // Initialize other special beans in specific context subclasses.
+            /** 没有具体实现的方法*/
+            onRefresh();
+
+            // Check for listener beans and register them.
+            /** 检查监听bean并且将这些Bean向容器注册*/
+            registerListeners();
+
+            // Instantiate all remaining (non-lazy-init) singletons.
+            /** Bean的实例化*/
+            finishBeanFactoryInitialization(beanFactory);
+
+            // Last step: publish corresponding event.
+            /** 发布容器事件，结束refresh过程*/
+            finishRefresh();
+        }
+
+        catch (BeansException ex) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("Exception encountered during context initialization - " +
+                        "cancelling refresh attempt: " + ex);
+            }
+
+            // Destroy already created singletons to avoid dangling resources.
+            /** 为防止Bean资源占用，在异常处理中，销毁已经在前面过程中生成的单件bean*/
+            destroyBeans();
+
+            // Reset 'active' flag.
+            /** 重置 active 标志*/
+            cancelRefresh(ex);
+
+            // Propagate exception to caller.
+            throw ex;
+        }
+
+        finally {
+            // Reset common introspection caches in Spring's core, since we
+            // might not ever need metadata for singleton beans anymore...
+            resetCommonCaches();
+        }
+    }
+}
+```
+### refresh()时序图
 <div align="center">
     <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/AnnotationConfigApplication_refresh.jpg">
  </div>
@@ -32,7 +124,7 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 #### 1.prepareRefresh()方法
 &ensp;&ensp;该方法包括主要是完成：准备工作包括设置启动时间，是否激活标识位；初始化属性源（property source）配置。
 
-```
+```java
 protected void prepareRefresh() {
     // Switch to active.
     this.startupDate = System.currentTimeMillis();
@@ -76,7 +168,7 @@ protected void prepareRefresh() {
 }
 ```
 &ensp;&ensp;其中第一处的代码，是一个空壳方法，spring并没有实现。留做以后子类扩展使用，具体代码如下
-```
+```java
 protected void initPropertySources() {
     // For subclasses: do nothing by default.
 }
@@ -105,10 +197,15 @@ protected final void refreshBeanFactory() throws IllegalStateException {
 ```
 &ensp;&ensp;同理这里的`getBeanFactory()`方法，也会到`GenericApplicationContext`中执行`getBeanFactory()`方法，
 最终获取到的是在之前初始化好的DefaultListableBeanFactory对象。
+```java
+public final ConfigurableListableBeanFactory getBeanFactory() {
+    return this.beanFactory;
+}
+```
 
 #### 3.prepareBeanFactory(beanFactory)方法
 &ensp;&ensp;该方法是准备BeanFactory的方法，配置BeanFactory的标准特征，比如上下文的加载器 ClassLoader 和 post-processors 回调等。
-```
+```java
 protected void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
     // Tell the internal bean factory to use the context's class loader etc.
     /** 设置bean的类加载器*/
@@ -178,3 +275,13 @@ protected void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
     }
 }
 ```
+#### 4.postProcessBeanFactory()
+&ensp;&ensp; `postProcessBeanFactory()` 同样也是一个空方法，交给子类实现。
+```java
+protected void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) {
+}
+```
+### 容器形成图
+<div align="center">
+    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/annotionConfigApplication/spring_ioc_contains_3.jpg">
+ </div>
