@@ -1,4 +1,4 @@
-## AnnotationConfigApplicationContext 源码解析
+## AnnotationConfigApplicationContext 源码解析 refresh_02
 &ensp;&ensp;之前的文章介绍到了，`AbstractApplicationContext.refresh()`方法，在改方法中
 有十几个流程，这篇文章将重点介绍啊`invokeBeanFactoryPostProcessors(beanFactory)`。这个
 代码是重点流程，这篇文章详细分析一下。
@@ -14,7 +14,7 @@
 第③步：PostProcessorRegistrationDelegate#invokeBeanDefinitionRegistryPostProcessors() spring内部自己实现了BeanDefinitionRegistryPostProcessor接口
 
 第④步：postProcessor.postProcessBeanDefinitionRegistry(registry) 不同的子类去自己的实现类中处理，在这里，spring内部的目前为止只有一个实现，
-那就是ConfigurationClassPostProcessor类，改了是spring内置的。
+那就是ConfigurationClassPostProcessor类，该类是spring内置的。
 
 第⑤步：ConfigurationClassPostProcessor#processConfigBeanDefinitions(),处理 ConfigurationClassPostProcessor
 
@@ -99,10 +99,6 @@ public static void invokeBeanFactoryPostProcessors(
             }
         }
 
-        // Do not initialize FactoryBeans here: We need to leave all regular beans
-        // uninitialized to let the bean factory post-processors apply to them!
-        // Separate between BeanDefinitionRegistryPostProcessors that implement
-        // PriorityOrdered, Ordered, and the rest.
         /**
          * currentRegistryProcessors是放的spring内部自己实现了BeanDefinitionRegistryPostProcessor接口
          */
@@ -171,7 +167,6 @@ public static void invokeBeanFactoryPostProcessors(
             currentRegistryProcessors.clear();
         }
 
-        // Now, invoke the postProcessBeanFactory callback of all processors handled so far.
         /**
          * 执行 BeanFactoryPostProcessor 的回调
          * 这里执行的是 BeanFactoryPostProcessor 的子类 BeanDefinitionRegistryPostProcessor 的回调方法
