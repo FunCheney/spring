@@ -1,6 +1,7 @@
-## Spring IoC 源码解析 refresh_02
-&ensp;&ensp;之前的文章介绍到了，`AbstractApplicationContext.refresh()`方法，在改方法中
-有十几个流程，这篇文章将重点介绍啊`invokeBeanFactoryPostProcessors(beanFactory)`。这个
+## Spring容器初始化 refresh() 方法_02
+>你的赞，是我最大的动力。期待与大家一起，共同进步。
+
+&ensp;&ensp;之前的文章介绍到了，`AbstractApplicationContext.refresh()`方法，在改方法中有十几个流程，上一篇文章中介绍了`refresh()`的前四个流程。这篇文章将重点介绍`invokeBeanFactoryPostProcessors(beanFactory)`。这个
 代码是重点流程，这篇文章详细分析一下。
 ### 5.invokeBeanFactoryPostProcessors()
 #### 5.1 该方法调用流过程
@@ -8,8 +9,8 @@
 
 第②步：PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
 
-        2.1 registryProcessor.postProcessBeanDefinitionRegistry(registry) 处理自定义的 BeanDefinitionRegistryPostProcessor子类
-        2.2 DefaultListableBeanFactory.getBeanNamesForType(java.lang.Class<?>, boolean, boolean) 通过type得到 得到一个Ben的名称
+>        2.1 registryProcessor.postProcessBeanDefinitionRegistry(registry) 处理自定义的 BeanDefinitionRegistryPostProcessor子类
+>        2.2 DefaultListableBeanFactory.getBeanNamesForType(java.lang.Class<?>, boolean, boolean) 通过type得到 得到一个Ben的名称
 
 第③步：PostProcessorRegistrationDelegate#invokeBeanDefinitionRegistryPostProcessors() spring内部自己实现了BeanDefinitionRegistryPostProcessor接口
 
@@ -57,8 +58,10 @@ public class TestFactoryPostProcessor implements BeanFactoryPostProcessor {
 }
 ```
 &ensp;&ensp;这种方式实现的方式，会通过`getBeanFactoryPostProcessors()`的方式拿到。
+##### 5.2.0 时序图
 
 
+##### 5.2.1 invokeBeanFactoryPostProcessors
 
 ```java
 public static void invokeBeanFactoryPostProcessors(
@@ -230,7 +233,7 @@ public static void invokeBeanFactoryPostProcessors(
     beanFactory.clearMetadataCache();
 }
 ```
-
+##### 5.2.2 invokeBeanDefinitionRegistryPostProcessors
 ```java
 private static void invokeBeanDefinitionRegistryPostProcessors(
         Collection<? extends BeanDefinitionRegistryPostProcessor> postProcessors, BeanDefinitionRegistry registry) {
@@ -242,16 +245,18 @@ private static void invokeBeanDefinitionRegistryPostProcessors(
         /**
          * 根据不同的 BeanDefinitionRegistryPostProcessors 实现
          *  去调用不同的 postProcessBeanDefinitionRegistry 方法
-         *
          */
         postProcessor.postProcessBeanDefinitionRegistry(registry);
     }
 }
 ```
-#### 5.2 ConfigurationClassPostProcessor
+&ensp;&ensp;通过上上数介绍，可只在Spring 中先处理程序员自己定义的 `BeanFactoryPostProcessor`，然后在处理Spring中内置的，后者说交给其管理的
+`BeanDefinitionRegistryPostProcessor`，其中 `BeanDefinitionRegistryPostProcessor` 是 `BeanFactoryPostProcessor` 的子类。截止到目前为止
+Spring 中唯一的一个内置的 `BeanDefinitionRegistryPostProcessor` 的实现类就是 `ConfigurationClassPostProcessor` 接下来就是对 `ConfigurationClassPostProcessor`
+的处理。
 
-&ensp;&ensp;由于`ConfigurationClassPostProcessor`是唯一个spring内置的且及其重要的类，看一下
-该类中对应的方法实现：
+
+#### 5.3 ConfigurationClassPostProcessor 的处理
 
 ```java
 public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) {
@@ -271,7 +276,8 @@ public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) {
     processConfigBeanDefinitions(registry);
 }
 ```
-#### 5.3 processConfigBeanDefinitions
+&ensp;&ensp;对 `ConfigurationClassPostProcessor` 的真正的处理是通过 `processConfigBeanDefinitions` 来完成的
+##### 5.3.1 processConfigBeanDefinitions
     
 ```java
 public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {
@@ -402,7 +408,22 @@ public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {
     }
 }
 ```
-#### 5.4 checkConfigurationClassCandidate
+##### 5.3.2 对于 beanDef 的判断
+&ensp;&ensp;对于 `beanDef` 判断的代码片段如下：
+```java
+BeanDefinition beanDef = registry.getBeanDefinition(beanName);
+if (ConfigurationClassUtils.isFullConfigurationClass(beanDef) ||
+        ConfigurationClassUtils.isLiteConfigurationClass(beanDef)) {
+    if (logger.isDebugEnabled()) {
+        logger.debug("Bean definition has already been processed as a configuration class: " + beanDef);
+    }
+}
+```
+&ensp;&ensp;在 `ConfigurationClassUtils` 中定义了两个常量用 `private static final String CONFIGURATION_CLASS_FULL = "full"`
+和 `private static final String CONFIGURATION_CLASS_LITE = "lite"` 使用这两个常量用来判断当前的 `BeanDefinition` 是一个 **全配置类**还是
+**部分配置类**。在这里对于 `@Configuration` 注解的配置里走下面的 `checkConfigurationClassCandidate` 判断，可断点调试验证。
+
+##### 5.3.3 checkConfigurationClassCandidate
 
 ```java
 public static boolean checkConfigurationClassCandidate(
@@ -480,11 +501,21 @@ public static boolean checkConfigurationClassCandidate(
     return true;
 }
 ```
-#### 5.5 ConfigurationClassParser 实例化
-：
-
+&ensp;&ensp;在 `checkConfigurationClassCandidate` 方法中 `@Configuration` 注解是的类是 `AnnotatedBeanDefinition
+`的实现，首先获取到元数据 `metadata` 如下图：
+![](https://imgkr.cn-bj.ufileos.com/b4152cd0-677f-4465-8d01-0a946e62a368.jpg)
+&ensp;&ensp;然后，对于加了 `@Configuration`注解的类，会将该类的属性设置为 `full`，如下图：
+![](https://imgkr.cn-bj.ufileos.com/a9117046-c3dc-4fb8-ae26-c91694947171.jpg)
+&ensp;&ensp;最后，如果 `checkConfigurationClassCandidate()` 方法返回true，这将 `BeanDefinition` 封装成 `BeanDefinitionHolder` 添加到
+`configCandidates` 中，供后面解析使用。
+#### 5.6 ConfigurationClassParser 实例化
 ```java
 ConfigurationClassParser parser = new ConfigurationClassParser(
 				this.metadataReaderFactory, this.problemReporter, this.environment,
 				this.resourceLoader, this.componentScanBeanNameGenerator, registry);
 ```
+### 容器形成图
+![容器形成图](https://imgkr.cn-bj.ufileos.com/25239c99-10ea-49bc-97cb-8f7025550773.jpg)
+&ensp;&ensp;在本片文章中并没有在 IoC容器中添加新的对象。这篇文章中涉及到的就是对`@Configuration`注解类对应的Spring内置的`ConfigurationClassPostProcessor`处理。
+
+
