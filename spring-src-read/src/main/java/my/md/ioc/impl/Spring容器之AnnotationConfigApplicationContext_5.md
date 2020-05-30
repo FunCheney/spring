@@ -1,9 +1,9 @@
-## AnnotationConfigApplicationContext 源码解析 refresh_02
+## Spring IoC 源码解析 refresh_02
 &ensp;&ensp;之前的文章介绍到了，`AbstractApplicationContext.refresh()`方法，在改方法中
 有十几个流程，这篇文章将重点介绍啊`invokeBeanFactoryPostProcessors(beanFactory)`。这个
 代码是重点流程，这篇文章详细分析一下。
-### invokeBeanFactoryPostProcessors()
-#### 该方法调用流过程
+### 5.invokeBeanFactoryPostProcessors()
+#### 5.1 该方法调用流过程
 第①步：AbstractApplicationContext#invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory)
 
 第②步：PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
@@ -25,10 +25,7 @@
 第⑧步：ConfigurationClassParser#parse(Set<BeanDefinitionHolder>)
 
 **注:这里的parse()方法及其重要，下一篇文章详细介绍，这里先看一下前面几步涉及的代码逻辑！！！**
-#### 代码解析
-
-第一步对应的代码实现：
-
+#### 5.2 invokeBeanFactoryPostProcessors
 ```java
 protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
     /**
@@ -61,7 +58,7 @@ public class TestFactoryPostProcessor implements BeanFactoryPostProcessor {
 ```
 &ensp;&ensp;这种方式实现的方式，会通过`getBeanFactoryPostProcessors()`的方式拿到。
 
-第二步对应的实现：
+
 
 ```java
 public static void invokeBeanFactoryPostProcessors(
@@ -233,7 +230,6 @@ public static void invokeBeanFactoryPostProcessors(
     beanFactory.clearMetadataCache();
 }
 ```
-第三步对应的代码实现:
 
 ```java
 private static void invokeBeanDefinitionRegistryPostProcessors(
@@ -252,7 +248,7 @@ private static void invokeBeanDefinitionRegistryPostProcessors(
     }
 }
 ```
-第四步对应的代码实现:
+#### 5.2 ConfigurationClassPostProcessor
 
 &ensp;&ensp;由于`ConfigurationClassPostProcessor`是唯一个spring内置的且及其重要的类，看一下
 该类中对应的方法实现：
@@ -275,7 +271,7 @@ public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) {
     processConfigBeanDefinitions(registry);
 }
 ```
-第五步对应的代码实现:
+#### 5.3 processConfigBeanDefinitions
     
 ```java
 public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {
@@ -406,7 +402,7 @@ public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {
     }
 }
 ```
-第六步对应的代码实现:
+#### 5.4 checkConfigurationClassCandidate
 
 ```java
 public static boolean checkConfigurationClassCandidate(
@@ -484,7 +480,8 @@ public static boolean checkConfigurationClassCandidate(
     return true;
 }
 ```
-第七步代码实现：
+#### 5.5 ConfigurationClassParser 实例化
+：
 
 ```java
 ConfigurationClassParser parser = new ConfigurationClassParser(
