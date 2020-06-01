@@ -141,6 +141,7 @@ class ConfigurationClassParser {
 
 
 	/**
+	 * ConfigurationClassParser 配置类解析器
 	 * Create a new {@link ConfigurationClassParser} instance that will be used
 	 * to populate the set of configuration classes.
 	 */
@@ -166,7 +167,8 @@ class ConfigurationClassParser {
 			try {
 				/** 根据不同的 BeanDefinition 类型做相应的处理*/
 				if (bd instanceof AnnotatedBeanDefinition) {
-
+					// bd 类型为 AnnotatedBeanDefinition 走这里
+					// 获取注解的元数据，获取 BeanName
 					parse(((AnnotatedBeanDefinition) bd).getMetadata(), holder.getBeanName());
 				}
 				else if (bd instanceof AbstractBeanDefinition && ((AbstractBeanDefinition) bd).hasBeanClass()) {
@@ -199,6 +201,7 @@ class ConfigurationClassParser {
 	}
 
 	protected final void parse(AnnotationMetadata metadata, String beanName) throws IOException {
+		// 处理配置类, 将注解的元数据 与 beanName 再次封装
 		processConfigurationClass(new ConfigurationClass(metadata, beanName));
 	}
 
@@ -225,7 +228,6 @@ class ConfigurationClassParser {
 		/**
 		 * 处理 imported 的情况
 		 *   就是当前这个注解类有没有被别的类import
-		 *
 		 */
 		ConfigurationClass existingClass = this.configurationClasses.get(configClass);
 		if (existingClass != null) {

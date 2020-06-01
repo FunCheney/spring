@@ -1,11 +1,11 @@
-## AnnotationConfigApplicationContext 源码解析
-&ensp;&ensp;上篇文章中提到的第八步是一个及其重要的步骤，在解析这一不部分代码之前，先来断点一下，看看
-
+## ConfigurationClassParser#parse(Set<BeanDefinitionHolder>)
+&ensp;&ensp;上篇文章中讲到`invokeBeanFactoryPostProcessor()`中有一个非常重要分方法`parse()`，今天这篇文章中，就来看看这个方法的实现。开始之前，通过下图回顾
+一下：
 <div align="center">
     <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/ConfigurationClassParser_parse.png">
  </div>
 
-### ConfigurationClassParser#parse(Set<BeanDefinitionHolder>)
+### 5.7 ConfigurationClassParser#parse(Set<BeanDefinitionHolder>)
 
 
 ```

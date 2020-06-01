@@ -362,6 +362,11 @@ final class PostProcessorRegistrationDelegate {
 			Collection<? extends BeanFactoryPostProcessor> postProcessors, ConfigurableListableBeanFactory beanFactory) {
 
 		for (BeanFactoryPostProcessor postProcessor : postProcessors) {
+			/**
+			 * 根据不同的 BeanFactoryPostProcessor 实现
+			 *  去调用不同的 postProcessBeanFactory 方法
+			 *  ConfigurationClassPostProcessor 同时也是 BeanFactoryPostProcessor 的子类
+			 */
 			postProcessor.postProcessBeanFactory(beanFactory);
 		}
 	}
