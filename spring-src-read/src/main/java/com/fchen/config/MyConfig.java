@@ -2,13 +2,14 @@ package com.fchen.config;
 
 import com.fchen.bean.biz.FactoryBeanTest;
 import org.springframework.context.annotation.*;
+import org.springframework.stereotype.Component;
 
 /**
  * @author: Fchen
  * @date: 2020/1/5 9:22 上午
  * @desc: 配置类
  */
-@Configuration(value = "testConfig")
+@Configuration
 @ComponentScan("com.fchen")
 //@EnableAspectJAutoProxy
 @Import(MyScanConfig.class)
@@ -19,5 +20,13 @@ public class MyConfig {
 		return new FactoryBeanTest();
 	}
 
+	@Component
+	public static class TestMy{
 
+	}
+
+	@Configuration
+	public  class TestMy2{
+
+	}
 }

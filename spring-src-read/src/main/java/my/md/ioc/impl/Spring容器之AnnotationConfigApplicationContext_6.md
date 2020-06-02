@@ -7,7 +7,8 @@
 
 ### 5.7 ConfigurationClassParser#parse(Set<BeanDefinitionHolder>)
 
-
+#### 时序图
+ 
 ```
 public void parse(Set<BeanDefinitionHolder> configCandidates) {
     for (BeanDefinitionHolder holder : configCandidates) {
@@ -38,13 +39,19 @@ public void parse(Set<BeanDefinitionHolder> configCandidates) {
     this.deferredImportSelectorHandler.process();
 }
 ```
+&ensp;&ensp;这里的 `Set<BeanDefinitionHolder> configCandidates` 中只有一个元素，就是对 `MyConfig` 的表述文件 `BeanDefinition` 的
+封装，对应的 `BeanDefinitionHolder`。通过下图可知，这个类是 `AnnotatedBeanDefinition` 的实现
+
+prase_1.jpg
+
+&ensp;&ensp;按照上图，进入对应的 `prase()` 方法如下，在该方法中调用对应的 `processConfigurationClas()` 方法，完成对 `ConfigurationClass`
+的处理。
 
 ```
 protected final void parse(AnnotationMetadata metadata, String beanName) throws IOException {
     processConfigurationClass(new ConfigurationClass(metadata, beanName));
 }
 ```
-
 ```
 protected void processConfigurationClass(ConfigurationClass configClass) throws IOException {
     if (this.conditionEvaluator.shouldSkip(configClass.getMetadata(), ConfigurationPhase.PARSE_CONFIGURATION)) {
@@ -85,6 +92,9 @@ protected void processConfigurationClass(ConfigurationClass configClass) throws 
     this.configurationClasses.put(configClass, configClass);
 }
 ```
+&ensp;&ensp;在上述方法中，首先判断当前类有没有被别的类 `import`。在本文中，当前的`MyConfig`，没有被 `Import`，因此这里不执行。
+然后就是通过 `asSourceClass(configClass)` 将 配置类转化为 `SourceClass` 供后续处理。这里的方法对于整个流程来说不重要，我们还是本着抓主要矛盾
+的原则，继续往下看，只需要记住，这里的 `configClass` 转化为 `SourceClass` 在后面的 `doProcessConfigurationClass()` 方法中用到。
 
 ```
 private SourceClass asSourceClass(ConfigurationClass configurationClass) throws IOException {
@@ -95,6 +105,9 @@ private SourceClass asSourceClass(ConfigurationClass configurationClass) throws 
     return asSourceClass(metadata.getClassName());
 }
 ```
+
+&ensp;&ensp;每当看到 Spring 中 `doXXX` 开头的方法，我就知道重头戏要来了，因为，在Spring中，真正做事的都是通过这个方法来处理的，下面就进入到
+万众期待的 `doProcessConfigurationClass()` 里面来一探究竟。。。
 
 ```
 protected final SourceClass doProcessConfigurationClass(ConfigurationClass configClass, SourceClass sourceClass)
@@ -147,8 +160,7 @@ protected final SourceClass doProcessConfigurationClass(ConfigurationClass confi
         }
     }
 
-    // Process any @Import annotations
-    /**
+     /**
      * 处理 @Import
      * 判断类中是否有 @Import 注解 如果有 把 @Import 中的值拿出来，是一个类；
      *   比如 @Import(xxx.class), 这里将 xxx 传进去解析
@@ -198,3 +210,15 @@ protected final SourceClass doProcessConfigurationClass(ConfigurationClass confi
     return null;
 }
 ```
+
+#### @Configuration 中对内部类的处理
+
+
+
+#### @Configuration 中对 @ComponentScan 注解的处理
+
+
+#### @Configuration 中对 @Import(xxx.class) 的处理
+
+
+#### @Configuration 中对 @Bean 方法 的处理
