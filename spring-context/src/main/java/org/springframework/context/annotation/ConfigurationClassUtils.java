@@ -161,6 +161,7 @@ abstract class ConfigurationClassUtils {
 	 * reflection-detected bean definition; {@code false} otherwise
 	 */
 	public static boolean isConfigurationCandidate(AnnotationMetadata metadata) {
+		// 判断是是否为全配置候选类 || 判断是否为部分配置候选类
 		return (isFullConfigurationCandidate(metadata) || isLiteConfigurationCandidate(metadata));
 	}
 
@@ -201,7 +202,7 @@ abstract class ConfigurationClassUtils {
 			}
 		}
 
-		// Finally, let's look for @Bean methods...
+		// 没有加上述的注解，如果内部类中有 @Bean 同样也被认为是 部分配置类
 		try {
 			return metadata.hasAnnotatedMethods(Bean.class.getName());
 		}

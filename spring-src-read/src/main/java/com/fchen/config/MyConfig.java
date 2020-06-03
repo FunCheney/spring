@@ -26,7 +26,7 @@ public class MyConfig {
 	}
 
 	@Configuration
-	public  class TestMy2{
+	public class TestMy2{
 
 	}
 }

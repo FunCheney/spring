@@ -210,10 +210,102 @@ protected final SourceClass doProcessConfigurationClass(ConfigurationClass confi
     return null;
 }
 ```
+&ensp;&ensp;从上述方法中可以看出，主要对配置类中属性一一作了处理，如：内部类、 `@ComponentScan`、`@Important`、`@Bean` 。下面将逐个分析。
+#### doProcessConfigurationClass 流程图
+
 
 #### @Configuration 中对内部类的处理
 
+```java
+private void processMemberClasses(ConfigurationClass configClass, SourceClass sourceClass) throws IOException {
+    // 获取内部类
+    Collection<SourceClass> memberClasses = sourceClass.getMemberClasses();
+    if (!memberClasses.isEmpty()) {
+        // 定义 candidates 供后面处理使用
+        List<SourceClass> candidates = new ArrayList<>(memberClasses.size());
+        for (SourceClass memberClass : memberClasses) {
+            // 判断内部类是否为配置候选类 && 内部类的名称 不等于 当前配置类的名称
+            if (ConfigurationClassUtils.isConfigurationCandidate(memberClass.getMetadata()) &&
+                    !memberClass.getMetadata().getClassName().equals(configClass.getMetadata().getClassName())) {
+                // 添加到 候选的 SourceClass 类集合中
+                candidates.add(memberClass);
+            }
+        }
+        OrderComparator.sort(candidates);
+        for (SourceClass candidate : candidates) {
+            if (this.importStack.contains(configClass)) {
+                this.problemReporter.error(new CircularImportProblem(configClass, this.importStack));
+            }
+            else {
+                this.importStack.push(configClass);
+                try {
+                    // 处理配置类
+                    processConfigurationClass(candidate.asConfigClass(configClass));
+                }
+                finally {
+                    this.importStack.pop();
+                }
+            }
+        }
+    }
+}
+```
+&ensp;&ensp;上述代码中有通过 `ConfigurationClassUtils.isConfigurationCandidate(memberClass.getMetadata())` 来判断，内部类是否为配置
+候选类。
+```java
+public static boolean isConfigurationCandidate(AnnotationMetadata metadata) {
+    // 判断是是否为全配置候选类 || 判断是否为部分配置候选类
+    return (isFullConfigurationCandidate(metadata) || isLiteConfigurationCandidate(metadata));
+}
+```
+```java
+public static boolean isFullConfigurationCandidate(AnnotationMetadata metadata) {
+    return metadata.isAnnotated(Configuration.class.getName());
+}
+```
+```java
+public static boolean isLiteConfigurationCandidate(AnnotationMetadata metadata) {
+    // Do not consider an interface or an annotation...
+    if (metadata.isInterface()) {
+        return false;
+    }
 
+    // Any of the typical annotations found?
+    /**
+     * {@link candidateIndicators}
+     * 中 包含 {@link Component}、{@link ComponentScan}、
+     *        {@link Import}、{@link ImportResource}
+     */
+    for (String indicator : candidateIndicators) {
+        if (metadata.isAnnotated(indicator)) {
+            return true;
+        }
+    }
+
+    // Finally, let's look for @Bean methods...
+    try {
+        return metadata.hasAnnotatedMethods(Bean.class.getName());
+    }
+    catch (Throwable ex) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Failed to introspect @Bean methods on class [" + metadata.getClassName() + "]: " + ex);
+        }
+        return false;
+    }
+}
+```
+&ensp;&ensp;从上述代码中可以看出，对于内部类中全配置候选类的判断，是通过内部类上的注解来判断的，如果在内部类中加了
+`@Configuration` 注解，Spring 判断其为全配置候选类，如没有加注解，但是有`@Bean`或者加了`@Component`、`@ComponentScan`、
+`@Import`、`@ImportResource`则将其判断为部分配置候选类。具体的定义，是通过静态代码快的方式，添加到 `candidateIndicators` 中：
+```java
+static {
+		candidateIndicators.add(Component.class.getName());
+		candidateIndicators.add(ComponentScan.class.getName());
+		candidateIndicators.add(Import.class.getName());
+		candidateIndicators.add(ImportResource.class.getName());
+	}
+```
+&ensp;&ensp;最后对于内部类的处理方式，也是通过调用 `processConfigurationClass()` 方法来完成相应的处理。
 
 #### @Configuration 中对 @ComponentScan 注解的处理
 
