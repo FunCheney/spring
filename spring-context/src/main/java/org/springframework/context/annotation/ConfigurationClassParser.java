@@ -480,7 +480,10 @@ class ConfigurationClassParser {
 		Assert.isTrue(locations.length > 0, "At least one @PropertySource(value) location is required");
 		boolean ignoreResourceNotFound = propertySource.getBoolean("ignoreResourceNotFound");
 
+		// 得到创建 PropertySource的工厂
 		Class<? extends PropertySourceFactory> factoryClass = propertySource.getClass("factory");
+		//创建 PropertySource的工厂如果是 PropertySourceFactory 就使用Spring 内部默认的 实现 DefaultPropertySourceFactory
+		//否则 通过反射创建一个对象
 		PropertySourceFactory factory = (factoryClass == PropertySourceFactory.class ?
 				DEFAULT_PROPERTY_SOURCE_FACTORY : BeanUtils.instantiateClass(factoryClass));
 
@@ -488,6 +491,7 @@ class ConfigurationClassParser {
 			try {
 				String resolvedLocation = this.environment.resolveRequiredPlaceholders(location);
 				Resource resource = this.resourceLoader.getResource(resolvedLocation);
+				// 调用factory的createPropertySource方法根据名字、编码、资源创建出一个PropertySource出来
 				addPropertySource(factory.createPropertySource(name, new EncodedResource(resource, encoding)));
 			}
 			catch (IllegalArgumentException | FileNotFoundException | UnknownHostException ex) {
