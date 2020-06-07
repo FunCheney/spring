@@ -1,14 +1,9 @@
-## ConfigurationClassParser#parse(Set<BeanDefinitionHolder>)
+## Spring容器初始化 refresh() 方法_03
 &ensp;&ensp;上篇文章中讲到`invokeBeanFactoryPostProcessor()`中有一个非常重要分方法`parse()`，今天这篇文章中，就来看看这个方法的实现。开始之前，通过下图回顾
 一下：
-<div align="center">
-    <img src="https://github.com/FunCheney/spring/blob/master/spring-src-read/src/main/java/my/image/ioc/ConfigurationClassParser_parse.png">
- </div>
-
-### 5.7 ConfigurationClassParser#parse(Set<BeanDefinitionHolder>)
-
-#### 时序图
- 
+![解析配置候选类](https://imgkr.cn-bj.ufileos.com/c2c15c7f-8276-471e-96b6-4eb1fa506130.png)
+## 5.7 ConfigurationClassParser#parse(Set<BeanDefinitionHolder>)
+&ensp;&ensp;方法入口如下： 
 ```
 public void parse(Set<BeanDefinitionHolder> configCandidates) {
     for (BeanDefinitionHolder holder : configCandidates) {
@@ -41,9 +36,7 @@ public void parse(Set<BeanDefinitionHolder> configCandidates) {
 ```
 &ensp;&ensp;这里的 `Set<BeanDefinitionHolder> configCandidates` 中只有一个元素，就是对 `MyConfig` 的表述文件 `BeanDefinition` 的
 封装，对应的 `BeanDefinitionHolder`。通过下图可知，这个类是 `AnnotatedBeanDefinition` 的实现
-
-prase_1.jpg
-
+![MyConfig的BD](https://imgkr.cn-bj.ufileos.com/ca12748e-d068-4774-acd5-a4432cb092c6.png)
 &ensp;&ensp;按照上图，进入对应的 `prase()` 方法如下，在该方法中调用对应的 `processConfigurationClas()` 方法，完成对 `ConfigurationClass`
 的处理。
 
@@ -52,6 +45,8 @@ protected final void parse(AnnotationMetadata metadata, String beanName) throws 
     processConfigurationClass(new ConfigurationClass(metadata, beanName));
 }
 ```
+&esnp;&ensp; `processConfigurationClass()` 方法的处理比较复杂，我们先通过流程图简单的看看该方法都做了什么，人后逐个击破：
+![processConfigurationClass流程](https://imgkr.cn-bj.ufileos.com/e035c0a5-7f97-4e2e-b21d-1038fa79d006.png)
 ```
 protected void processConfigurationClass(ConfigurationClass configClass) throws IOException {
     if (this.conditionEvaluator.shouldSkip(configClass.getMetadata(), ConfigurationPhase.PARSE_CONFIGURATION)) {
@@ -184,7 +179,7 @@ protected final SourceClass doProcessConfigurationClass(ConfigurationClass confi
     }
 
     /**
-     * 处理 @Bean 方法
+     * 提取 @Bean 方法 信息
      */
     Set<MethodMetadata> beanMethods = retrieveBeanMethodMetadata(sourceClass);
 
@@ -211,10 +206,8 @@ protected final SourceClass doProcessConfigurationClass(ConfigurationClass confi
 }
 ```
 &ensp;&ensp;从上述方法中可以看出，主要对配置类中属性一一作了处理，如：内部类、 `@ComponentScan`、`@Important`、`@Bean` 。下面将逐个分析。
-#### doProcessConfigurationClass 流程图
 
-
-#### @Configuration 中对内部类的处理
+### 1. @Configuration 中对内部类的处理
 
 ```java
 private void processMemberClasses(ConfigurationClass configClass, SourceClass sourceClass) throws IOException {
@@ -252,17 +245,20 @@ private void processMemberClasses(ConfigurationClass configClass, SourceClass so
 ```
 &ensp;&ensp;上述代码中有通过 `ConfigurationClassUtils.isConfigurationCandidate(memberClass.getMetadata())` 来判断，内部类是否为配置
 候选类。
+#### 1.1 判断是否为配置候选类
 ```java
 public static boolean isConfigurationCandidate(AnnotationMetadata metadata) {
     // 判断是是否为全配置候选类 || 判断是否为部分配置候选类
     return (isFullConfigurationCandidate(metadata) || isLiteConfigurationCandidate(metadata));
 }
 ```
+#### 1.2 判断是否为全配置候选类（Full）
 ```java
 public static boolean isFullConfigurationCandidate(AnnotationMetadata metadata) {
     return metadata.isAnnotated(Configuration.class.getName());
 }
 ```
+#### 1.3 判断是否为部分配置候选类（Lite）
 ```java
 public static boolean isLiteConfigurationCandidate(AnnotationMetadata metadata) {
     // Do not consider an interface or an annotation...
@@ -294,6 +290,7 @@ public static boolean isLiteConfigurationCandidate(AnnotationMetadata metadata) 
     }
 }
 ```
+#### 1.3 Full 与 Lite 配置类的区别
 &ensp;&ensp;从上述代码中可以看出，对于内部类中全配置候选类的判断，是通过内部类上的注解来判断的，如果在内部类中加了
 `@Configuration` 注解，Spring 判断其为全配置候选类，如没有加注解，但是有`@Bean`或者加了`@Component`、`@ComponentScan`、
 `@Import`、`@ImportResource`则将其判断为部分配置候选类。具体的定义，是通过静态代码快的方式，添加到 `candidateIndicators` 中：
@@ -305,9 +302,10 @@ static {
 		candidateIndicators.add(ImportResource.class.getName());
 	}
 ```
-&ensp;&ensp;最后对于内部类的处理方式，也是通过调用 `processConfigurationClass()` 方法来完成相应的处理。
+&ensp;&ensp;最后对于内部类的处理方式，也是通过调用 `processConfigurationClass()` 方法来完成相应的处理。也就是说，先经过一系列的判断，将符合
+条件的加入到候选类治类的集合中 `List<SourceClass> candidates`。然后在for循序，拿出每一个配置类，进行相应的处理。
 
-#### @Configuration 中对 @PropertySource 注解的处理
+### 2. @Configuration 中对 @PropertySource 注解的处理
 &ensp;&ensp;在Spring 中通过 `@PropertySource` 来加载指定的属性文件。
 ```java
 private void processPropertySource(AnnotationAttributes propertySource) throws IOException {
@@ -391,7 +389,7 @@ private void addPropertySource(PropertySource<?> propertySource) {
 ```
 &ensp;&ensp;我在这里暂时没有用到， `@PropertySource` 注解，这里先指出代码的处理，后面用到的时候，在做详细的介绍。这里，我们先对这部分内容过掉。
 
-#### @Configuration 中对 @ComponentScan 注解的处理
+### 3. @Configuration 中对 @ComponentScan 注解的处理
 ```java
 public Set<BeanDefinitionHolder> parse(AnnotationAttributes componentScan, final String declaringClass) {
     /**
@@ -460,8 +458,7 @@ public Set<BeanDefinitionHolder> parse(AnnotationAttributes componentScan, final
 ```
 &ensp;&ensp;从这里可以看出，对于包的扫描，是在扫描的时候 `new ClassPathBeanDefinitionScanner()` 创建的扫描器来完成扫描的，并不是使用
 `AnnotationConfigApplicationContext` 中初始化的扫描器来完成包扫描的。
-
-##### doScan()
+#### 3.1 doScan()
 ```java
 protected Set<BeanDefinitionHolder> doScan(String... basePackages) {
     Assert.notEmpty(basePackages, "At least one base package must be specified");
@@ -506,8 +503,8 @@ protected Set<BeanDefinitionHolder> doScan(String... basePackages) {
     return beanDefinitions;
 }
 ```
-##### 通用注解的处理
-
+  &ensp;&ensp;又是熟悉的`doXXX()`方法，通过这个方法，将我们定义的包路径下的对象添加到IoC容器中去当然，在注册到容器中之前，也要对扫描得到的`BeanDeifition`的属性进行处理，如通用的注解
+#### 3.2 通用注解的处理
 ```java
 /**
  * 处理类的通用注解
@@ -573,7 +570,7 @@ static void processCommonDefinitionAnnotations(AnnotatedBeanDefinition abd, Anno
 }
 ```
 
-##### 对扫描出来的类注册
+#### 3.3 对扫描出来的类注册
 ```java
 if (checkCandidate(beanName, candidate)) {
     BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(candidate, beanName);
@@ -584,7 +581,16 @@ if (checkCandidate(beanName, candidate)) {
     registerBeanDefinition(definitionHolder, this.registry);
 }
 ```
-#### @Configuration 中对 @Import(xxx.class) 的处理
+&ensp;&ensp;通过这里，就可以将我们自己交给Spring管理的类，注册到了容器当中，对应的我们的容器形成图例里面的内容也相应的增加了：
+##### 3.3.1容器中的对象
+![容器中的对象](https://imgkr.cn-bj.ufileos.com/52b4644e-2757-4e78-8f8c-c5891de85d2d.png)
+##### 3.3.2容器中的对象名称
+![容器中的对象名称](https://imgkr.cn-bj.ufileos.com/9057bc69-6b8f-4456-a0bf-cb4381e3757e.png)
+##### 3.3.3容器形成图
+![容器形成图](https://imgkr.cn-bj.ufileos.com/a7b734a4-f4da-4da0-8cf7-10bfdc05a6eb.png)
+
+
+### 4. @Configuration 中对 @Import(xxx.class) 的处理
 ```java
 private void processImports(ConfigurationClass configClass, SourceClass currentSourceClass,
         Collection<SourceClass> importCandidates, boolean checkForCircularImports) {
@@ -668,7 +674,8 @@ private void processImports(ConfigurationClass configClass, SourceClass currentS
 }
 ```
 
-#### @Configuration 中对 @Bean 方法 的处理
+### 5. @Configuration 中对 @Bean 方法 信息的提取
+&ensp;&ensp;获取当前类中 `@Bean` 注解的方法的元数据，包含比如方法名、所在类全名、返回类型、是否静态、是否不可覆盖等等信息。
 ```java
 private Set<MethodMetadata> retrieveBeanMethodMetadata(SourceClass sourceClass) {
     /** 获取类的元数据*/
@@ -708,3 +715,4 @@ private Set<MethodMetadata> retrieveBeanMethodMetadata(SourceClass sourceClass) 
     return beanMethods;
 }
 ```
+

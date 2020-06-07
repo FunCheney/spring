@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Configuration
 @ComponentScan("com.fchen")
 //@EnableAspectJAutoProxy
-@Import(MyScanConfig.class)
+//@Import(MyScanConfig.class)
 public class MyConfig {
 
 	@Bean("factoryBeanTest")
@@ -20,13 +20,16 @@ public class MyConfig {
 		return new FactoryBeanTest();
 	}
 
-	@Component
-	public static class TestMy{
+//	@Component
+//	public static class TestMy{
+//
+//	}
 
-	}
-
-	@Configuration
-	public class TestMy2{
-
-	}
+//	@Configuration
+//	public static class TestMy2{
+//		@Bean
+//		public FactoryBeanTest userFactoryBean() {
+//			return new FactoryBeanTest();
+//		}
+//	}
 }

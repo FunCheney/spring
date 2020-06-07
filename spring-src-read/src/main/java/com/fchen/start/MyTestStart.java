@@ -2,10 +2,10 @@ package com.fchen.start;
 
 import com.fchen.bean.factory.post.processor.MyFactoryPostProcessor;
 import com.fchen.config.MyConfig;
-import com.fchen.config.MySelectorImportConfig;
-import com.fchen.expand.MyImportSelector;
-import com.fchen.service.MyScannerService;
-import com.fchen.service.MySelectImportService;
+//import com.fchen.config.MySelectorImportConfig;
+//import com.fchen.expand.MyImportSelector;
+//import com.fchen.service.MyScannerService;
+//import com.fchen.service.MySelectImportService;
 import com.fchen.service.MyService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
