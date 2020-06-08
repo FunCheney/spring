@@ -225,7 +225,7 @@ class ConfigurationClassBeanDefinitionReader {
 			beanDef.setFactoryMethodName(methodName);
 		}
 		else {
-			// instance @Bean method
+			// 实例 @Bean 方法
 			beanDef.setFactoryBeanName(configClass.getBeanName());
 			beanDef.setUniqueFactoryMethodName(methodName);
 		}

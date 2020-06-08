@@ -97,5 +97,12 @@ public void enhanceConfigurationClasses(ConfigurableListableBeanFactory beanFact
     }
 }
 ```
+&ensp;&ensp;接上篇文章我们提到配置类的 `Full`和 `Lite`两种不同的模式。在这篇文章中，我们可以看到，`Full`模式，也就是全配置类，Spring 通过使用`CGLIB`动态代理的
+方式对其进行了增强。而 `Lite` 模式的配置类，没有通过代理的方式增强。我们究其原因发现，对于`@Configuration` 类的处理，是Spring 的后置处理器的典型应用。纵观整个 Spring，
+在器内部只有一个 `ConfigurationClassPostProcessor` 该类中处理了 `BeanDefinitionRegistryPostProcessor
+` 的方法 `postProcessBeanDefinitionRegistry()`
+也处理了 `postProcessBeanFactory`的方法 `postProcessBeanFactory()`。通过该类，我们应该也要知道，对于Spring 的扩展点 `BeanFactoryPostProcessor` 的处理。
+
+
 
 
