@@ -1,4 +1,5 @@
 ## invokeBeanFactoryPostProcessors
+断点调试图一：
 
 ```java
 private static void invokeBeanFactoryPostProcessors(
@@ -14,7 +15,8 @@ private static void invokeBeanFactoryPostProcessors(
     }
 }
 ```
-
+&ensp;&ensp;从上图中可以看出，这里的 `postProcessor` 对应的子类为 `ConfigurationClassPostProcessor`，下面的 `postProcessBeanFactory()`
+方法对应子类的实现如下：
 ```java
 public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) {
     int factoryId = System.identityHashCode(beanFactory);
