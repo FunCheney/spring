@@ -405,7 +405,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			BeanDefinition beanDef = beanFactory.getBeanDefinition(beanName);
 			/**
 			 * 判断这个类是不是全注解类,这个地方与前面 {@link Configuration} 注解的类的
-			 * 处理有关
+			 * 处理有关 full 模式的标记
 			 */
 			if (ConfigurationClassUtils.isFullConfigurationClass(beanDef)) {
 				if (!(beanDef instanceof AbstractBeanDefinition)) {

@@ -105,6 +105,61 @@ public void enhanceConfigurationClasses(ConfigurableListableBeanFactory beanFact
 ` 的方法 `postProcessBeanDefinitionRegistry()`
 也处理了 `postProcessBeanFactory`的方法 `postProcessBeanFactory()`。通过该类，我们应该也要知道，对于Spring 的扩展点 `BeanFactoryPostProcessor` 的处理。
 
+```java
+public Class<?> enhance(Class<?> configClass, @Nullable ClassLoader classLoader) {
+    /** 判断是否被代理过*/
+    if (EnhancedConfiguration.class.isAssignableFrom(configClass)) {
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Ignoring request to enhance %s as it has " +
+                    "already been enhanced. This usually indicates that more than one " +
+                    "ConfigurationClassPostProcessor has been registered (e.g. via " +
+                    "<context:annotation-config>). This is harmless, but you may " +
+                    "want check your configuration and remove one CCPP if possible",
+                    configClass.getName()));
+        }
+        return configClass;
+    }
+    /** 没有被代理 cglib 代理*/
+    Class<?> enhancedClass = createClass(newEnhancer(configClass, classLoader));
+    if (logger.isTraceEnabled()) {
+        logger.trace(String.format("Successfully enhanced %s; enhanced class name is: %s",
+                configClass.getName(), enhancedClass.getName()));
+    }
+    return enhancedClass;
+}
+```
+```java
+/**
+ * Creates a new CGLIB {@link Enhancer} instance.
+ * 创建一个 CGLIB 实例
+ */
+private Enhancer newEnhancer(Class<?> configSuperClass, @Nullable ClassLoader classLoader) {
+    Enhancer enhancer = new Enhancer();
+    /** 增强父类 */
+    enhancer.setSuperclass(configSuperClass);
+    /** 增强接口，
+     * 便于判断，表示一个类被增强了
+     * EnhancedConfiguration 实现了 BeanFactoryAware 接口
+     */
+    enhancer.setInterfaces(new Class<?>[] {EnhancedConfiguration.class});
+    enhancer.setUseFactory(false);
+    /**
+     * BeanFactoryAwareGeneratorStrategy 是一个生成策略
+     * 主要为生成的 cglib 类中添加成员变量 $$beanFactory
+     * 同时基于接口 EnhancedConfiguration 的父接口 BeanFactoryAware 中的 setBeanFactory 方法，
+     * 设置此变量的值为当前 context 中的 beanFactory，这样一来 cglib 代理的对象就有了 beanFactory
+     * 有了 factory 就能获得对象了，不用通过 new 来获取对象了
+     * 该BeanFactory 的作用是在 this 调用时拦截该调用，并直接在 beanFactory 中获得目标bean
+     *
+     */
+    enhancer.setNamingPolicy(SpringNamingPolicy.INSTANCE);
+    enhancer.setStrategy(new BeanFactoryAwareGeneratorStrategy(classLoader));
+    enhancer.setCallbackFilter(CALLBACK_FILTER);
+    enhancer.setCallbackTypes(CALLBACK_FILTER.getCallbackTypes());
+    return enhancer;
+}
+```
+
 
 
 
