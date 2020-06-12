@@ -1,6 +1,6 @@
 ##  Spring容器初始化 refresh() 方法_05
 
-### finishBeanFactoryInitialization
+### 11.finishBeanFactoryInitialization
 ```java
 protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
     // Initialize conversion service for this context.

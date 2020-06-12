@@ -24,8 +24,16 @@ public class MyService {
 		this.xxxx = xxxx;
 	}
 
+//	@Autowired
+	MyTest myTest;
+
 	public void test(){
 		System.out.println("hello test");
-//		myTest.test();
+		myTest.test();
+	}
+
+	@Autowired
+	public MyService(MyTest myTest){
+		this.myTest = myTest;
 	}
 }
