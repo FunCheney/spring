@@ -20,6 +20,11 @@ public class MyConfig {
 		return new FactoryBeanTest();
 	}
 
+	@Bean
+	public static FactoryBeanTest myTestBean(){
+		return new FactoryBeanTest();
+	}
+
 //	@Component
 //	public static class TestMy{
 //

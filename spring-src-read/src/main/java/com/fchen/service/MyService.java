@@ -18,22 +18,16 @@ public class MyService {
 
 	private Logger log = LoggerFactory.getLogger(MyService.class);
 
-	MyTest xxxx;
-	@Autowired
-	public void setxxx(MyTest xxxx) {
-		this.xxxx = xxxx;
-	}
-
+//	MyTest xxxx;
 //	@Autowired
+//	public void setxxx(MyTest xxxx) {
+//		this.xxxx = xxxx;
+//	}
+	@Autowired
 	MyTest myTest;
 
 	public void test(){
 		System.out.println("hello test");
 		myTest.test();
-	}
-
-	@Autowired
-	public MyService(MyTest myTest){
-		this.myTest = myTest;
 	}
 }

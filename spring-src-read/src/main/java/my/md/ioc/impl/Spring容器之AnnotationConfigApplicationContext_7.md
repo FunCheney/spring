@@ -7,6 +7,13 @@ protected void registerBeanPostProcessors(ConfigurableListableBeanFactory beanFa
     PostProcessorRegistrationDelegate.registerBeanPostProcessors(beanFactory, this);
 }
 ```
+&ensp;&ensp;在Spring中对于 `BeanPostProcessor` 的处理分为连个过程，对于内置的 `BeanPostProcessor`的子类的实现，添加到
+`IoC`容器中，是通过`refresh()` 方法中的 `prepareBeanFactory()` 过程来完成的。比如 `ApplicationContextAwareProcessor`，
+`ApplicationListenerDetector`。对于 `ImportAwareBeanPostProcessor` 是在，处理 `ConfigurationClassPostProcessor`时，对
+`@Configuration`注解的类生成`CGLIB` 代理的时候加入容器中的。最后，在Spring中对于 `BeanPostProcessor`的实现类的处理，是在 `refresh()`
+方法中有一个步骤 `registerBeanPostProcessors()` 来完成注册的，如 `BeanPostProcessorChecker`，`CommonAnnotationBeanPostProcessor`
+以及 `AutowiredAnnotationBeanPostProcessor`，`CommonAnnotationBeanPostProcessor`。这样，在容器初始化之处，没有自己实现 `BeanPsotProcessor`
+的时候，容器中就包含了6个Bean的后置处理器的实现。其中对于 `registerBeanPostProcessors()` 方法的详细代码实现，下面一一分析：
 
 ```java
 public static void registerBeanPostProcessors(
@@ -100,7 +107,7 @@ public static void registerBeanPostProcessors(
     beanFactory.addBeanPostProcessor(new ApplicationListenerDetector(applicationContext));
 }
 ```
-
+#### 将Bean的后置处理器加入到容器中
 ```java
 public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor) {
     Assert.notNull(beanPostProcessor, "BeanPostProcessor must not be null");

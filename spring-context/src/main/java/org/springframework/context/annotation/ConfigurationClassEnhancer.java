@@ -78,7 +78,9 @@ class ConfigurationClassEnhancer {
 			 * 增强方法，主要控制bean的作用域，
 			 * 不用每次都 new
 			 */
+			// Bean 方法来拦截器
 			new BeanMethodInterceptor(),
+			// 拦截BeanFactoryAware 定义的方法 setBeanFactory
 			new BeanFactoryAwareMethodInterceptor(),
 			NoOp.INSTANCE
 	};
@@ -151,6 +153,8 @@ class ConfigurationClassEnhancer {
 	}
 
 	/**
+	 * 使用增强器生成超类的子类，
+	 * 确保新的子类注册了回调
 	 * Uses enhancer to generate a subclass of superclass,
 	 * ensuring that callbacks are registered for the new subclass.
 	 */
