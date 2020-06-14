@@ -124,6 +124,9 @@ public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor) {
     this.beanPostProcessors.add(beanPostProcessor);
 }
 ```
+&ensp;&ensp;至此，Spring 中容器初始化不部分的解析已经处理完了，到目前为止，容器的中的东西基本上已经齐活了，通过下面的容器形成图示例：
+spring_iod_contains_5.jpg
+
 ### 7.initMessageSource()
 
 
