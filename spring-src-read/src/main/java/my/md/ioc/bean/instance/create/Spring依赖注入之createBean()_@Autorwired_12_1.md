@@ -21,3 +21,6 @@ public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, Str
 在这两个类中，都实现了父类 `InjectionMetadata.InjectedElement` 的 `inject()` 方法来完成注入。
 
 
+#### 默认使用byType 
+
+#### byName 的选择
