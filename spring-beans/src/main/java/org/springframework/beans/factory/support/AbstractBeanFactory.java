@@ -1318,6 +1318,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		}
 		/*
 		 * getBeanDefinition(beanName)  获取 RootBeanDefinition
+		 * 从 BeanDefinitionMap 中获取
 		 * 如果返回的 BeanDefinition 是子类 bean 的话，则合并父类相关属性
 		 */
 		return getMergedBeanDefinition(beanName, getBeanDefinition(beanName));
@@ -1334,6 +1335,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	protected RootBeanDefinition getMergedBeanDefinition(String beanName, BeanDefinition bd)
 			throws BeanDefinitionStoreException {
 
+		//
 		return getMergedBeanDefinition(beanName, bd, null);
 	}
 
