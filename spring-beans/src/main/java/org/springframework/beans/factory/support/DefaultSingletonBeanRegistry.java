@@ -235,7 +235,8 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		synchronized (this.singletonObjects) {
 			/**
 			 * 首先检查对应的Bean是否已经加载过，
-			 * singleton 就是复用以前创建的Bean，这一步是必须的
+			 * singleton 就是复用以前创建的Bean，这一步是必须的,
+			 * 在容器创建初始化之处，这里拿到的一定是 null
 			 */
 			Object singletonObject = this.singletonObjects.get(beanName);
 			/** 如果为空 才可以进行 singleton 的初始化 */

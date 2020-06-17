@@ -525,6 +525,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		try {
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
 			// 如果Bean配置了PostProcessor，这里返回的是一个Proxy
+			// 这里配置的后置处理器，返回的对象 不会维护对象之间的关系
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
 				// 在配置了PostProcessor的处理器中 改变了Bean，直接返回
@@ -538,7 +539,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		try {
 			/**
-			 * 创建Bean的实例，若bean的配置信息中配置了 lookup-method 和 replace-method
+			 * 创建Bean的实例
 			 */
 			Object beanInstance = doCreateBean(beanName, mbdToUse, args);
 			if (logger.isTraceEnabled()) {
