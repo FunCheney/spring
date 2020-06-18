@@ -37,3 +37,6 @@ protected Object getSingleton(String beanName, boolean allowEarlyReference) {
     return singletonObject;
 }
 ```
+&ensp;&ensp;通过下面的图片来介绍上述 `getSingleton()` 的过程：
+
+&ensp;&ensp;对于这个 `getSingleton()` 方法而言，在容器初始化的时候，`singletonObjects` 中没有对象， 

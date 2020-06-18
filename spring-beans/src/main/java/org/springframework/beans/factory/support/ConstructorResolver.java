@@ -217,6 +217,7 @@ class ConstructorResolver {
 
 			//定义了一个差异变量
 			int minTypeDiffWeight = Integer.MAX_VALUE;
+			// 有歧义的构造方法
 			Set<Constructor<?>> ambiguousConstructors = null;
 			LinkedList<UnsatisfiedDependencyException> causes = null;
 
