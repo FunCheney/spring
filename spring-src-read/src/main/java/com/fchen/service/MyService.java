@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author: Fchen
@@ -29,5 +33,18 @@ public class MyService {
 	public void test(){
 		System.out.println("hello test");
 		myTest.test();
+	}
+
+//	@Autowired
+//	public MyService(){
+//
+//	}
+
+	public MyService(MyTest myTest){
+		this.myTest = myTest;
+	}
+
+	public MyService(int t){
+
 	}
 }

@@ -50,6 +50,7 @@ public class ConstructorArgumentValues {
 
 	/**
 	 * Create a new empty ConstructorArgumentValues object.
+	 * 创建一个空的 ConstructorArgumentValues 对象
 	 */
 	public ConstructorArgumentValues() {
 	}

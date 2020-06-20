@@ -1481,6 +1481,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		 * 取得BeanDefinition 中设置的 Property值，
 		 * 这些property来自对BeanDefinition的解析，
 		 * 具体的过程可以参看对载入个解析BeanDefinition的分析
+		 * 这里是Spring 内部设置的属性值，一般不会设置
 		 */
 		PropertyValues pvs = (mbd.hasPropertyValues() ? mbd.getPropertyValues() : null);
 
@@ -1488,6 +1489,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		 * 开始进行依赖注入过程，首先处理 autowire的注入
 		 */
 		int resolvedAutowireMode = mbd.getResolvedAutowireMode();
+		// Spring 默认 既不是 byType 也不是 byName, 默认是null
 		if (resolvedAutowireMode == AUTOWIRE_BY_NAME || resolvedAutowireMode == AUTOWIRE_BY_TYPE) {
 			MutablePropertyValues newPvs = new MutablePropertyValues(pvs);
 			// Add property values based on autowire by name if applicable.
@@ -1516,11 +1518,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		PropertyDescriptor[] filteredPds = null;
 		if (hasInstAwareBpps) {
 			if (pvs == null) {
+				// 与构造方法的处理一样，对象有但对象里面的属性没有
 				pvs = mbd.getPropertyValues();
 			}
 			for (BeanPostProcessor bp : getBeanPostProcessors()) {
 				if (bp instanceof InstantiationAwareBeanPostProcessor) {
 					InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
+					// 通过后置处理器来完成处理
 					PropertyValues pvsToUse = ibp.postProcessProperties(pvs, bw.getWrappedInstance(), beanName);
 					if (pvsToUse == null) {
 						if (filteredPds == null) {
