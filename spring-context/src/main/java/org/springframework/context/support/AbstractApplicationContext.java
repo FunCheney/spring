@@ -799,7 +799,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * Use parent's if none defined in this context.
 	 */
 	protected void initMessageSource() {
+		// 获取 BeanFactory
 		ConfigurableListableBeanFactory beanFactory = getBeanFactory();
+		//判断beanFactory中是否有名字为messageSource的bean
+		// MESSAGE_SOURCE_BEAN_NAME = "messageSource";
+		// 如果没有，新建DelegatingMessageSource类作为messageSource的Bean。
+		// 如果有，从beanFactory中获取
 		if (beanFactory.containsLocalBean(MESSAGE_SOURCE_BEAN_NAME)) {
 			this.messageSource = beanFactory.getBean(MESSAGE_SOURCE_BEAN_NAME, MessageSource.class);
 			// Make MessageSource aware of parent MessageSource.

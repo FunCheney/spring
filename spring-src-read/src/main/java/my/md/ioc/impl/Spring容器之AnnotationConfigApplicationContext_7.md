@@ -129,12 +129,108 @@ spring_iod_contains_5.jpg
 
 ### 7.initMessageSource()
 
+```java
+protected void initMessageSource() {
+    ConfigurableListableBeanFactory beanFactory = getBeanFactory();
+    if (beanFactory.containsLocalBean(MESSAGE_SOURCE_BEAN_NAME)) {
+        this.messageSource = beanFactory.getBean(MESSAGE_SOURCE_BEAN_NAME, MessageSource.class);
+        // Make MessageSource aware of parent MessageSource.
+        if (this.parent != null && this.messageSource instanceof HierarchicalMessageSource) {
+            HierarchicalMessageSource hms = (HierarchicalMessageSource) this.messageSource;
+            if (hms.getParentMessageSource() == null) {
+                // Only set parent context as parent MessageSource if no parent MessageSource
+                // registered already.
+                hms.setParentMessageSource(getInternalParentMessageSource());
+            }
+        }
+        if (logger.isTraceEnabled()) {
+            logger.trace("Using MessageSource [" + this.messageSource + "]");
+        }
+    }
+    else {
+        // Use empty MessageSource to be able to accept getMessage calls.
+        DelegatingMessageSource dms = new DelegatingMessageSource();
+        dms.setParentMessageSource(getInternalParentMessageSource());
+        this.messageSource = dms;
+        beanFactory.registerSingleton(MESSAGE_SOURCE_BEAN_NAME, this.messageSource);
+        if (logger.isTraceEnabled()) {
+            logger.trace("No '" + MESSAGE_SOURCE_BEAN_NAME + "' bean, using [" + this.messageSource + "]");
+        }
+    }
+}
+```
+判断beanFactory中是否有名字为messageSource的bean，如果有，从beanFactory中获取并且判断获取的是不是HierarchicalMessageSource类型的，如果是设置其父级消息源
+如果没有，新建DelegatingMessageSource类作为messageSource的Bean。
 
 ### 8.initApplicationEventMulticaster()
+```java
+protected void initApplicationEventMulticaster() {
+    ConfigurableListableBeanFactory beanFactory = getBeanFactory();
+    if (beanFactory.containsLocalBean(APPLICATION_EVENT_MULTICASTER_BEAN_NAME)) {
+        this.applicationEventMulticaster =
+                beanFactory.getBean(APPLICATION_EVENT_MULTICASTER_BEAN_NAME, ApplicationEventMulticaster.class);
+        if (logger.isTraceEnabled()) {
+            logger.trace("Using ApplicationEventMulticaster [" + this.applicationEventMulticaster + "]");
+        }
+    }
+    else {
+        this.applicationEventMulticaster = new SimpleApplicationEventMulticaster(beanFactory);
+        beanFactory.registerSingleton(APPLICATION_EVENT_MULTICASTER_BEAN_NAME, this.applicationEventMulticaster);
+        if (logger.isTraceEnabled()) {
+            logger.trace("No '" + APPLICATION_EVENT_MULTICASTER_BEAN_NAME + "' bean, using " +
+                    "[" + this.applicationEventMulticaster.getClass().getSimpleName() + "]");
+        }
+    }
+}
+```
+初始化 `ApplicationEventMulticaster` 如果用户自定义了事件广播器，那么使用用户自定义的事件广播器如果用户没有自定义事件广播器，那么使用默认的 
+`ApplicationEventMulticaster` 即 `SimpleApplicationEventMulticaster`.
 
 ### 9.onRefresh()
+```java
+protected void onRefresh() throws BeansException {
+    // For subclasses: do nothing by default.
+}
+```
+&ensp;&ensp;空方法，Spring 预留给子类需要时来实现。
 
 ### 10.registerListeners();
+```java
+protected void registerListeners() {
+    // Register statically specified listeners first.
+    // 硬编码的方式注册监听器的处理
+    for (ApplicationListener<?> listener : getApplicationListeners()) {
+        getApplicationEventMulticaster().addApplicationListener(listener);
+    }
 
+    // Do not initialize FactoryBeans here: We need to leave all regular beans
+    // uninitialized to let post-processors apply to them!
+    // 配置文件注册监听器的处理
+    String[] listenerBeanNames = getBeanNamesForType(ApplicationListener.class, true, false);
+    for (String listenerBeanName : listenerBeanNames) {
+        getApplicationEventMulticaster().addApplicationListenerBean(listenerBeanName);
+    }
 
+    // Publish early application events now that we finally have a multicaster...
+    Set<ApplicationEvent> earlyEventsToProcess = this.earlyApplicationEvents;
+    this.earlyApplicationEvents = null;
+    if (earlyEventsToProcess != null) {
+        for (ApplicationEvent earlyEvent : earlyEventsToProcess) {
+            getApplicationEventMulticaster().multicastEvent(earlyEvent);
+        }
+    }
+}
+```
+&ensp;&ensp;获取容器中的监听器，然后得到当前容器中的 `applicationEventMulticaster`，调用 `addApplicationListener`进行添加。
+这里的 `applicationEventMulticaster` 就是刚才初始化的，如果为空就是 `SimpleApplicationEventMulticaster`。
+
+&ensp;&ensp;从BeanFactory中获取ApplicationListener类型的Bean，并且添加为ListenerBeans。
+
+&ensp;&ensp;获取需要提前发布的事件，进行广播。
+
+### 最后
+&ensp;&enep;至此， `refresh()`方法中的各个子方法的学习，仅剩了一个`finishBeanFactoryInitialization()`。关于这个方法，涉及到很多新的过程
+并且与 `Bean` 的实例化过程息息相关。后面的文章将会介绍 `Bean` 的实例化。这里就是`Bean`的实例化入口的地方。
+
+            
 

@@ -22,7 +22,7 @@ public class MyService {
 
 	private Logger log = LoggerFactory.getLogger(MyService.class);
 
-//	MyTest xxxx;
+	//	MyTest xxxx;
 //	@Autowired
 //	public void setxxx(MyTest xxxx) {
 //		this.xxxx = xxxx;
