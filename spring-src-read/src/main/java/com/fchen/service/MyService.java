@@ -44,7 +44,7 @@ public class MyService {
 		this.myTest = myTest;
 	}
 
-	public MyService(int t){
-
-	}
+//	public MyService(int t){
+//
+//	}
 }

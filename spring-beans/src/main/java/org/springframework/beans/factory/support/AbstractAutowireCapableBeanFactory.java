@@ -1271,6 +1271,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		/**
 		 * 使用构造函数进行实例化
 		 * 由后置处理器决定返回那些构造方法
+		 * 当有多个构造器的时候，Spring 认为是没有通过构造器初始化的
 		 */
 		Constructor<?>[] ctors = determineConstructorsFromBeanPostProcessors(beanClass, beanName);
 		if (ctors != null || mbd.getResolvedAutowireMode() == AUTOWIRE_CONSTRUCTOR ||
