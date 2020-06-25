@@ -15,15 +15,15 @@ import org.springframework.stereotype.Component;
 //@Import(MyScanConfig.class)
 public class MyConfig {
 
-	@Bean("factoryBeanTest")
-	public FactoryBeanTest userFactoryBean() {
-		return new FactoryBeanTest();
-	}
-
-	@Bean
-	public static FactoryBeanTest myTestBean(){
-		return new FactoryBeanTest();
-	}
+//	@Bean("factoryBeanTest")
+//	public FactoryBeanTest userFactoryBean() {
+//		return new FactoryBeanTest();
+//	}
+//
+//	@Bean
+//	public static FactoryBeanTest myTestBean(){
+//		return new FactoryBeanTest();
+//	}
 
 //	@Component
 //	public static class TestMy{

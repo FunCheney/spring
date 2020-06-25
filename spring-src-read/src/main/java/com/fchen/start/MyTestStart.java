@@ -19,7 +19,8 @@ public class MyTestStart {
 	public static void main(String[] args) {
 
 		ApplicationContext ann = new AnnotationConfigApplicationContext(MyConfig.class);
-		MyService myService = ann.getBean(MyService.class);
+//		MyService myService = ann.getBean(MyService.class);
+		MyService myService = (MyService)ann.getBean("myService");
 		myService.test();
 //		MyScannerService myScannerService = ann.getBean(MyScannerService.class);
 //		myScannerService.testMyScan();
