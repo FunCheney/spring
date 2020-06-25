@@ -73,10 +73,12 @@ public Object getSingleton(String beanName, ObjectFactory<?> singletonFactory) {
 }
 ```
 &ensp;&ensp;这个 `getSingleton()` 方法要区别上一篇文章找那个提到的 `getSingleton()` 方法。这两个方法是重载方法，对应的实现逻辑也不相同。
+这里的这个方法的处理逻辑与
 
 ### 实例化之前的处理与判断
 
 ### Bean 的实例化
+&ensp;&ensp; 
 
 ### 实例化之后的处理
 
