@@ -1,8 +1,7 @@
 ## Spring Bean 的实例化_02
 &ensp;&ensp;在上篇文章中提到 `Object sharedInstance = getSingleton(beanName);` 这一行代码，在容器初始化的时候返回的对象为`null`。
-但是，今天这篇文章中，我要先来处理 `sharedInstance 不为null`的情况，看看Spring做了什么样的处理。对应下述流程图中的左侧部分：
-doGetBean_1.jpg
-
+但是，今天这篇文章中，我要先来处理 `sharedInstance 不为null`的情况，看看Spring做了什么样的处理。对应下述流程图中的方法：
+doGetBean-getSingleton_3.jpg
 ### getObjectForBeanInstance
 ```java
 protected Object getObjectForBeanInstance(
@@ -164,4 +163,106 @@ private Object doGetObjectFromFactoryBean(final FactoryBean<?> factory, final St
 &ensp;&ensp;上述代码中最重要的一行就是 ` object = factory.getObject();`。可以看到，这里的 `factory` 就是我们传入的 `beanInstance`。
 在 `getObjectForBeanInstance` 中做了转换`FactoryBean<?> factory = (FactoryBean<?>) beanInstance;` 。 回到最初的起点，`getBean(beanName)`
 通过 `beanName` 获取对象，最终得到的是调用 `FactoryBean` 的 `getObject()` 方法返回的对象。
+
+### 何为 FactoryBean
+&ensp;&ensp;`FactoryBean`是一个工厂`Bean`，可以生成某一个类型`Bean`实例。通过使用 `FactoryBean` 我们可以自定义 `Bean` 的创建。在Spring中
+`FactoryBean` 支持泛型。当在IOC容器中的`Bean`实现了`FactoryBean`后，通过`getBean(String BeanName)`获取到的`Bean`对象并不是`FactoryBean`
+的实现类对象，而是这个实现类中的`getObject()`方法返回的对象。要想获取`FactoryBean`的实现类，就要`getBean(&BeanName)`，在`BeanName之`前加上"&"。
+
+```java
+public interface FactoryBean<T> {
+
+	/**
+	 * 返回由FactoryBean创建的bean实例，如果 isSingleton返回true，则该实例会放置到spring容器中单实例缓存池中
+	 */
+	@Nullable
+	T getObject() throws Exception;
+
+	/**
+	 * 返回FactoryBean 创建的实例Bean的类型
+	 */
+	@Nullable
+	Class<?> getObjectType();
+
+	/**
+	 * 用来判断有FactoryBean创建的是bean的作用域
+	 */
+	default boolean isSingleton() {
+		return true;
+	}
+}
+```
+&ensp;&ensp;上述的 `FactoryBean<T>`接口， 就是Spring中定义好的接口。从上述接口中的方法我们可以看出：`FactoryBean`中定义了一个Spring 
+`Bean`的很重要的三个特性：是否单例、`Bean`类型、`Bean`实例。下面我们就简单的使用一下 `FactoryBean`。
+#### FactoryBean接口的实现类
+```java
+@Component
+public class FactoryBeanTest implements FactoryBean<User> {
+	@Override
+	public User getObject() throws Exception {
+		return new User();
+	}
+
+	@Override
+	public Class<?> getObjectType() {
+		return User.class;
+	}
+
+	@Override
+	public boolean isSingleton() {
+		return true;
+	}
+}
+```
+&ensp;&ensp;在上面的重写方法`getObject()` 方法中，我采用了 `new` 的方式来控制 `Bean` 的创建过程。
+#### 对象类
+```java
+public class User {
+
+	private String name;
+
+	private int age;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+}
+```
+#### 测试方法
+```java
+public class FactoryBeanTest {
+	public static void main(String[] args) {
+		ApplicationContext ann = new AnnotationConfigApplicationContext(MyConfig.class);
+		// 方式一
+		FactoryBeanTest beanTest = ann.getBean(FactoryBeanTest.class);
+		System.out.println(beanTest);
+		// 方式二
+		Object user = ann.getBean("factoryBeanTest");
+		System.out.println(user);
+		// 方式三
+		Object user2 = ann.getBean("&factoryBeanTest");
+		System.out.println(user2);
+	}
+}
+```
+&ensp;&ensp;程序运行结果如下：
+
+FactoryBean_01.jpg
+
+&ensp;&ensp;从结果我们可以看出，通过类型 `FactoryBeanTest.class` 与通过使用 "&"+beanName 的方式(`&factoryBeanTest`);获取到的对象
+是同一个，这个对象是就是 `FactoryBean`的实现类。而通过`beanName` 获取到的对象，就是通过 `FactoryBean` 中 `getObject()` 方法返回的对象。
+
+
 

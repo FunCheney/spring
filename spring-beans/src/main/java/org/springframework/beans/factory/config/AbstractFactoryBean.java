@@ -152,7 +152,9 @@ public abstract class AbstractFactoryBean<T>
 	 */
 	@Override
 	public final T getObject() throws Exception {
+		// 判断是否为单例
 		if (isSingleton()) {
+			// initialized 默认为 false 这里走 getEarlySingletonInstance()
 			return (this.initialized ? this.singletonInstance : getEarlySingletonInstance());
 		}
 		else {
@@ -172,6 +174,7 @@ public abstract class AbstractFactoryBean<T>
 					getClass().getName() + " does not support circular references");
 		}
 		if (this.earlySingletonInstance == null) {
+			// 通过动态代理创建对象
 			this.earlySingletonInstance = (T) Proxy.newProxyInstance(
 					this.beanClassLoader, ifcs, new EarlySingletonInvocationHandler());
 		}
