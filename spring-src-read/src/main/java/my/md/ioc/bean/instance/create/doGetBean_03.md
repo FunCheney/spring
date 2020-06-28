@@ -106,6 +106,19 @@ protected void afterSingletonCreation(String beanName) {
 }
 ```
 &ensp;&ensp;当 `singletonFactory.getObject();` 结束时候，Spring 也对其做了处理，与`beforeSingletonCreation()` 的处理过程相反。
+这里还有一个重要的步骤： `singletonObjects` 中添加对象；`singletonFactories`中移除对应的 `beanName`；`earlySingletonObjects`中
+移除 `beanName`; `registeredSingletons` 中添加 `beanName` 用来保存当前注册的Bean。
+
+```java
+protected void addSingleton(String beanName, Object singletonObject) {
+    synchronized (this.singletonObjects) {
+        this.singletonObjects.put(beanName, singletonObject);
+        this.singletonFactories.remove(beanName);
+        this.earlySingletonObjects.remove(beanName);
+        this.registeredSingletons.add(beanName);
+    }
+}
+```
 
 ### 总结
 ①：容器实例化 `Bean` 的入口是 `getSingleton(String beanName, ObjectFactory<?> singletonFactory

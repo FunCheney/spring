@@ -513,7 +513,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Prepare method overrides.
 		try {
 			/**
-			 * 处理lockup-method 和 replace-method配置，spring将这两个方法统称为 method overrides
+			 * 处理lookup-method 和 replace-method配置，spring将这两个方法统称为 method overrides
 			 */
 			mbdToUse.prepareMethodOverrides();
 		}
