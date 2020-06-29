@@ -36,16 +36,15 @@ public class MyService {
 		myTest.test();
 	}
 
-//	@Autowired
-//	public MyService(){
-//
-//	}
+	public MyService(){
+
+	}
 
 	public MyService(MyTest myTest){
 		this.myTest = myTest;
 	}
 
-//	public MyService(int t){
-//
-//	}
+	public MyService(int t){
+
+	}
 }
