@@ -219,3 +219,41 @@ protected BeanWrapper createBeanInstance(String beanName, RootBeanDefinition mbd
     return instantiateBean(beanName, mbd);
 }
 ```
+&ensp;&ensp;这个方法返回主要是用来返回 `BeanWrapper` 对象。我自己对 `BeanWrapper` 的理解就是 `Bean` 的包装。Spring提供的一个用来操
+作javaBean属性的工具，使用它可以直接修改一个对象的属性。`BeanWrapper`本身是一个接口，它提供了一整套处理Bean的方法，代码如下：
+```java
+public interface BeanWrapper extends ConfigurablePropertyAccessor {
+
+	/**
+	 * 为数组和集合自动增长指定一个限制。在普通的BeanWrapper上默认是无限的。
+	 */
+	void setAutoGrowCollectionLimit(int autoGrowCollectionLimit);
+
+	/**
+	 * 返回数组和集合自动增长的限制。
+	 */
+	int getAutoGrowCollectionLimit();
+
+	/**
+	 * 返回对象包装的bean实例
+	 */
+	Object getWrappedInstance();
+
+	/**
+	 * 返回被包装的Bean对象的类型。
+	 */
+	Class<?> getWrappedClass();
+
+	/**
+	 * 获取包装对象的PropertyDescriptors
+	 */
+	PropertyDescriptor[] getPropertyDescriptors();
+
+	/**
+	 * 获取包装对象的特定属性的属性描述符。
+	 */
+	PropertyDescriptor getPropertyDescriptor(String propertyName) throws InvalidPropertyException;
+
+}
+
+```

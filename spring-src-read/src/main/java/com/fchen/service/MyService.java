@@ -30,21 +30,23 @@ public class MyService {
 //	}
 	@Autowired
 	MyTest myTest;
+	@Autowired
+	MyServiceB myServiceB;
 
 	public void test(){
 		System.out.println("hello test");
 		myTest.test();
 	}
 
-	public MyService(){
-
-	}
-
-	public MyService(MyTest myTest){
-		this.myTest = myTest;
-	}
-
-	public MyService(int t){
-
-	}
+//	public MyService(){
+//
+//	}
+//
+//	public MyService(MyTest myTest){
+//		this.myTest = myTest;
+//	}
+//
+//	public MyService(int t){
+//
+//	}
 }

@@ -1242,9 +1242,6 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			return instantiateUsingFactoryMethod(beanName, mbd, args);
 		}
 
-		/**
-		 * 多次构建同一个Bean时，可以使用shortcut
-		 */
 		boolean resolved = false;
 		boolean autowireNecessary = false;
 		if (args == null) {
