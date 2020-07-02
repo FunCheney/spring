@@ -1,4 +1,4 @@
-### 万众期待的 doGetBean
+### 万众期待的 doCreateBean
 
 ```java
 protected Object doCreateBean(final String beanName, final RootBeanDefinition mbd, final @Nullable Object[] args)
@@ -39,8 +39,6 @@ protected Object doCreateBean(final String beanName, final RootBeanDefinition mb
         }
     }
 
-    // Eagerly cache singletons to be able to resolve circular references
-    // even when triggered by lifecycle interfaces like BeanFactoryAware.
     /*
      * 是否需要提前曝光：单例 & 允许循环依赖& 当前的bean正在创建中，检测循环依赖
      */
@@ -145,7 +143,18 @@ protected Object doCreateBean(final String beanName, final RootBeanDefinition mb
  * ⑦：注册 DisposableBean
  * ⑧：完成创建并返回
  
+&ensp;&ensp;`isSingletonCurrentlyInCreation(beanName)`在这里返回的时候为`true`。还记得在什么地方，将当前正在创建的`beanName`放入到 
+ `singletonsCurrentlyInCreation`这个`Set` 集合中吗？
+ 
+ **答案就是：** `getSingleton(String beanName, ObjectFactory<?> singletonFactory)`方法中的 `beforeSingletonCreation(beanName)`方法中
+ addsingletonsCurrentlyInCreation.jpg
+ 
+ &ensp;&ensp;在这里需要指出 `addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));` 这一行代码在Spring中解决
+ 循环依赖起着非常重要的作用。其原理就是，提前暴露创建可以通过 `getObject()`返回对象的 `ObjectFactory` 来解决。这一部分，后续也会陆续讲到。
+ 
 ### 创建bean
+&ensp;&ensp;在今天这篇文章中，还将介绍创建 `createBeanInstance()` 返回 `BeanWrapper` 对象的入口，应为在Spring中创建对象的方式做了区分，
+分为通过: 使用工厂方法对Bean进行实例化、通过构造方法自动装配的方式构造Bean对象、通过默认的无参构造方法进行实例化。每一种方式都有对应的方法进行处理。 
 ```java
 protected BeanWrapper createBeanInstance(String beanName, RootBeanDefinition mbd, @Nullable Object[] args) {
     // Make sure bean class is actually resolved at this point.
@@ -219,6 +228,7 @@ protected BeanWrapper createBeanInstance(String beanName, RootBeanDefinition mbd
     return instantiateBean(beanName, mbd);
 }
 ```
+### BeanWrapper 对象
 &ensp;&ensp;这个方法返回主要是用来返回 `BeanWrapper` 对象。我自己对 `BeanWrapper` 的理解就是 `Bean` 的包装。Spring提供的一个用来操
 作javaBean属性的工具，使用它可以直接修改一个对象的属性。`BeanWrapper`本身是一个接口，它提供了一整套处理Bean的方法，代码如下：
 ```java
@@ -257,3 +267,4 @@ public interface BeanWrapper extends ConfigurablePropertyAccessor {
 }
 
 ```
+&ensp;&ensp;这个 `BeanWrapper` 在Spring中是对Bean实力化来说一个非常重要的对象，在进行依赖关系处理的时候会使用到该对象，后面的文章中会讲到。
