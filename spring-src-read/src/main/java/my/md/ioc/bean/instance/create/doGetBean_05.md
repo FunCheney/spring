@@ -150,7 +150,7 @@ protected Object doCreateBean(final String beanName, final RootBeanDefinition mb
  addsingletonsCurrentlyInCreation.jpg
  
  &ensp;&ensp;在这里需要指出 `addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));` 这一行代码在Spring中解决
- 循环依赖起着非常重要的作用。其原理就是，提前暴露创建可以通过 `getObject()`返回对象的 `ObjectFactory` 来解决。这一部分，后续也会陆续讲到。
+ 循环依赖起着非常重要的作用。其原理就是，提前暴露 `ObjectFactory` 将其添加到`singletonFactories`中去，然后通过`getObject()`返回对象。
  
 ### 创建bean
 &ensp;&ensp;在今天这篇文章中，还将介绍创建 `createBeanInstance()` 返回 `BeanWrapper` 对象的入口，应为在Spring中创建对象的方式做了区分，
@@ -228,6 +228,7 @@ protected BeanWrapper createBeanInstance(String beanName, RootBeanDefinition mbd
     return instantiateBean(beanName, mbd);
 }
 ```
+&ensp;&ensp;
 ### BeanWrapper 对象
 &ensp;&ensp;这个方法返回主要是用来返回 `BeanWrapper` 对象。我自己对 `BeanWrapper` 的理解就是 `Bean` 的包装。Spring提供的一个用来操
 作javaBean属性的工具，使用它可以直接修改一个对象的属性。`BeanWrapper`本身是一个接口，它提供了一整套处理Bean的方法，代码如下：
