@@ -12,4 +12,12 @@ import org.springframework.stereotype.Service;
 public class MyServiceB {
 	@Autowired
 	MyService myService;
+
+	public MyServiceB(){
+
+	}
+
+	public MyServiceB(MyService myService){
+		this.myService = myService;
+	}
 }
