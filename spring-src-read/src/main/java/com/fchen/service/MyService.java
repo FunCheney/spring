@@ -47,9 +47,9 @@ public class MyService {
 		this.myTest = myTest;
 	}
 
-	public MyService(MyServiceB myServiceB, MyTest myTest){
-		
-	}
+//	public MyService(MyServiceB myServiceB, MyTest myTest){
+//
+//	}
 //
 //	public MyService(int t){
 //

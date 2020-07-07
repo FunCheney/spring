@@ -305,12 +305,16 @@ public class MethodInvoker {
 		int result = 0;
 		for (int i = 0; i < paramTypes.length; i++) {
 			if (!ClassUtils.isAssignableValue(paramTypes[i], args[i])) {
+				// 只要有一个双女户类型不匹配，返回最大权重值
 				return Integer.MAX_VALUE;
 			}
 			if (args[i] != null) {
 				Class<?> paramType = paramTypes[i];
 				Class<?> superClass = args[i].getClass().getSuperclass();
+				// 父类不为null
 				while (superClass != null) {
+					// 注入参数的类型 是方法参数类型的子类，每往上找一层子类
+					// 差异值 +2，一直找到与方法参数的类型相同
 					if (paramType.equals(superClass)) {
 						result = result + 2;
 						superClass = null;
@@ -323,6 +327,7 @@ public class MethodInvoker {
 						superClass = null;
 					}
 				}
+				// 方法参数类型是接口 +1
 				if (paramType.isInterface()) {
 					result = result + 1;
 				}

@@ -1,4 +1,4 @@
-### 确定采用的构造方法
+### Spring 实例化之推断构造函数 
 ```java
 public Constructor<?>[] determineCandidateConstructors(Class<?> beanClass, final String beanName)
         throws BeanCreationException {
