@@ -1,3 +1,13 @@
+### 前情提要
+&ensp;&ensp;文章开篇，不得不前情提要走一波了。还记得 `@Configuration` 类中的`@Bean`方法是如何处理的吗？小小的脑袋上面是否有大大的问号呢？
+这里做一个简要回顾，首先看 `@Bean` 方法的处理：
+
+&ensp;&ensp;然后在通过下面以系列的方法对其解析：
+
+&ensp;&ensp;最后转化成相应的 `BeanDefinition` 注册到 `BeanDefinitionMap` 中去：
+
+
+
 ### 通过工厂方法创建实例 
 
 ```java
