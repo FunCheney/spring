@@ -15,17 +15,19 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan("com.demo")
 public class DemoConfigOne {
-	@Bean("demoOne")
+
+	@Bean
 	public FactoryBeanDemoOne DemoFactoryBean() {
 		return new FactoryBeanDemoOne();
 	}
 
-//	public static FactoryBeanDemoOne DemoFactoryBean(){
-//		return new FactoryBeanDemoOne();
-//	}
+	@Bean
+	public  FactoryBeanDemoOne DemoFactoryBean(int i){
+		return new FactoryBeanDemoOne(i);
+	}
 
 	@Bean("demoService")
-	public DemoServiceOne demoServiceOne(){
+	public static DemoServiceOne demoServiceOne(){
 		return new DemoServiceOne();
 	}
 }

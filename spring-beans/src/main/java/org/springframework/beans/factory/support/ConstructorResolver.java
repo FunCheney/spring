@@ -482,6 +482,8 @@ class ConstructorResolver {
 		}
 		else {
 			// 工厂名称为空，则可能是一个静态工厂
+			// 如果有static 且为工厂方法，则添加到 candidateList 中
+			// 这加这个判断是以防漏掉 加了 static 的 @Bean 方法。当然，没有加 @Bean 的方法就不会被考虑了
 			if (!mbd.hasBeanClass()) {
 				throw new BeanDefinitionStoreException(mbd.getResourceDescription(), beanName,
 						"bean definition declares neither a bean class nor a factory-bean reference");
@@ -541,9 +543,8 @@ class ConstructorResolver {
 			// 检索所有方法，这里是对方法进行过滤
 			List<Method> candidateList = new ArrayList<>();
 			for (Method candidate : rawCandidates) {
-				// 如果有static 且为工厂方法，则添加到 candidateList 中
-				// 这加这个判断是以防漏掉 加了 static 的 @Bean 方法。当然，没有加 @Bean 的方法就不会被考虑了
 				if (Modifier.isStatic(candidate.getModifiers()) == isStatic && mbd.isFactoryMethod(candidate)) {
+					// 添加到候选类里面去
 					candidateList.add(candidate);
 				}
 			}

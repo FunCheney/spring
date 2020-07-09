@@ -22,4 +22,9 @@ public class FactoryBeanDemoOne implements FactoryBean<BeanDemoOne> {
 	public boolean isSingleton() {
 		return false;
 	}
+	public FactoryBeanDemoOne (){}
+
+	public FactoryBeanDemoOne (int i){
+
+	}
 }
