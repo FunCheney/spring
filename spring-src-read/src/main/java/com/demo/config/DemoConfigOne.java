@@ -2,6 +2,7 @@ package com.demo.config;
 
 import com.demo.factory.FactoryBeanDemoOne;
 import com.demo.service.DemoServiceOne;
+import com.demo.service.DemoServiceTwo;
 import com.fchen.bean.biz.FactoryBeanTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,17 +18,17 @@ import org.springframework.context.annotation.Configuration;
 public class DemoConfigOne {
 
 	@Bean
-	public FactoryBeanDemoOne DemoFactoryBean() {
+	public FactoryBeanDemoOne demoFactoryBean() {
 		return new FactoryBeanDemoOne();
 	}
 
 	@Bean
-	public  FactoryBeanDemoOne DemoFactoryBean(int i){
-		return new FactoryBeanDemoOne(i);
+	public  DemoServiceOne demoServiceOne(DemoServiceTwo demoServiceTwo){
+		return new DemoServiceOne(demoServiceTwo);
 	}
 
-	@Bean("demoService")
-	public static DemoServiceOne demoServiceOne(){
+	@Bean
+	public  DemoServiceOne demoServiceOne(){
 		return new DemoServiceOne();
 	}
 }

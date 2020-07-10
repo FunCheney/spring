@@ -538,7 +538,7 @@ class ConstructorResolver {
 			// 获取工厂方法的类全名称
 			factoryClass = ClassUtils.getUserClass(factoryClass);
 
-			// 获取所有待定方法
+			// 获取所有声明的构造方法，默认允许访问非公开的方法
 			Method[] rawCandidates = getCandidateMethods(factoryClass, mbd);
 			// 检索所有方法，这里是对方法进行过滤
 			List<Method> candidateList = new ArrayList<>();

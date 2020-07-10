@@ -1,5 +1,6 @@
 package com.demo.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -7,12 +8,15 @@ import org.springframework.stereotype.Service;
  * @date: 2020/7/8 8:34 下午
  * @desc: TODO
  */
-@Service
+
 public class DemoServiceOne {
-	public DemoServiceOne(int i){
+	@Autowired
+	DemoServiceTwo demoServiceTwo;
+	public DemoServiceOne(){
 
 	}
-	public DemoServiceOne(){
-		
+
+	public DemoServiceOne(DemoServiceTwo demoServiceTwo){
+		this.demoServiceTwo = demoServiceTwo;
 	}
 }

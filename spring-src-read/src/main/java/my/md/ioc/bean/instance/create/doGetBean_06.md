@@ -1,14 +1,119 @@
-### 前情提要
+### 1.前情提要
 &ensp;&ensp;文章开篇，不得不前情提要走一波了。还记得 `@Configuration` 类中的`@Bean`方法是如何处理的吗？小小的脑袋上面是否有大大的问号呢？
 这里做一个简要回顾，首先看 `@Bean` 方法的处理：
+@Bean方法处理_01.jpg
 
 &ensp;&ensp;然后在通过下面以系列的方法对其解析：
+@Bean方法解析概要.jpg
+
+&ensp;&ensp;上述图片中的最后一步，是不是很亲切？是不是看到了熟悉的 `registerBeanDefinition()`方法？是不是还能想起 `this.beanDefinitionMap.put(beanName
+, beanDefinition);`？
 
 &ensp;&ensp;最后转化成相应的 `BeanDefinition` 注册到 `BeanDefinitionMap` 中去：
+@Bean_02.jpg
+&ensp;&ensp;首先我们其中一个 `BeanDefinition` 为例，看看这个 `BeanDefinition` 中都包含哪些信息。
+ 
+&ensp;&ensp;这里看到，将 `BeanDefinition` 注册到 `Map` 中去了，但是这里这个注册并不是这么简单的。这里要对一下几种情况加以区分，要不然看到后面的
+`instantiateUsingFactoryMethod()` 方法肯定会懵圈的。
 
+&ensp;&ensp;上述代码中用到的两个类：
+```java
+public class DemoServiceOne {
 
+}
 
-### 通过工厂方法创建实例 
+public class FactoryBeanDemoOne implements FactoryBean<BeanDemoOne> {
+	@Override
+	public BeanDemoOne getObject() throws Exception {
+		return new BeanDemoOne();
+	}
+
+	@Override
+	public Class<?> getObjectType() {
+		return null;
+	}
+
+	@Override
+	public boolean isSingleton() {
+		return false;
+	}
+	public FactoryBeanDemoOne (){}
+
+	public FactoryBeanDemoOne (int i){
+
+	}
+}
+```
+
+#### 1.1 静态的 @Bean 方法
+
+```java
+@Configuration
+@ComponentScan("com.demo")
+public class DemoConfigOne {
+
+	@Bean("demoService")
+	public static DemoServiceOne demoServiceOne(){
+		return new DemoServiceOne();
+	}
+}
+```
+situation_01.jpg
+#### 1.2 非静态的构造方法
+```java
+@Configuration
+@ComponentScan("com.demo")
+public class DemoConfigOne {
+
+	@Bean
+	public FactoryBeanDemoOne demoFactoryBean() {
+		return new FactoryBeanDemoOne();
+	}
+}
+```
+situation_02.jpg
+
+#### 1.3 通过两个 @Bean 返回同类型的对象
+```java
+@Configuration
+@ComponentScan("com.demo")
+public class DemoConfigOne {
+
+	@Bean
+	public FactoryBeanDemoOne demoFactoryBean() {
+		return new FactoryBeanDemoOne();
+	}
+
+	@Bean
+	public  FactoryBeanDemoOne demoFactoryBean(int i){
+		return new FactoryBeanDemoOne(i);
+	}
+
+}
+```
+situation_03.jpg
+#### 1.4 通过两个 @Bean 返回指定名称的同类型对象 
+```java
+@Configuration
+@ComponentScan("com.demo")
+public class DemoConfigOne {
+
+	@Bean("demoOne")
+	public FactoryBeanDemoOne demoFactoryBean() {
+		return new FactoryBeanDemoOne();
+	}
+
+	@Bean("demoTwo")
+	public  FactoryBeanDemoOne demoFactoryBean(int i){
+		return new FactoryBeanDemoOne(i);
+	}
+}
+```
+situation_04.jpg
+
+### 2.通过工厂方法创建实例
+&ensp;&ensp;在不禁感慨Spring的强大的同时，在看到某些方法的时候，也觉得某些方法好像不是那么符合Spring的设计？下面这个方法，就是写的比较绕的方法，
+没有办法，只能硬着头皮往下看。。。
 
 ```java
 public BeanWrapper instantiateUsingFactoryMethod(

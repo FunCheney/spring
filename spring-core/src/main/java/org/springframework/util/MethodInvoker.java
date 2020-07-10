@@ -305,7 +305,7 @@ public class MethodInvoker {
 		int result = 0;
 		for (int i = 0; i < paramTypes.length; i++) {
 			if (!ClassUtils.isAssignableValue(paramTypes[i], args[i])) {
-				// 只要有一个双女户类型不匹配，返回最大权重值
+				// 只要有一个参数类型不匹配，返回最大权重值
 				return Integer.MAX_VALUE;
 			}
 			if (args[i] != null) {

@@ -24,7 +24,4 @@ public class FactoryBeanDemoOne implements FactoryBean<BeanDemoOne> {
 	}
 	public FactoryBeanDemoOne (){}
 
-	public FactoryBeanDemoOne (int i){
-
-	}
 }
