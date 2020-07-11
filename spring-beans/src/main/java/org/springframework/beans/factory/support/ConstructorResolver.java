@@ -467,16 +467,17 @@ class ConstructorResolver {
 		// 通过beanDefinition获取到factoryBeanName ，实际就是@Bean注解的方法 所在的 configuration类
 		String factoryBeanName = mbd.getFactoryBeanName();
 		if (factoryBeanName != null) {
+			// factoryBeanName 与 当前的 beanName 相同 抛出异常
 			if (factoryBeanName.equals(beanName)) {
 				throw new BeanDefinitionStoreException(mbd.getResourceDescription(), beanName,
 						"factory-bean reference points back to the same bean definition");
 			}
-			// 根据 BeanName 获取 对象，又是是 @Configuration 注解的类 这里获取到的是被 CGLIB 代理的类
+			// 根据 BeanName 获取 对象，就是 @Configuration 注解的类 这里获取到的是被 CGLIB 代理的类
 			factoryBean = this.beanFactory.getBean(factoryBeanName);
 			if (mbd.isSingleton() && this.beanFactory.containsSingleton(beanName)) {
 				throw new ImplicitlyAppearedSingletonException();
 			}
-			// 获取工厂实例
+			// 获取工厂类
 			factoryClass = factoryBean.getClass();
 			isStatic = false;
 		}
@@ -605,7 +606,7 @@ class ConstructorResolver {
 
 			LinkedList<UnsatisfiedDependencyException> causes = null;
 
-			// 遍历候选方法
+			// 遍历候选方法 （这里拿到的其实就是实例化 Bean 的构造方法）
 			for (Method candidate : candidates) {
 				// 方法的参数列表
 				Class<?>[] paramTypes = candidate.getParameterTypes();

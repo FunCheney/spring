@@ -19,9 +19,30 @@
 &ensp;&ensp;上述代码中用到的两个类：
 ```java
 public class DemoServiceOne {
+	@Autowired
+	DemoServiceTwo demoServiceTwo;
+	public DemoServiceOne(){
 
+	}
+
+	public DemoServiceOne(DemoServiceTwo demoServiceTwo){
+		this.demoServiceTwo = demoServiceTwo;
+	}
 }
+```
 
+```java
+@Service
+public class DemoServiceTwo {
+}
+```
+
+```java
+public class BeanDemoOne {
+}
+```
+
+```java
 public class FactoryBeanDemoOne implements FactoryBean<BeanDemoOne> {
 	@Override
 	public BeanDemoOne getObject() throws Exception {
@@ -79,15 +100,15 @@ situation_02.jpg
 @ComponentScan("com.demo")
 public class DemoConfigOne {
 
-	@Bean
-	public FactoryBeanDemoOne demoFactoryBean() {
-		return new FactoryBeanDemoOne();
-	}
-
-	@Bean
-	public  FactoryBeanDemoOne demoFactoryBean(int i){
-		return new FactoryBeanDemoOne(i);
-	}
+	    @Bean
+    	public  DemoServiceOne demoServiceOne(DemoServiceTwo demoServiceTwo){
+    		return new DemoServiceOne(demoServiceTwo);
+    	}
+    
+    	@Bean
+    	public  DemoServiceOne demoServiceOne(){
+    		return new DemoServiceOne();
+    	}
 
 }
 ```
@@ -98,15 +119,16 @@ situation_03.jpg
 @ComponentScan("com.demo")
 public class DemoConfigOne {
 
-	@Bean("demoOne")
-	public FactoryBeanDemoOne demoFactoryBean() {
-		return new FactoryBeanDemoOne();
+    @Bean("demoOne")
+	public  DemoServiceOne demoServiceOne(DemoServiceTwo demoServiceTwo){
+		return new DemoServiceOne(demoServiceTwo);
 	}
 
 	@Bean("demoTwo")
-	public  FactoryBeanDemoOne demoFactoryBean(int i){
-		return new FactoryBeanDemoOne(i);
+	public  DemoServiceOne demoServiceOne(){
+		return new DemoServiceOne();
 	}
+
 }
 ```
 situation_04.jpg
@@ -134,21 +156,24 @@ public BeanWrapper instantiateUsingFactoryMethod(
     // 通过beanDefinition获取到factoryBeanName ，实际就是@Bean注解的方法 所在的 configuration类
     String factoryBeanName = mbd.getFactoryBeanName();
     if (factoryBeanName != null) {
+        // factoryBeanName 与 当前的 beanName 相同 抛出异常
         if (factoryBeanName.equals(beanName)) {
             throw new BeanDefinitionStoreException(mbd.getResourceDescription(), beanName,
                     "factory-bean reference points back to the same bean definition");
         }
-        // 根据 BeanName 获取 对象，又是是 @Configuration 注解的类 这里获取到的是被 CGLIB 代理的类
+        // 根据 BeanName 获取 对象，就是 @Configuration 注解的类 这里获取到的是被 CGLIB 代理的类
         factoryBean = this.beanFactory.getBean(factoryBeanName);
         if (mbd.isSingleton() && this.beanFactory.containsSingleton(beanName)) {
             throw new ImplicitlyAppearedSingletonException();
         }
-        // 获取工厂实例
+        // 获取工厂类
         factoryClass = factoryBean.getClass();
         isStatic = false;
     }
     else {
         // 工厂名称为空，则可能是一个静态工厂
+        // 如果有static 且为工厂方法，则添加到 candidateList 中
+        // 这加这个判断是以防漏掉 加了 static 的 @Bean 方法。当然，没有加 @Bean 的方法就不会被考虑了
         if (!mbd.hasBeanClass()) {
             throw new BeanDefinitionStoreException(mbd.getResourceDescription(), beanName,
                     "bean definition declares neither a bean class nor a factory-bean reference");
@@ -203,14 +228,13 @@ public BeanWrapper instantiateUsingFactoryMethod(
         // 获取工厂方法的类全名称
         factoryClass = ClassUtils.getUserClass(factoryClass);
 
-        // 获取所有待定方法
+        // 获取所有声明的构造方法，默认允许访问非公开的方法
         Method[] rawCandidates = getCandidateMethods(factoryClass, mbd);
         // 检索所有方法，这里是对方法进行过滤
         List<Method> candidateList = new ArrayList<>();
         for (Method candidate : rawCandidates) {
-            // 如果有static 且为工厂方法，则添加到 candidateList 中
-            // 这加这个判断是以防漏掉 加了 static 的 @Bean 方法。当然，没有加 @Bean 的方法就不会被考虑了
             if (Modifier.isStatic(candidate.getModifiers()) == isStatic && mbd.isFactoryMethod(candidate)) {
+                // 添加到候选类里面去
                 candidateList.add(candidate);
             }
         }
@@ -271,7 +295,7 @@ public BeanWrapper instantiateUsingFactoryMethod(
 
         LinkedList<UnsatisfiedDependencyException> causes = null;
 
-        // 遍历候选方法
+        // 遍历候选方法 （这里拿到的其实就是实例化 Bean 的构造方法）
         for (Method candidate : candidates) {
             // 方法的参数列表
             Class<?>[] paramTypes = candidate.getParameterTypes();
@@ -409,6 +433,10 @@ public BeanWrapper instantiateUsingFactoryMethod(
     return bw;
 }
 ```
+#### 2.1 方法流程图
+
+#### 2.2 方法分析
+&ensp;&ensp;首先这个方法的流程比较长，首先声明：关于推断构造函数的使用，这里暂时不做
 
 ```java
 public int getTypeDifferenceWeight(Class<?>[] paramTypes) {

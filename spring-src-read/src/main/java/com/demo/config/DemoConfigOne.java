@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
 public class DemoConfigOne {
 
 	@Bean
-	public FactoryBeanDemoOne demoFactoryBean() {
+	public static FactoryBeanDemoOne demoFactoryBean() {
 		return new FactoryBeanDemoOne();
 	}
 
