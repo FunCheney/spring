@@ -1,4 +1,40 @@
-### Spring 实例化之推断构造函数 
+## 通过 BeanPostProcessors 确定构造函数
+### 1.开篇
+&ensp;&ensp;上一篇文章学习了在Spring中如何通过工厂方法来实例化对象的，详细分析了 `createBeanInstance()` 方法中调用的 `instantiateUsingFactoryMethod(beanName, mbd, args)`
+方法，今天这个片文章，将来分析另一个被调用的方法 `determineConstructorsFromBeanPostProcessors(beanClass, beanName)`。方法入口如下：
+
+&ensp;&ensp;在这个的实现中，我们又看到了非常熟悉的 `BeanPostProcessors` 的处理，代码如下：  
+
+```java
+protected Constructor<?>[] determineConstructorsFromBeanPostProcessors(@Nullable Class<?> beanClass, String beanName)
+        throws BeansException {
+
+    if (beanClass != null && hasInstantiationAwareBeanPostProcessors()) {
+        for (BeanPostProcessor bp : getBeanPostProcessors()) {
+            if (bp instanceof SmartInstantiationAwareBeanPostProcessor) {
+                SmartInstantiationAwareBeanPostProcessor ibp = (SmartInstantiationAwareBeanPostProcessor) bp;
+                Constructor<?>[] ctors = ibp.determineCandidateConstructors(beanClass, beanName);
+                if (ctors != null) {
+                    return ctors;
+                }
+            }
+        }
+    }
+    return null;
+}
+```
+&ensp;&ensp;从上述代码中，可以看到 Spring 中的处理方式就是先获取到所有的 `BeanPostProcessors` 的子类实现，然后循环判断，如果有符合条件的，
+那么就调用该类的 `determineCandidateConstructors()` 方法，完成相应的处理。
+
+
+&ensp;&ensp;在文章正式开始之前，又到了问问题的时候了， `ibp.determineCandidateConstructors(beanClass, beanName
+)` 在执行 `determineCandidateConstructors()` 方法的 `BeanPostProcessor` 的实现类中，有一个 `AutowiredAnnotationBeanPostProcessor`,
+我这里有一个问题，就是这个类是在什么时候放到 `BeanDefinitionMap`中的呢？**请查看Spring容器初始化之先发五虎**。
+
+### 2.正题
+#### 2.1 AutowiredAnnotationBeanPostProcessor 类中的方法 
+&ensp;&ensp;从代码的实现可以看出，对于一个放在注册到容器中的 `BeanName`，都会做一次这个判断。终于没有交给Spring的类，这里当然是不会子处理了。
+
 ```java
 public Constructor<?>[] determineCandidateConstructors(Class<?> beanClass, final String beanName)
         throws BeanCreationException {
