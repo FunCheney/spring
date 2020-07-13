@@ -32,8 +32,11 @@ protected Constructor<?>[] determineConstructorsFromBeanPostProcessors(@Nullable
 我这里有一个问题，就是这个类是在什么时候放到 `BeanDefinitionMap`中的呢？**请查看Spring容器初始化之先发五虎**。
 
 ### 2.正题
-#### 2.1 AutowiredAnnotationBeanPostProcessor 类中的方法 
-&ensp;&ensp;从代码的实现可以看出，对于一个放在注册到容器中的 `BeanName`，都会做一次这个判断。终于没有交给Spring的类，这里当然是不会子处理了。
+#### 2.1 你真的知道Spring如何选择构造器吗？
+&ensp;&ensp;文章开始之前，还是要从使用场景入手，然后在通过源码来分析，毕竟源码是不会骗人的。。。
+
+#### 2.2 AutowiredAnnotationBeanPostProcessor 类中的方法 
+&ensp;&ensp;从代码的实现可以看出，对于一个放在注册到容器中的 `BeanName`，都会做一次这个判断。终于没有交给Spring的类，这里当然是不会做处理了。
 
 ```java
 public Constructor<?>[] determineCandidateConstructors(Class<?> beanClass, final String beanName)
@@ -205,6 +208,7 @@ true：先判断requiredConstructor集合是否为空，若不为空则代表之
 false：直接放入candidates集合中。
 判断requiredConstructor集合是否为空（是否存在required=true的构造器），若没有，将默认构造器也放入candidates集合中。
 最后将上述candidates赋值给最终返回的candidateConstructors集合。
+
 4.总结
 
 综上所述，我们可以回答开篇疑问点小结所总结的一系列问题了：
