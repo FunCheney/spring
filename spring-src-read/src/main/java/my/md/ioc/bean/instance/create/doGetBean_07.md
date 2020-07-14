@@ -35,6 +35,72 @@ protected Constructor<?>[] determineConstructorsFromBeanPostProcessors(@Nullable
 #### 2.1 你真的知道Spring如何选择构造器吗？
 &ensp;&ensp;文章开始之前，还是要从使用场景入手，然后在通过源码来分析，毕竟源码是不会骗人的。。。
 
+##### 情形一
+```java
+@Service
+public class DemoServiceOne {
+
+}
+```
+##### 情形二
+```java
+@Service
+public class DemoServiceOne {
+    @Autowired
+	DemoServiceTwo demoServiceTwo;
+
+    public DemoServiceOne(){}
+
+    public DemoServiceOne(DemoServiceTwo demoServiceTwo){
+    		this.demoServiceTwo = demoServiceTwo;
+    }
+}
+```
+##### 情形三
+
+```java
+@Service
+public class DemoServiceOne {
+
+	@Autowired
+	DemoServiceTwo demoServiceTwo;
+
+	@Autowired
+	DemoServiceThree demoServiceThree;
+
+	public DemoServiceOne(DemoServiceTwo demoServiceTwo){
+		this.demoServiceTwo = demoServiceTwo;
+	}
+
+	public DemoServiceOne(DemoServiceThree demoServiceThree, DemoServiceTwo demoServiceTwo){
+		this.demoServiceTwo = demoServiceTwo;
+		this.demoServiceThree = demoServiceThree;
+	}
+}
+```
+
+##### 情形四
+```java
+@Service
+public class DemoServiceOne {
+
+	@Autowired
+	DemoServiceTwo demoServiceTwo;
+
+	@Autowired
+	DemoServiceThree demoServiceThree;
+
+	public DemoServiceOne(DemoServiceTwo demoServiceTwo){
+		this.demoServiceTwo = demoServiceTwo;
+	}
+	@Autowired
+	public DemoServiceOne(DemoServiceThree demoServiceThree, DemoServiceTwo demoServiceTwo){
+		this.demoServiceTwo = demoServiceTwo;
+		this.demoServiceThree = demoServiceThree;
+	}
+}
+```
+
 #### 2.2 AutowiredAnnotationBeanPostProcessor 类中的方法 
 &ensp;&ensp;从代码的实现可以看出，对于一个放在注册到容器中的 `BeanName`，都会做一次这个判断。终于没有交给Spring的类，这里当然是不会做处理了。
 
@@ -195,19 +261,27 @@ public Constructor<?>[] determineCandidateConstructors(Class<?> beanClass, final
     return (candidateConstructors.length > 0 ? candidateConstructors : null);
 }
 ```
-从这段核心代码我们可以看出几个要点：
+&ensp;&ensp;从上面的代码找那个可以看出，在选择构造器的时候 Spring 会做如下的判断：
 
-在没有@Autowired注解的情况下：
-无参构造器将直接加入defaultConstructor集合中。
-在构造器数量只有一个且有参数时，此唯一有参构造器将加入candidateConstructors集合中。
-在构造器数量有两个的时候，并且存在无参构造器，将defaultConstructor（第一条的无参构造器）放入candidateConstructors集合中。
-在构造器数量大于两个，并且存在无参构造器的情况下，将返回一个空的candidateConstructors集合，也就是没有找到构造器。
-在有@Autowired注解的情况下：
-判断required属性：
-true：先判断requiredConstructor集合是否为空，若不为空则代表之前已经有一个required=true的构造器了，两个true将抛出异常，再判断candidates集合是否为空，若不为空则表示之前已经有一个打了注解的构造器，此时required又是true，抛出异常。若两者都不为空将放入requiredConstructor集合中，再放入candidates集合中。
-false：直接放入candidates集合中。
-判断requiredConstructor集合是否为空（是否存在required=true的构造器），若没有，将默认构造器也放入candidates集合中。
-最后将上述candidates赋值给最终返回的candidateConstructors集合。
+*  在没有@Autowired注解的情况下：
+
+  + 无参构造器将直接加入defaultConstructor集合中。
+  
+  + 在构造器数量只有一个且有参数时，此唯一有参构造器将加入candidateConstructors集合中。
+  
+  + 在构造器数量有两个的时候，并且存在无参构造器，将defaultConstructor（第一条的无参构造器）放入candidateConstructors集合中。
+  
+  + 在构造器数量大于两个，并且存在无参构造器的情况下，将返回一个空的candidateConstructors集合，也就是没有找到构造器。
+
+* 在有@Autowired注解的情况下：
+
+- 判断required属性：
+
+   + true：先判断requiredConstructor集合是否为空，若不为空则代表之前已经有一个required=true的构造器了，两个true将抛出异常，再判断candidates
+ 集合是否为空，若不为空则表示之前已经有一个打了注解的构造器，此时required又是true，抛出异常。若两者都不为空将放入requiredConstructor集合中，再放入candidates集合中。
+
+   + false：直接放入candidates集合中。判断requiredConstructor集合是否为空（是否存在required=true的构造器），若没有，将默认构造器也放入candidates集合中。
+ 最后将上述candidates赋值给最终返回的candidateConstructors集合。
 
 4.总结
 

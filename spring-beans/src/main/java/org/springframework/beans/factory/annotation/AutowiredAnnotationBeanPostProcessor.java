@@ -281,7 +281,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 				if (candidateConstructors == null) {
 					Constructor<?>[] rawCandidates;
 					try {
-						// 获取 Bean的声明的所有构造器, 无惨构造器不属于
+						// 获取 Bean的声明的所有构造器, 无惨构造器也会被拿到
 						rawCandidates = beanClass.getDeclaredConstructors();
 					}
 					catch (Throwable ex) {
@@ -289,12 +289,13 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 								"Resolution of declared constructors on bean Class [" + beanClass.getName() +
 								"] from ClassLoader [" + beanClass.getClassLoader() + "] failed", ex);
 					}
+					// 初始化候选的构造方法 list 大小为 前面获取到的类的构造参数个数
 					List<Constructor<?>> candidates = new ArrayList<>(rawCandidates.length);
 					//存放依赖注入的required=true的构造器
 					Constructor<?> requiredConstructor = null;
 					//存放默认构造器
 					Constructor<?> defaultConstructor = null;
-					//获取主要的构造器,一般为null
+					//获取主要的构造器,大多数的情况下为 null
 					Constructor<?> primaryConstructor = BeanUtils.findPrimaryConstructor(beanClass);
 					int nonSyntheticConstructors = 0;
 					for (Constructor<?> candidate : rawCandidates) {
@@ -351,7 +352,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 						}
 						//如果该构造函数上没有注解，再判断构造函数上的参数个数是否为0
 						else if (candidate.getParameterCount() == 0) {
-							//如果没有参数，加入defaultConstructor集合
+							//如果没有参数，加入defaultConstructor集合，这里可以看出没有构造器的情况下，将无参构造器赋值给默认的构造器
 							defaultConstructor = candidate;
 						}
 					}
@@ -397,7 +398,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 				}
 			}
 		}
-		// 这里可以看到对 candidateConstructors 的初始化时有意义的
+		// 这里可以看到对 candidateConstructors 的初始化是有意义的
 		return (candidateConstructors.length > 0 ? candidateConstructors : null);
 	}
 

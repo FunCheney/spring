@@ -11,21 +11,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class DemoServiceOne {
 
-	@Autowired
-	DemoServiceThree demoServiceThree;
-	@Autowired
 	DemoServiceTwo demoServiceTwo;
 
+	DemoServiceThree demoServiceThree;
 //	public DemoServiceOne(){
 //
 //	}
 
+//	@Autowired(required = false)
 //	public DemoServiceOne(DemoServiceTwo demoServiceTwo){
 //		this.demoServiceTwo = demoServiceTwo;
 //	}
-//
-//	public DemoServiceOne(DemoServiceOne demoServiceOne, DemoServiceTwo demoServiceTwo){
+//	@Autowired(required = false)
+//	public DemoServiceOne(DemoServiceThree demoServiceThree, DemoServiceTwo demoServiceTwo){
 //		this.demoServiceTwo = demoServiceTwo;
-//		this.demoServiceOne = demoServiceOne;
+//		this.demoServiceThree = demoServiceThree;
 //	}
 }
