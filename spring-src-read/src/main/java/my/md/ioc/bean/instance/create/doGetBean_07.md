@@ -31,8 +31,8 @@ protected Constructor<?>[] determineConstructorsFromBeanPostProcessors(@Nullable
 )` 在执行 `determineCandidateConstructors()` 方法的 `BeanPostProcessor` 的实现类中，有一个 `AutowiredAnnotationBeanPostProcessor`,
 我这里有一个问题，就是这个类是在什么时候放到 `BeanDefinitionMap`中的呢？**请查看Spring容器初始化之先发五虎**。
 
-### 2.正题
-#### 2.1 你真的知道Spring如何选择构造器吗？
+
+### 2 你真的知道Spring如何选择构造器吗？
 &ensp;&ensp;文章开始之前，还是要从使用场景入手，然后在通过源码来分析，毕竟源码是不会骗人的。。。
 
 ##### 情形一
@@ -101,7 +101,7 @@ public class DemoServiceOne {
 }
 ```
 
-#### 2.2 AutowiredAnnotationBeanPostProcessor 类中的方法 
+### 3 AutowiredAnnotationBeanPostProcessor 类中的方法 
 &ensp;&ensp;从代码的实现可以看出，对于一个放在注册到容器中的 `BeanName`，都会做一次这个判断。终于没有交给Spring的类，这里当然是不会做处理了。
 
 ```java
@@ -261,48 +261,73 @@ public Constructor<?>[] determineCandidateConstructors(Class<?> beanClass, final
     return (candidateConstructors.length > 0 ? candidateConstructors : null);
 }
 ```
-&ensp;&ensp;从上面的代码找那个可以看出，在选择构造器的时候 Spring 会做如下的判断：
 
-*  在没有@Autowired注解的情况下：
+&ensp;&ensp;首先来分析一下上述代码主要住了什么事，采用伪代码的方式，挑主要的步骤进行说明：
 
-  + 无参构造器将直接加入defaultConstructor集合中。
+①：首先获取类的构造方法，记录在 `Constructor<?>[] rawCandidates` 中国
+    > rawCandidates = beanClass.getDeclaredConstructors();
+
+②： `for` 循环 `rawCandidates` 对其中的每一个构造器进行判断
+
+③：判断构造器上是否加了注解
+   
+   * 3.1 有加注解
+      > 先判断requiredConstructor集合是否为空, 若不为空则代表之前已经有一个required=true的构造器了，两个true将抛出异常. 
+        再判断candidates 集合是否为空，若不为空则表示之前已经有一个打了注解的构造器，若有required又是true，抛出异常.
+        若上述判断都通过了，将当前构造器赋值给 requiredConstructor集合中，再放入candidates集合中。
+   * 3.2 没有加注解             
+      > 如果是无惨构造器则赋值给 defaultConstructor，其他的构造器不做处理
+                                 
+⑤：没有加注解且参数的个数为 0。将当前 `for` 循环的构造方法赋值给 `defaultConstructor`
+    > defaultConstructor = candidate;
+    
+⑥：确定构造器
+   
+
+#### 4 情形分析
+
+* 构造器上没有注解的情况： 
+
+  + 无参构造器将直接加入defaultConstructor集合中，无论是否申明。但是本方法最后返回的是 `null`。最终的实例化是通过默认的构造函数来完成的 `instantiateBean(beanName, mbd)`。
   
-  + 在构造器数量只有一个且有参数时，此唯一有参构造器将加入candidateConstructors集合中。
+  + 在构造器数量只有一个且有参数时，此唯一有参构造器将加入candidateConstructors集合中。最后返回。
   
-  + 在构造器数量有两个的时候，并且存在无参构造器，将defaultConstructor（第一条的无参构造器）放入candidateConstructors集合中。
+  + 在构造器数量大于1个，无论是否申明无参构造器的情况下，将返回一个空的candidateConstructors集合，也就是没有找到构造器。
+   > 不过这里需要区分一下是否声明无惨构造器：
+       如果未声明  defaultConstructor 为null
+       如果声明了 defaultConstructor 不为null
+
+      
+&ensp;&ensp;综上所述，在构造器没有注解的情况下，如果有且仅有一个非无惨的构造器，那么本方法返回的就是这个构造器。如果大于一个或则只有一个
+无参构造器，那么该方法返回的都是 `null`。
+
+                                                                                                                                                                                                                                                                                                                                                                    
+* 构造器上有注解的情况：
+
+&ensp;&ensp;构造器上有注解的情况需要判断required属性：
+
+  + 两个构造器上都有 `@Autowired` 且 required属性都为true
+    > 抛出异常
   
-  + 在构造器数量大于两个，并且存在无参构造器的情况下，将返回一个空的candidateConstructors集合，也就是没有找到构造器。
+  + 两个构造器上都有 `@Autowired` 一个 required属性都为true 另一个 required属性都为false
+    > 抛出异常
+  
+  + 两个构造器上都有 `@Autowired` 且 required属性都为false
+    > 通过
+   
 
-* 在有@Autowired注解的情况下：
-
-- 判断required属性：
-
-   + true：先判断requiredConstructor集合是否为空，若不为空则代表之前已经有一个required=true的构造器了，两个true将抛出异常，再判断candidates
- 集合是否为空，若不为空则表示之前已经有一个打了注解的构造器，此时required又是true，抛出异常。若两者都不为空将放入requiredConstructor集合中，再放入candidates集合中。
-
-   + false：直接放入candidates集合中。判断requiredConstructor集合是否为空（是否存在required=true的构造器），若没有，将默认构造器也放入candidates集合中。
- 最后将上述candidates赋值给最终返回的candidateConstructors集合。
-
-4.总结
-
-综上所述，我们可以回答开篇疑问点小结所总结的一系列问题了：
-
-为什么写三个构造器（含有无参构造器），并且没有@Autowired注解，Spring总是使用无参构造器实例化Bean？
-
-答：参照没有注解的处理方式： 若构造器只有两个，且存在无参构造器，将直接使用无参构造器初始化。若大于两个构造器，将返回一个空集合，也就是没有找到合适的构造器，那么参照第三节初始化Bean的第一段代码createBeanInstance方法的末尾，将会使用无参构造器进行实例化。这也就解答了为什么没有注解，Spring总是会使用无参的构造器进行实例化Bean，并且此时若没有无参构造器会抛出异常，实例化Bean失败。
-
-为什么注释掉两个构造器，留下一个有参构造器，并且没有@Autowired注解，Spring将会使用构造器注入Bean的方式初始化Bean？
-
-答：参照没有注解的处理方式： 构造器只有一个且有参数时，将会把此构造器作为适用的构造器返回出去，使用此构造器进行实例化，参数自然会从IOC中获取Bean进行注入。
-
-为什么写三个构造器，并且在其中一个构造器上打上@Autowired注解，就可以正常注入构造器？
-
-答：参照有注解的处理方式： 在最后判断candidates适用的构造器集合是否为空时，若有注解，此集合当然不为空，且required=true，也不会将默认构造器集合defaultConstructor加入candidates集合中，最终返回的是candidates集合的数据，也就是这唯一一个打了注解的构造器，所以最终使用此打了注解的构造器进行实例化。
-
-两个@Autowired注解就会报错，一定需要在所有@Autowired中的required都加上false即可正常初始化？
-
-答：参照有注解的处理方式： 当打了两个@Autowired注解，也就是两个required都为true，将会抛出异常，若是一个为true，一个为false，也将会抛出异常，无论顺序，因为有两层的判断，一个是requiredConstructor集合是否为空的判断，一个是candidates集合为空的判断，若两个构造器的required属性都为false，不会进行上述判断，直接放入candidates集合中，并且在下面的判断中会将defaultConstructor加入到candidates集合中，也就是candidates集合有三个构造器，作为结果返回。
-
-至于第四条结论，返回的构造器若有三个，Spring将如何判断使用哪一个构造器呢？在后面Spring会遍历三个构造器，依次判断参数是否是Spring的Bean（是否被IOC容器管理），若参数不是Bean，将跳过判断下一个构造器，也就是说，例如上述两个参数的构造器其中一个参数不是Bean，将判断一个参数的构造器，若此参数是Bean，使用一个参数的构造器实例化，若此参数不是Bean，将使用无参构造器实例化。也就是说，若使用@Autowired注解进行构造器注入，required属性都设置为false的话，将避免无Bean注入的异常，使用无参构造器正常实例化。若两个参数都是Bean，则就直接使用两个参数的构造器进行实例化并获取对应Bean注入构造器。
-
-在这里最后说一点，从上面可以看出，若想使用构造器注入功能，最好将要注入的构造器都打上@Autowired注解（若有多个需要注入的构造器，将所有@Autowired中required属性都设置为false），若有多个构造器，只有一个构造器需要注入，将这个构造器打上@Autowired注解即可，不用设置required属性。如果不打注解也是可以使用构造器注入功能的，但构造器数量只能为1，且代码可读性较差，读代码的人并不知道你这里使用了构造器注入的方式，所以这里我建议若使用构造器注入打上@Autowired注解会比较好一点。
+### 5 总结
+* 1. 对象中存在多个未被注解的构造器`determineCandidateConstructors()`方法都会返回`null`。***这里有彩蛋***
+* 2. 对象中有且仅有一个未被注入的构造器 
+     
+     + 若该构造器为无参的，那么`determineCandidateConstructors()`返回 `null`
+     + 若该构造哦器为有参的，那么`determineCandidateConstructors()`返回 该构造器
+* 3. 仅有一个注入的构造器，则使用改构造器
+* 4. 有两个注入的构造器
+     + required 都为 `true` 抛出异常
+     + required 一个为 `true` 另一个为 `false` 抛出异常
+     + required 都为 `false` 正常通过
+     
+&ensp;&ensp;这篇文章中对Spring中通过使用 `BeanPostProcessor` 的实现类来完成构造器的确认进行了分析。当我们实例化一个对象的时候，构造方法确定了，
+那么就可以通过使用构造方法来实例化了。但是，通过上面的分析发现，可能会有多个构造方法存在的情况，那么在这种情况下，Spring是如何确定使用哪个构造方法的，
+也就是大名鼎鼎的推断构造器，下一篇文章中，将进行分析。

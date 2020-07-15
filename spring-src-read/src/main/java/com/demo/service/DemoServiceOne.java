@@ -14,9 +14,18 @@ public class DemoServiceOne {
 	DemoServiceTwo demoServiceTwo;
 
 	DemoServiceThree demoServiceThree;
-//	public DemoServiceOne(){
-//
+
+	public DemoServiceOne(DemoServiceTwo demoServiceTwo){
+		this.demoServiceTwo = demoServiceTwo;
+	}
+
+//	public DemoServiceOne(DemoServiceThree demoServiceThree, DemoServiceTwo demoServiceTwo){
+//		this.demoServiceTwo = demoServiceTwo;
+//		this.demoServiceThree = demoServiceThree;
 //	}
+	public DemoServiceOne(){
+
+	}
 
 //	@Autowired(required = false)
 //	public DemoServiceOne(DemoServiceTwo demoServiceTwo){

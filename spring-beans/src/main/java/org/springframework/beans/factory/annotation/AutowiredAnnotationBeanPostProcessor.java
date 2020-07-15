@@ -299,8 +299,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 					Constructor<?> primaryConstructor = BeanUtils.findPrimaryConstructor(beanClass);
 					int nonSyntheticConstructors = 0;
 					for (Constructor<?> candidate : rawCandidates) {
-						// 判断构造器是否为合成构造器
-						// todo：什么是合成构造器
+						// 判断构造器是否为合成构造器，只要是我们自己申明的都不是合成构造器
 						if (!candidate.isSynthetic()) {
 							// 不是合成构造器，标记非合成构造器的数字 加一
 							nonSyntheticConstructors++;
@@ -334,7 +333,8 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 										". Found constructor with 'required' Autowired annotation already: " +
 										requiredConstructor);
 							}
-							//判断此注解上的required属性
+							//判断此注解上的required属性 默认为 true 可设置为 false
+							// 这里是用来处理两个注解一个 required 为 true，一个 为false的情况
 							boolean required = determineRequiredStatus(ann);
 							if (required) {
 								if (!candidates.isEmpty()) {
