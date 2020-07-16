@@ -1,4 +1,38 @@
-### 确定构造方法创建实例
+## 找到最合适的构造器
+
+&ensp;&ensp;上一篇文章中，我们说到了Spring确定有哪些构造器他可以使用，这一片文章中，我们将来分析Spring是如何找到一个最合适的构造的
+```java
+@Service
+public class DemoServiceOne {
+
+	DemoServiceTwo demoServiceTwo;
+
+	DemoServiceThree demoServiceThree;
+
+	public DemoServiceOne(){
+
+	}
+
+	@Autowired(required = false)
+	public DemoServiceOne(DemoServiceTwo demoServiceTwo){
+		this.demoServiceTwo = demoServiceTwo;
+	}
+	@Autowired(required = false)
+	public DemoServiceOne(DemoServiceThree demoServiceThree, DemoServiceTwo demoServiceTwo){
+		this.demoServiceTwo = demoServiceTwo;
+		this.demoServiceThree = demoServiceThree;
+	}
+}
+```
+&ensp;&ensp;已上面这个类为例，Spring可以使用的构造器，最终确定为三个，如下图：
+
+
+
+&ensp;&ensp;接下来就是本文的重点，通过构造器来完成对象的实例化。
+
+
+### 1.通过构造器来完成对象的实例化
+
 ```java
 public BeanWrapper autowireConstructor(String beanName, RootBeanDefinition mbd,
         @Nullable Constructor<?>[] chosenCtors, @Nullable Object[] explicitArgs) {
