@@ -160,8 +160,10 @@ class ConstructorResolver {
 			if (candidates == null) {
 				Class<?> beanClass = mbd.getBeanClass();
 				try {
+					// 判断是否允许访问非公开的构造器和方法， 默认是true，程序可自己设定
 					candidates = (mbd.isNonPublicAccessAllowed() ?
-							beanClass.getDeclaredConstructors() : beanClass.getConstructors());
+							beanClass.getDeclaredConstructors() :
+							beanClass.getConstructors());
 				}
 				catch (Throwable ex) {
 					throw new BeanCreationException(mbd.getResourceDescription(), beanName,
@@ -232,7 +234,7 @@ class ConstructorResolver {
 				Class<?>[] paramTypes = candidate.getParameterTypes();
 
 				/**
-				 * 判断是否确定的具体的构造方法来完成实例化
+				 * 判断是否有确定的具体的构造方法来完成实例化
 				 * argsToUse.length > paramTypes.length
 				 * constructorToUse != null 表示已经有确定的构造方法来
 				 * argsToUse.length > paramTypes.length 说明要使用的参数与指定构造方法的参数个数不匹配 break 结束循环

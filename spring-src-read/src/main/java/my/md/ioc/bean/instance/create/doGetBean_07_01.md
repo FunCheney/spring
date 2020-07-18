@@ -28,7 +28,7 @@ public class DemoServiceOne {
 
 
 
-&ensp;&ensp;接下来就是本文的重点，通过构造器来完成对象的实例化。
+&ensp;&ensp;接下来就是本文的重点，通过构造器来完成对象的实例化。再有多个构造器的时候，是如何选出最合适的一个呢？
 
 
 ### 1.通过构造器来完成对象的实例化
@@ -282,3 +282,6 @@ public BeanWrapper autowireConstructor(String beanName, RootBeanDefinition mbd,
     return bw;
 }
 ```
+&ensp;&ensp;上述方法的过程分析复杂，而Spring为了兼容开发人员在使用框架的过程中可能会发生的各种场景，所以做了很多的判断与处理。处理的场景多了
+起来对应的异常情况也就多类起来。关于这个方法的分析，我试着画了一个流程图处理，我打算从流程图入手，试着梳理一下，如有错误之处，还请多多包涵！
+
