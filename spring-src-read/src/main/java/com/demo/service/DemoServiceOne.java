@@ -23,12 +23,12 @@ public class DemoServiceOne {
 //		this.demoServiceTwo = demoServiceTwo;
 //		this.demoServiceThree = demoServiceThree;
 //	}
-//	@Autowired
-//	public DemoServiceOne(){
-//
-//	}
+	@Autowired(required = false)
+	public DemoServiceOne(){
 
-	@Autowired
+	}
+
+	@Autowired(required = false)
 	public DemoServiceOne(DemoServiceTwo demoServiceTwo){
 		this.demoServiceTwo = demoServiceTwo;
 	}
@@ -37,4 +37,9 @@ public class DemoServiceOne {
 //		this.demoServiceTwo = demoServiceTwo;
 //		this.demoServiceThree = demoServiceThree;
 //	}
+
+	@Autowired(required = false)
+	public DemoServiceOne(DemoServiceThree demoServiceThree){
+		this.demoServiceThree = demoServiceThree;
+	}
 }
