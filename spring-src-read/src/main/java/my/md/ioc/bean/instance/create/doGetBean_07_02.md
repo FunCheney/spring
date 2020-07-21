@@ -1,7 +1,7 @@
-### 确定构造器之后如何创建Bean
+### 确定构造器之后如何实例化Bean的
 
 
-### 没有确定的构造器是怎么创建Bean的
+### 没有确定的构造器是怎么实例化Bean的
 ```java
 protected BeanWrapper instantiateBean(final String beanName, final RootBeanDefinition mbd) {
     try {

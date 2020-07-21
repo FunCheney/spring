@@ -273,6 +273,7 @@ class ConstructorResolver {
 						/**
 						 * Spring 内部只提供字符串的参数值,故而需要转换
 						 * argsHolder 所包含的值就是转换之后的
+						 * 这里是通过构造器注入 触发依赖注入 入口
 						 */
 						argsHolder = createArgumentArray(beanName, mbd, resolvedValues, bw, paramTypes, paramNames,
 								getUserDeclaredConstructor(candidate), autowiring, candidates.length == 1);
