@@ -1,4 +1,57 @@
-### 依赖注入
+## 依赖关系的处理
+&ensp;&ensp;上一篇文章中，通过 `createBeanInstance()` 方法，最终得到了 `BeanWrapper` 对象。再得到这个对象之后，在Spring中，对于依赖
+关系的处理，是通过 `BeanWrapper` 来完成的。
+
+### 1.自动装配与@Autowired
+&ensp;&ensp;这里首先做一个区分，因为在之前的很长一段时间内，我都错误的以为 `@Autowired` 就是自动装配。这也就引发了我一直错误的任务Spring的自动
+装配首先是 `byType` 然后是 `byName` 的。通过这段时间对于源码的阅读，我才意识到这个错误。
+
+&ensp;&ensp;当涉及到自动装配Bean的依赖关系时，Spring提供了4种自动装配策略。
+
+```java
+public interface AutowireCapableBeanFactory{
+ 
+ //无需自动装配
+ int AUTOWIRE_NO = 0;
+ 
+ //按名称自动装配bean属性
+ int AUTOWIRE_BY_NAME = 1;
+ 
+ //按类型自动装配bean属性
+ int AUTOWIRE_BY_TYPE = 2;
+ 
+ //按构造器自动装配
+ int AUTOWIRE_CONSTRUCTOR = 3;
+ 
+ //过时方法，Spring3.0之后不再支持
+ @Deprecated
+ int AUTOWIRE_AUTODETECT = 4;
+ ...
+}
+```
+
+#### 1.1 自动装配
+&ensp;&ensp;在 `xml` 中定义 `Bean`的时候，可以通过如下的方式指定自动装配的类型。
+```xml
+<bean id="demoServiceOne" class="DemoServiceOne" autowire="byName"/>
+```
+```xml
+<bean id="userService" class="UserService" autowire="byType"/>
+```
+```xml
+<bean id="user" class="User" autowire="constructor"></bean>
+```
+
+如果使用了根据类型来自动装配，那么在IOC容器中只能有一个这样的类型，否则就会报错！
+#### 1.2 使用注解来实现自动装配
+&ensp;&ensp;`@Autowired` 注解，它可以对类成员变量、方法及构造函数进行标注，完成自动装配的工作。Spring是通过 `@Autowired` 来实现自动装配的。
+当然，Spring还支持其他的方式来实现自动装配，如：**JSR-330的@Inject注解**、**JSR-250的@Resource注解**。
+
+&ensp;&ensp;通过注解的方式来自动装配 `Bean` 的属性，它允许更细粒度的自动装配，我们可以选择性的标注某一个属性来对其应用自动装配。
+
+### 2.依赖注入
+&ensp;&ensp;在这篇文章中，我将详细的分析，在一个对象中通过 `@Autowired`注入或 `@Resource` 注入属性的处理过程。
+
 ```java
 protected void populateBean(String beanName, RootBeanDefinition mbd, @Nullable BeanWrapper bw) {
     if (bw == null) {
@@ -40,7 +93,7 @@ protected void populateBean(String beanName, RootBeanDefinition mbd, @Nullable B
     PropertyValues pvs = (mbd.hasPropertyValues() ? mbd.getPropertyValues() : null);
 
     /**
-     * 开始进行依赖注入过程，首先处理 autowire的注入
+     * 处理自动装配，xml的方式可能会有配置自动装配类型的情况 
      */
     int resolvedAutowireMode = mbd.getResolvedAutowireMode();
     // Spring 默认 既不是 byType 也不是 byName, 默认是null

@@ -28,10 +28,10 @@ public class DemoServiceOne {
 //
 //	}
 
-	@Autowired
-	public DemoServiceOne(DemoServiceTwo demoServiceTwo){
-		this.demoServiceTwo = demoServiceTwo;
-	}
+//	@Autowired
+//	public DemoServiceOne(DemoServiceTwo demoServiceTwo){
+//		this.demoServiceTwo = demoServiceTwo;
+//	}
 //	@Autowired(required = false)
 //	public DemoServiceOne(DemoServiceThree demoServiceThree, DemoServiceTwo demoServiceTwo){
 //		this.demoServiceTwo = demoServiceTwo;

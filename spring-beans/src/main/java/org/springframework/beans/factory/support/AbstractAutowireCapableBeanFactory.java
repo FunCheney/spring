@@ -1484,10 +1484,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		PropertyValues pvs = (mbd.hasPropertyValues() ? mbd.getPropertyValues() : null);
 
 		/**
-		 * 开始进行依赖注入过程，首先处理 autowire的注入
+		 * 处理自动装配，xml的方式可能会有配置自动装配类型的情况
+		 * 或者通过 setAutowireMode() 的方式设置自动装配的模式
 		 */
 		int resolvedAutowireMode = mbd.getResolvedAutowireMode();
 		// Spring 默认 既不是 byType 也不是 byName, 默认是null
+		// 这里之所以做这个判断是因为某种特殊的场景下，会修改到自动注入的模型，所以需要做判断
 		if (resolvedAutowireMode == AUTOWIRE_BY_NAME || resolvedAutowireMode == AUTOWIRE_BY_TYPE) {
 			MutablePropertyValues newPvs = new MutablePropertyValues(pvs);
 			// Add property values based on autowire by name if applicable.

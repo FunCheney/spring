@@ -14,5 +14,7 @@ public class DemoOne {
 	public static void main(String[] args) {
 
 		ApplicationContext ann = new AnnotationConfigApplicationContext(DemoConfigOne.class);
+
+		
 	}
 }
