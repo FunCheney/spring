@@ -1,5 +1,6 @@
 package com.demo.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,5 +10,12 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class DemoServiceThree {
+
+//	private Test2ServiceImpl test2Service;
+//
+//	@Autowired
+//	public void prepare(Test2ServiceImpl test2Service) {
+//		this.test2Service = test2Service;
+//	}
 
 }

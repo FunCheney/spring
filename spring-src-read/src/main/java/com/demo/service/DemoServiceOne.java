@@ -3,6 +3,8 @@ package com.demo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author: Fchen
  * @date: 2020/7/8 8:34 下午
@@ -10,6 +12,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class DemoServiceOne {
+
+//	@Autowired
+//	List<IStrategryService> myList;
 
 	DemoServiceTwo demoServiceTwo;
 
