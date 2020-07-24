@@ -13,9 +13,9 @@ import javax.annotation.Resource;
 @Service
 public class DemoServiceTwo {
 
-//	@Autowired
-//	DemoServiceThree demoServiceThree;
+	@Autowired
+	DemoServiceThree demoServiceThree;
 
-	@Resource
-	DemoServiceOne demoServiceOne;
+//	@Resource
+//	DemoServiceOne demoServiceOne;
 }

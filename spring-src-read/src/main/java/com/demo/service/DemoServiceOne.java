@@ -24,10 +24,10 @@ public class DemoServiceOne {
 //		this.demoServiceTwo = demoServiceTwo;
 //	}
 
-//	public DemoServiceOne(DemoServiceThree demoServiceThree, DemoServiceTwo demoServiceTwo){
-//		this.demoServiceTwo = demoServiceTwo;
-//		this.demoServiceThree = demoServiceThree;
-//	}
+	public DemoServiceOne(DemoServiceThree demoServiceThree, DemoServiceTwo demoServiceTwo){
+		this.demoServiceTwo = demoServiceTwo;
+		this.demoServiceThree = demoServiceThree;
+	}
 //	@Autowired(required = false)
 //	public DemoServiceOne(){
 //
