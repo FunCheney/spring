@@ -1,3 +1,4 @@
+>其实生活中的坑，都是自己挖的，迷茫也是。愿我们内心坚定而且不失热爱，期待与你的共同进步。
 ## 依赖关系的处理
 &ensp;&ensp;上一篇文章中，通过 `createBeanInstance()` 方法，最终得到了 `BeanWrapper` 对象。再得到这个对象之后，在Spring中，对于依赖
 关系的处理，是通过 `BeanWrapper` 来完成的。
@@ -117,7 +118,7 @@ public class DemoServiceTwo {
    * `AutowiredMethodElement` 表示注解方法的情况
    * 绿颜色的线条表示注解在构造方法上的情况
    
-&ensp;&ensp;通过上述流程图，我从中找到了以下几点。通过一下几点我们也可以区分 `@Resource` 和 `@Autowired`。
+&ensp;&ensp;通过上述流程图，我从中找到了以下几点。通过已下几点我们也可以区分 `@Resource` 和 `@Autowired`。
 
 1. 两种注解的处理方式都是通过后置处理器来完成处理的，`getBeanPostProcessors()` 在我们不做任何扩展的情况下，Spring 中只有五个。如有忘记请查看：[**容器初始化先发五虎**](https://juejin.im/post/5ec9f01d6fb9a047a6445123)；
 2. 对于 `@Resource` 的处理是通过 `CommonAnnotationBeanPostProcessor` 来完成的。
@@ -126,7 +127,7 @@ public class DemoServiceTwo {
 
 4. 对于 `@Autowired` 注解构造器的方式，获取到被注解元素为 `null` 则直接返回。完成 `populateBean()` 的过程。
 5. 对于剩下的情形，处理思路一致，都是先获取到被注入的对象，然后将维护对象属性之间的关系。
-6. 最后重点突出以下 `getBean()` 这里还是我们熟悉的 `getBean()`...
+6. 重点突出一下 `getBean()` 这里还是我们熟悉的 `getBean()`...
 7. `field.set()` 维护对象之间的依赖关系。
 
 ### 3.源码分析
@@ -181,8 +182,8 @@ protected void populateBean(String beanName, RootBeanDefinition mbd, @Nullable B
         /**
          * byName 处理
          * 通过反射从当前Bean中得到需要注入的属性名，
-         * 然后使用这个属性名想容器申请与之同名的Bean，
-         * 这样实际有处发了另一个Bean生成和依赖注入的过程
+         * 然后使用这个属性名向容器申请与之同名的Bean，
+         * 这样实际又触发了另一个Bean生成和依赖注入的过程
          */
         if (resolvedAutowireMode == AUTOWIRE_BY_NAME) {
             autowireByName(beanName, mbd, bw, newPvs);
@@ -460,7 +461,7 @@ private final Map<String, Set<String>> dependentBeanMap = new ConcurrentHashMap<
 /** 指定bean与目前已经注册的创建这个bean所需依赖的所有bean的依赖关系的缓存（依赖我的) */
 private final Map<String, Set<String>> dependenciesForBeanMap = new ConcurrentHashMap<>(64);
 ```
-&ensp;&ensp;在上述的方法中，就是通过上述两个 `Map` 维护了对象建依赖于被依赖的关系，详细看下图
+&ensp;&ensp;在上述的方法中，就是通过上述两个 `Map` 维护了对象间依赖与被依赖的关系，详细看下图
 ![对象之间依赖关系的维护](https://imgkr.cn-bj.ufileos.com/dba38750-472f-4019-a2d6-82907615c738.jpg)
 &ensp;&ensp;当前的 `Bean` 是 `demoServiceTwo` 注入的对象是 `demoServiceThree`。结合这个可以对上面的 `Map` 有一个更直观的理解。
 
@@ -472,7 +473,14 @@ private final Map<String, Set<String>> dependenciesForBeanMap = new ConcurrentHa
 &ensp;&ensp;前面介绍过，通过 `@Autowired` 注解构造器的方式，在 `populateBean()` 方法中，通过后置处理器来处理时，获取到的被注入的元素为空，因此直接返回。也就是说这里并没有维护对象之间的依赖关系。但是对象和属性之间的依赖关系，在通过构造器实例化对象的时候已经依赖好了。我自己的理解就是 `java` 对象和对象属性之间的关系已经有了。
 
 
+### 6. 总结
+&ensp;&ensp;本文主要介绍了 Spring 中对象之间依赖关系的处理流程。通过流程图的方式，粗略的看了一下 `@Resource` 和 `@Autowired` 注解处理的过程。
 
+&ensp;&ensp;本文详细介绍了 `@Autowired` 注解属性的处理过程、`java` 对象与属性关系的维护以及 `Spring` 对象之间的依赖关系的维护。
+
+&ensp;&ensp;简单介绍了 `@Autowired` 注解构造器的处理构成。
+
+&ensp;&ensp;关于 `@Resource` 注解与 `@Autowired` 注解方法的处理过程，后面有机会在详细分析。
 
 
 

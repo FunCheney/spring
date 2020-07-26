@@ -1,8 +1,13 @@
-### 构造器注入与循环依赖 
+## 循环依赖与解决循环依赖
 
-&ensp;&ensp;依赖注入入口：
-```java
-argsHolder = createArgumentArray(beanName, mbd, resolvedValues, bw, paramTypes, paramNames,
-								getUserDeclaredConstructor(candidate), autowiring, candidates.length == 1);
+### 1. Spring 中的循环依赖
 
-```
+#### 1.1 通过构造方法造成的循环依赖
+
+#### 1.2 属性注入造成的循环依赖
+
+
+### 2. Spring 解决循环依赖
+
+
+ 
