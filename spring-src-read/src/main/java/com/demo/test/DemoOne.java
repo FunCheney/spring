@@ -1,6 +1,7 @@
 package com.demo.test;
 
 import com.demo.config.DemoConfigOne;
+import com.demo.service.DemoServiceOne;
 import com.fchen.service.MyService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -14,7 +15,7 @@ public class DemoOne {
 	public static void main(String[] args) {
 
 		ApplicationContext ann = new AnnotationConfigApplicationContext(DemoConfigOne.class);
-
-		
+		DemoServiceOne demoServiceOne = (DemoServiceOne) ann.getBean("demoServiceOne");
+		demoServiceOne.test();
 	}
 }
