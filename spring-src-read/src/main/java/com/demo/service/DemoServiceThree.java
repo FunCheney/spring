@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
  * @date: 2020/7/13 10:55 下午
  * @desc: TODO
  */
-@Service
+//@Service
 public class DemoServiceThree {
 
 //	private Test2ServiceImpl test2Service;

@@ -1,3 +1,5 @@
+> 我们终此一生，就是要摆脱别人的期待，找到真正的自己。
+                                       --《无声告白》
 ## 循环依赖与解决循环依赖
 &ensp;&ensp;上一篇文章中系统的了解了 `Spring` 关于属性注入的处理，详细分析了 `@Autowired` 注解字段，以及简单
 分析了 `@Autowired` 注解构造方法的处理方式。我们知道在使用 `Spring` 的时候，如果应用设计比较复杂，那么在这个应用
@@ -115,6 +117,138 @@ public class DemoServiceTwo {
 &ensp;&ensp;接下来，就到了解惑的时候了，记得谁说的来着：**源码是不会骗人的，你要的答案都在源码里！**
 
 ### 3. Spring 解决循环依赖
+&ensp;&ensp;在开始分析之前先声明：原型(Prototype)的场景是不支持循环依赖的，通常会走到AbstractBeanFactory类中下面的判断，抛出异常。
+![原型bean之间的循环依赖](https://imgkr.cn-bj.ufileos.com/7e632c07-6401-40b5-a1a8-bca0a11c8946.jpg)
+&ensp;&ensp;这里我先分析，通过属性注入的情况，通过上一篇文章我们知道，属性注入最终的结果就是 `getBean()`，从而触发新一轮的处理过程。
+#### 3.1 构造器注入抛异常
+&ensp;&ensp;对于构造器注入的方式，`Spring` 会[找到一个合适的构造器](https://juejin.im/post/5f146ccc5188257109551576)来完成实例化。还记得通过构造方法注入的对象触发依赖注入的地方法吗？我们以上述的 ***1.2*** 代码为例，在如下图所示的地方触发依赖注入：
+![构造器触发依赖注入](https://imgkr.cn-bj.ufileos.com/b966e685-d21d-4c5c-a73c-7be97ef83326.jpg)
+&ensp;&ensp;接下来，看一下这里的方法调用栈：
+![构造器依赖注入方法调用栈](https://imgkr.cn-bj.ufileos.com/bdee3a23-b604-44e8-807f-aee8e1d23787.jpg)
+&ensp;&ensp;可以看到，最终对于依赖属性的调用还是走到 `getBean()` 方法。好的，这里又要回顾一下上一篇文章了，你是否还记得，属性注入的最终的 `getBean()` 方法的触发入口是在 `populateBean()` 方法中呢？我们先提出掉通过后置处理器处理的部分。其实对于两种依赖的处理到最后都是一样的，通过下述代码示例指出：
+
+* 对于属性注入：在 `org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.AutowiredFieldElement#inject()` 方法中
+通过下述代码，来触发依赖注入：
+```java
+value = beanFactory.resolveDependency(desc, beanName, autowiredBeanNames, typeConverter);
+``` 
+* 对于构造器注入：在 `org.springframework.beans.factory.support.ConstructorResolver#resolveAutowiredArgument()` 方法中
+通过下述代码，来触发依赖注入：
+```
+return this.beanFactory.resolveDependency(
+					new DependencyDescriptor(param, true), beanName, autowiredBeanNames, typeConverter);
+```
+&ensp;&ensp;也就是说这一部分的处理逻辑是一样的，但是我们依然没有办法判断到底是哪里出问题了。革命尚未成功，通知仍需努力啊...我想了一下，在我刚开始看的时候，这里有很大的疑惑，到底是什么地方出了问题，为什么一个可以，另一个不可以呢？我在这里，使用的方式就是通过断点调试，一点一点的看到底是什么地方抛出的异常，定位问题，然后分析问题。下面就是 `showTime`(有点不要 `face` 了，其实就是苦逼的断点)
+
+* 1.我们要找到异常的场景
+   
+   &ensp;&ensp;以我上述构造器注入的代码为例，抛出异常的场景是：容器自身触发 `getBean(demoServiceOne)` 通过构造器实例化对象的时候发现需要 `getBean(demoServiceTwo)` 由于 `DemoServiceTwo` 也是通过构造器来完成实例化，在实例化的时候发现需要 `getBean(demoServiceOne)` 这个时候就出现了循环，为了不让 `jvm` 抛出异常，`Spring` 框架做了处理。
+* 2. `catch` 异常的地方
+![异常分析](https://imgkr.cn-bj.ufileos.com/777a5c3b-bd6a-45da-9814-b732ed3467b8.jpg)
+* 3. 抛出异常的地方
+![异常来源](https://imgkr.cn-bj.ufileos.com/8fe66b66-f043-4f5b-b1e9-7b04b9055f5d.jpg)
+&ensp;&ensp;究其原因，就是在 `DemoserviceTwo` 创建的时候依赖到 `DemoServiceOne`，在去容器中创建 `DemoServiceOne` 的时候，发现 `DemoServiceOne` 正在创建中。
+
+&ensp;&ensp;还记得在 `Spring` 中用来维护正在创建的 `BeanName` 的一个 `Set`集合吗？
+```java
+private final Set<String> singletonsCurrentlyInCreation =
+			Collections.newSetFromMap(new ConcurrentHashMap<>(16));
+```
+&ensp;&ensp;文章分析到这里，好像并没有解决：**为什么注入属性的方式循环依赖是可以的？** 这个问题。不要着急，慢慢来，下面一定会如你所愿的...保证让你满足😼
+
+#### 3.2 属性注入的相安无事
+&ensp;&ensp;希望细心的你去仔细看一下，在 `populateBean()` 方法中后置处理器处理的部分，并没有做特殊的处理，来支持属性之间的循环依赖。这里由于篇幅问题，不在做详细的对比。但是可以看到，最终的结果都是： **无论如何，都要通过 `getBean()` 来完成注入对象的获取。** 那么结局问题的关键在哪里？答案就在下面的代码片段中：
+```java
+boolean earlySingletonExposure = (mbd.isSingleton() && this.allowCircularReferences &&
+				isSingletonCurrentlyInCreation(beanName));
+		if (earlySingletonExposure) {
+			if (logger.isTraceEnabled()) {
+				logger.trace("Eagerly caching bean '" + beanName +
+						"' to allow for resolving potential circular references");
+			}
+			/*
+			 * setter 方法注入的Bean，通过提前暴露一个单例工厂方法
+			 * 从而能够使其他Bean引用到该Bean，注意通过setter方法注入的
+			 * Bean 必须是单例的才会到这里来。
+			 * 对 Bean 再一次依赖引用，主要应用 SmartInstantiationAwareBeanPostProcessor
+			 * 其中 AOP 就是在这里将advice动态织入bean中，若没有则直接返回，不做任何处理
+			 *
+			 * 在Spring中解决循环依赖的方法：
+			 *   在 B 中创建依赖 A 时通过 ObjectFactory 提供的实例化方法来中断 A 中的属性填充，
+			 *   使 B 中持有的 A 仅仅是刚初始化并没有填充任何属性的 A，初始化 A 的步骤是在最开始创建A的时候进行的，
+			 *   但是 因为 A 与 B 中的 A 所表示的属性地址是一样的，所以在A中创建好的属性填充自然可以通过B中的A获取，
+			 *   这样就解决了循环依赖。
+			 */
+			addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
+		}
+```
+&ensp;&ensp;这里是 `doCreateBean()` 方法中的代码片段，我下面将结合这里分析一下，这里为什么可以解决属性注入的循环依赖。
+
+&ensp;&ensp;首先是 `boolean` 变量 `earlySingletonExposure` 的获取：
+
+* 1. `mbd.isSingleton()` 这里与前文原型的`bean`不支持循环依赖呼应
+* 2. `this.allowCircularReferences` 在 `Spring` 中默认是允许解决循环依赖的，一般不会有人去设置成否。框架帮我们做难道不香吗？
+* 3. `isSingletonCurrentlyInCreation(beanName)` 当第二次获取某个 `bean` 的时候这里返回必然为 `true`。因为在第一次获取的时候，在 `beforeSingletonCreation()` 方法中调用了 `this.singletonsCurrentlyInCreation.add(beanName)` 添加到集合中。
+```java
+  protected void beforeSingletonCreation(String beanName) {
+      if (!this.inCreationCheckExclusions.contains(beanName) && !this.singletonsCurrentlyInCreation.add(beanName)) {
+        throw new BeanCurrentlyInCreationException(beanName);
+      }
+    }
+```
+&ensp;&ensp;综上，所得 `earlySingletonExposure` 为 `true`。
+
+&ensp;&ensp;接下来就是 `addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));`
+
+&ensp;&ensp;首先，`getEarlyBeanReference()` 就是返回被注入的对象，特殊点就是有一些后再处理器，要插手对象的生成。比较特殊的就是有 `Aop` 的要进行动态的增强。
+![获取早期bean的引用](https://imgkr.cn-bj.ufileos.com/780ffa7d-ed03-4a74-b14f-a31872bad6ec.jpg)
+&ensp;&ensp;接下来就是 `addSingletonFactory()`，我理解的字面意思就是添加生成这个单例的工厂。
+```java
+protected void addSingletonFactory(String beanName, ObjectFactory<?> singletonFactory) {
+		Assert.notNull(singletonFactory, "Singleton factory must not be null");
+		synchronized (this.singletonObjects) {
+			if (!this.singletonObjects.containsKey(beanName)) {
+				this.singletonFactories.put(beanName, singletonFactory);
+				this.earlySingletonObjects.remove(beanName);
+				this.registeredSingletons.add(beanName);
+			}
+		}
+	}
+```
+&ensp;&ensp;上述这简单的几行代码中，涉及到三个 `Map` 的操作。注意重点来了：
+**上述三个 `Map` 是 `Spring` 设计的处理属性注入循环依赖的关键**。好，问题来了，你对三个 `Map` 还有印象吗？
+```java
+/** 用于存放完全初始化好的bean，从该缓存中取出的bean可以直接使用*/
+	private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);
+
+	/** Cache of singleton factories: bean name to ObjectFactory. */
+	/** 存放bean工厂对象，用于解决循环依赖 */
+	private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
+
+	/** Cache of early singleton objects: bean name to bean instance. */
+	/** 存放原始的bean对象用于解决循环依赖，存放的对象还未被填充属性 */
+	private final Map<String, Object> earlySingletonObjects = new HashMap<>(16);
+```
+&ensp;&ensp;由于 `Spring` 的注释的原因，这三个 `Map` 也就是我们经常听到的 **三级缓存**。下面我将对在 `Spring` 中的使用这三个 `Map` 来结局循环依赖的过程进行分析。
+
+
+
+
+
+
+
+
+
+
+
+          
+
+
+
+
+
+
+
 
 
 

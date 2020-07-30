@@ -16,6 +16,6 @@ public class DemoOne {
 
 		ApplicationContext ann = new AnnotationConfigApplicationContext(DemoConfigOne.class);
 		DemoServiceOne demoServiceOne = (DemoServiceOne) ann.getBean("demoServiceOne");
-		demoServiceOne.test();
+//		demoServiceOne.test();
 	}
 }

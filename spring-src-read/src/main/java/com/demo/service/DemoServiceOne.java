@@ -18,11 +18,11 @@ public class DemoServiceOne {
 	@Autowired
 	DemoServiceTwo demoServiceTwo;
 
-	public void test(){
-		System.out.println("hello");
-	}
+//	public void test(){
+//		System.out.println("hello");
+//	}
 
-	DemoServiceThree demoServiceThree;
+//	DemoServiceThree demoServiceThree;
 
 //	@Autowired
 //	public DemoServiceOne(DemoServiceTwo demoServiceTwo){
