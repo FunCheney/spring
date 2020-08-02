@@ -7,6 +7,6 @@ import org.springframework.stereotype.Service;
  * @date: 2020/7/23 10:14 下午
  * @desc: TODO
  */
-@Service
+//@Service
 public class TestServiceImpl implements IStrategryService {
 }
