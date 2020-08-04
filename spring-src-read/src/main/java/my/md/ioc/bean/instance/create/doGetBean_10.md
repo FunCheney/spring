@@ -44,6 +44,29 @@ protected Object initializeBean(final String beanName, final Object bean, @Nulla
 ```
 
 ```java
+private void invokeAwareMethods(final String beanName, final Object bean) {
+    if (bean instanceof Aware) {
+        if (bean instanceof BeanNameAware) {
+            ((BeanNameAware) bean).setBeanName(beanName);
+        }
+        if (bean instanceof BeanClassLoaderAware) {
+            ClassLoader bcl = getBeanClassLoader();
+            if (bcl != null) {
+                ((BeanClassLoaderAware) bean).setBeanClassLoader(bcl);
+            }
+        }
+        if (bean instanceof BeanFactoryAware) {
+            ((BeanFactoryAware) bean).setBeanFactory(AbstractAutowireCapableBeanFactory.this);
+        }
+    }
+}
+```
+
+BeanPostProcessor的postProcessBeforeInitialization方法
+
+
+
+```java
 protected void invokeInitMethods(String beanName, final Object bean, @Nullable RootBeanDefinition mbd)
         throws Throwable {
 
@@ -88,5 +111,65 @@ protected void invokeInitMethods(String beanName, final Object bean, @Nullable R
 ```
 
 ```java
+protected void invokeCustomInitMethod(String beanName, final Object bean, RootBeanDefinition mbd)
+        throws Throwable {
 
+    /**
+     * 获取 Bean 定义的 @Bean 中的 initMethod 属性 或xml中init-Method
+     */
+    String initMethodName = mbd.getInitMethodName();
+    Assert.state(initMethodName != null, "No init method set");
+    Method initMethod = (mbd.isNonPublicAccessAllowed() ?
+            BeanUtils.findMethod(bean.getClass(), initMethodName) :
+            ClassUtils.getMethodIfAvailable(bean.getClass(), initMethodName));
+
+    if (initMethod == null) {
+        if (mbd.isEnforceInitMethod()) {
+            throw new BeanDefinitionValidationException("Could not find an init method named '" +
+                    initMethodName + "' on bean with name '" + beanName + "'");
+        }
+        else {
+            if (logger.isTraceEnabled()) {
+                logger.trace("No default init method named '" + initMethodName +
+                        "' found on bean with name '" + beanName + "'");
+            }
+            // Ignore non-existent default lifecycle methods.
+            return;
+        }
+    }
+
+    if (logger.isTraceEnabled()) {
+        logger.trace("Invoking init method  '" + initMethodName + "' on bean with name '" + beanName + "'");
+    }
+    Method methodToInvoke = ClassUtils.getInterfaceMethodIfPossible(initMethod);
+
+    if (System.getSecurityManager() != null) {
+        AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+            ReflectionUtils.makeAccessible(methodToInvoke);
+            return null;
+        });
+        try {
+            AccessController.doPrivileged((PrivilegedExceptionAction<Object>) () ->
+                    methodToInvoke.invoke(bean), getAccessControlContext());
+        }
+        catch (PrivilegedActionException pae) {
+            InvocationTargetException ex = (InvocationTargetException) pae.getException();
+            throw ex.getTargetException();
+        }
+    }
+    else {
+        try {
+            ReflectionUtils.makeAccessible(methodToInvoke);
+            /**
+             * 通过 JDk 的反射机制得到 Method 对象
+             * 直接调用在 Bean 中定义声明的初始化方法
+             */
+            methodToInvoke.invoke(bean);
+        }
+        catch (InvocationTargetException ex) {
+            throw ex.getTargetException();
+        }
+    }
+}
 ```
+&ensp;&ensp;
