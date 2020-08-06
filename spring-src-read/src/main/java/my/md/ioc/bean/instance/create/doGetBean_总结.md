@@ -213,16 +213,58 @@ protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredTy
 &ensp;&ensp;这个方法的内容，本片文章的要介绍的，已经在本文的前半部分做了介绍。这里只是，将整个方法拿出来，从整个框架上面看一下这个方法做了些什么事，大致总结为如下的
 几个方面：
 
-①：转换对应的BeanName
+Bean加载过程中涉及的过程步骤
 
-②：尝试存缓存中加载单例Bean
-
-③：bean的实例化
-
-④：原型模式的依赖检查
-
-⑤：检测parentBeanFactory
-
-⑥：将存储XML配置文件的GenericBeanDefinition 转换为 RootBeanDefinition
+   ①：转换对应的BeanName
+   
+       这里传入的参数可能是 别名，也可能是FactoryBean，需要进行解析：
+         a：去除FactoryBean的修饰符，也就是如果name="&aa"，首选会去掉"&"是name="aa"。
+         b：取指定alias所表示的最终beanName，例如别名A指向名称为B的bean则返回B；
+              如果别名A指向别名B，别名B有指向别名C的bean则返回C。
+              
+   ②：尝试存缓存中加载单例Bean
+   
+       单例在spring的同一个容器内只会被创建一次，后续在获取Bean，就直接从单例缓存中获取了。这里先尝试在缓存中加载，
+       如果加载不成功则再次尝试从singletonFactories中加载，因为在创建单例bean的时候会存在依赖注入的情况，而在创
+       建依赖的时候为了避免循环依赖，在Spring中创建Bean的原则，不是等Bean创建完成就会将创建Bean的ObjectFactory
+       提早曝光到缓存中，一旦下一个Bean 创建的时候需要依赖上一个Bean则直接使用ObjectFactory。
+   
+   ③：bean的实例化
+   
+       如果在缓存中得到了Bean的原始状态，则需要对Bean实例化。缓存中存在的是Bean的原始状态，并不一定是最终想要的Bean
+       例如：我们需要对工厂Bean进行处理，那么这里得到的其实是工厂Bean的初始状态，但我们真正需要的是工厂Bean中定义的
+       factory-method方法中返回的Bean，而getObjectForBeanInstance()就是完成这个工作的。
+   
+   ④：原型模式的依赖检查
+   
+       只有在单例的情况下才会尝试解决循环依赖，如果存在A中有B的属性，B中有A的属性，那么当依赖注入的时候，就会产生当A还
+       未创建完的时候因为对于B的创建再次返回创建A，造成循环依赖；isPrototypeCurrentlyInCreation(beanName)判断true
+   
+   ⑤：检测parentBeanFactory
+   
+       缓存中没有，直接转到父类工厂上去加载。代码判断 parentBeanFactory != null && !containsBeanDefinition(beanName)
+       parentBeanFactory != null 这个判断显而易见；
+       !containsBeanDefinition(beanName) 检测如果当前加载的XMl文件不包含beanName所对应的配置，就只能到parentBeanFactory
+       中去尝试加载了，然后再去递归调用getBean()方法。
+       
+   ⑥：将存储XML配置文件的GenericBeanDefinition 转换为 RootBeanDefinition。
+   
+       因为在xml中读取到的Bean信息都存储在 GenericBeanDefinition 中，但是所有Bean的后续处理都是针对RootBeanDefinition的
+       所以这里需要进行一个转换，转换的同时如果父类bean不为空的话，则会一并合并父类的属性
+       
+   ⑦：寻找依赖
+   
+       因为bean的初始化过程可能会用到某些属性，而某些属性可能是动态配置的，并且配置依赖与其他的Bean，这个时候就有必要先加载依赖的Bean
+       所以在Spring的加载顺序中，在加载某一个Bean时会首先初始化这个bean所对应的依赖。
+       
+   ⑧：针对不同的scope进行Bean的创建
+   
+       根据bean作用域类型进行初始化
+       
+   ⑨：类型转换
+   
+       程序运行到这里bean的初始化基本结束，requiredType通常是为空的
+       但是可能存在这样的情况，返回的Bean是个String，但是requiredType是Integer，这个时候这个步骤就起作用了：
+       将返回的Bean转换为requiredType所指定的类型。
 
 #### 时序图
