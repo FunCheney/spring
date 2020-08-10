@@ -279,6 +279,12 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			@Nullable final Object[] args, boolean typeCheckOnly) throws BeansException {
 
 		// 转换beanName, FactoryBean 的name会已& 开头
+		/**
+		 * 通过 name 获取 beanName。这里不使用 name 作为 BeanName 有两个原因
+		 * 1. name 可能会以 "&" 字符开头，表名调用者想获取 FactoryBean 本身，而非 FactoryBean 实现类所创建的 bean。
+		 *    在 BeanFactory 中，FactoryBean 的实现类和其他 Bean 的存储方式是一致的即 <beanName，Bean>
+		 *    beanName 中没有 & 符。 所以需要移除 & 才能获取到 FactoryBean 的实例
+		 */
 		final String beanName = transformedBeanName(name);
 		Object bean;
 

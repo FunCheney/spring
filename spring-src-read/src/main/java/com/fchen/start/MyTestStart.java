@@ -18,10 +18,19 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class MyTestStart {
 	public static void main(String[] args) {
 
-		ApplicationContext ann = new AnnotationConfigApplicationContext(MyConfig.class);
+		// todo 使用方式一
+//		ApplicationContext ann = new AnnotationConfigApplicationContext(MyConfig.class);
 //		MyService myService = ann.getBean(MyService.class);
-		MyService myService = (MyService)ann.getBean("myService");
-		myService.test();
+//		MyService myService = (MyService)ann.getBean("myService");
+//		myService.test();
+		// todo 使用方式二
+//		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
+//		ctx.register(MyConfig.class);
+
+		// todo 扫描器区分
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+		context.scan("com.fchen");
+
 //		MyScannerService myScannerService = ann.getBean(MyScannerService.class);
 //		myScannerService.testMyScan();
 
