@@ -10,13 +10,14 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class ShareTest {
 	public static void main(String[] args) {
 		AnnotationConfigApplicationContext ann = new AnnotationConfigApplicationContext(Config.class);
-//		MyFactoryBean myFactoryBean = (MyFactoryBean) ann.getBean("myFactoryBean");
-//		myFactoryBean.testBean();
+//		MyFactoryBean myFactoryBean1 = (MyFactoryBean) ann.getBean("myFactoryBean");
+//		myFactoryBean1.testBean();
 
-		MyTest bean = (MyTest)ann.getBean("myFactoryBean");
-		bean.myTest();
+//		MyTest bean = (MyTest)ann.getBean("myFactoryBean");
+//
+//		bean.myTest();
 
-		MyFactoryBean myFactoryBean = (MyFactoryBean) ann.getBean("&myFactoryBean");
+		MyFactoryBean myFactoryBean = (MyFactoryBean) ann.getBean(MyFactoryBean.class);
 		myFactoryBean.testBean();
 
 	}
