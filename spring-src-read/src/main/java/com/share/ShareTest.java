@@ -17,8 +17,8 @@ public class ShareTest {
 //
 //		bean.myTest();
 
-		MyFactoryBean myFactoryBean = (MyFactoryBean) ann.getBean(MyFactoryBean.class);
-		myFactoryBean.testBean();
+//		MyFactoryBean myFactoryBean = (MyFactoryBean) ann.getBean(MyFactoryBean.class);
+//		myFactoryBean.testBean();
 
 	}
 }

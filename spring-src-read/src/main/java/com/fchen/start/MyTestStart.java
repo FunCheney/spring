@@ -1,5 +1,6 @@
 package com.fchen.start;
 
+import com.fchen.aware.MyAwareTestService;
 import com.fchen.bean.factory.post.processor.MyFactoryPostProcessor;
 import com.fchen.config.MyConfig;
 //import com.fchen.config.MySelectorImportConfig;
@@ -28,8 +29,8 @@ public class MyTestStart {
 //		ctx.register(MyConfig.class);
 
 		// todo 扫描器区分
-		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-		context.scan("com.fchen");
+//		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+//		context.scan("com.fchen");
 
 //		MyScannerService myScannerService = ann.getBean(MyScannerService.class);
 //		myScannerService.testMyScan();
@@ -50,6 +51,13 @@ public class MyTestStart {
 //		ApplicationContext ann = new AnnotationConfigApplicationContext(MySelectorImportConfig.class);
 //		MySelectImportService bean = ann.getBean(MySelectImportService.class);
 //		bean.test();
+
+		// todo Aware 使用测试
+		ApplicationContext ann = new AnnotationConfigApplicationContext(MyConfig.class);
+		MyAwareTestService service = (MyAwareTestService) ann.getBean("myAwareTestService");
+		service.myTest();
+		service.myTest();
+
 
 	}
 }
