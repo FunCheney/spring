@@ -9,6 +9,6 @@ import org.springframework.context.annotation.Configuration;
  * @desc: TODO
  */
 @Configuration
-@ComponentScan
+@ComponentScan("web")
 public class AppConfig {
 }
