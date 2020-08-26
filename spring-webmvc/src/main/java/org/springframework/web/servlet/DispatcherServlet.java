@@ -284,6 +284,10 @@ public class DispatcherServlet extends FrameworkServlet {
 		// Load default strategy implementations from properties file.
 		// This is currently strictly internal and not meant to be customized
 		// by application developers.
+		/**
+		 * 从属性文件加载默认的策略实现
+		 * load DispatcherServlet.properties 文件中 所有配置
+		 */
 		try {
 			ClassPathResource resource = new ClassPathResource(DEFAULT_STRATEGIES_PATH, DispatcherServlet.class);
 			defaultStrategies = PropertiesLoaderUtils.loadProperties(resource);
@@ -492,6 +496,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	 */
 	@Override
 	protected void onRefresh(ApplicationContext context) {
+		// 重点代码
 		initStrategies(context);
 	}
 
@@ -500,14 +505,22 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * <p>May be overridden in subclasses in order to initialize further strategy objects.
 	 */
 	protected void initStrategies(ApplicationContext context) {
+		// 初始化上传文件的 Bean
 		initMultipartResolver(context);
+		// 国际化
 		initLocaleResolver(context);
+		// 前端主题样式
 		initThemeResolver(context);
+		// 初始化 HandleMappers
 		initHandlerMappings(context);
+		// 初始化 适配器
 		initHandlerAdapters(context);
+
 		initHandlerExceptionResolvers(context);
 		initRequestToViewNameTranslator(context);
+		// 视图转换器
 		initViewResolvers(context);
+		// 重定向数据管理器
 		initFlashMapManager(context);
 	}
 
@@ -616,6 +629,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		// Ensure we have at least one HandlerMapping, by registering
 		// a default HandlerMapping if no other mappings are found.
 		if (this.handlerMappings == null) {
+			// 通过配置文件中的信息得到 handleMappering
 			this.handlerMappings = getDefaultStrategies(context, HandlerMapping.class);
 			if (logger.isTraceEnabled()) {
 				logger.trace("No HandlerMappings declared for servlet '" + getServletName() +
@@ -1009,10 +1023,13 @@ public class DispatcherServlet extends FrameworkServlet {
 			Exception dispatchException = null;
 
 			try {
+				// 检查文件中是否有上传操作
 				processedRequest = checkMultipart(request);
 				multipartRequestParsed = (processedRequest != request);
 
 				// Determine handler for the current request.
+				// 确定当前请求的处理程序
+				// 推断 请求 的类型
 				mappedHandler = getHandler(processedRequest);
 				if (mappedHandler == null) {
 					noHandlerFound(processedRequest, response);
@@ -1020,9 +1037,11 @@ public class DispatcherServlet extends FrameworkServlet {
 				}
 
 				// Determine handler adapter for the current request.
+				// 根据 handler 的类型封装适配，根据不同的适配器处理
 				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
 				// Process last-modified header, if supported by the handler.
+				// Spring 确定要如何反射调用
 				String method = request.getMethod();
 				boolean isGet = "GET".equals(method);
 				if (isGet || "HEAD".equals(method)) {
@@ -1031,12 +1050,13 @@ public class DispatcherServlet extends FrameworkServlet {
 						return;
 					}
 				}
-
+				// 前置处理 拦截器处理
 				if (!mappedHandler.applyPreHandle(processedRequest, response)) {
 					return;
 				}
 
 				// Actually invoke the handler.
+				// 反射调用
 				mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
 
 				if (asyncManager.isConcurrentHandlingStarted()) {
@@ -1233,6 +1253,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		 */
 		if (this.handlerMappings != null) {
 			for (HandlerMapping mapping : this.handlerMappings) {
+				// 把请求传过去确定
 				HandlerExecutionChain handler = mapping.getHandler(request);
 				if (handler != null) {
 					return handler;
