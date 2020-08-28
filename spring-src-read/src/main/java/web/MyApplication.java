@@ -14,10 +14,12 @@ public class MyApplication {
 		Tomcat tomcat =new Tomcat();
 		//端口号设置
 		tomcat.setPort(9090);
-		tomcat.addWebapp("/","");
+		tomcat.addWebapp("/","/");
 		try {
-			tomcat.start();//Tomcat启动方法
-			tomcat.getServer().await();//Tomcat阻塞方法
+			//Tomcat启动方法
+			tomcat.start();
+			//Tomcat阻塞方法
+			tomcat.getServer().await();
 		} catch (LifecycleException e) {
 			e.printStackTrace();
 		}
