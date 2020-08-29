@@ -365,7 +365,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 			try {
 				/**
-				 * 将存储在XML配置文件的 GernericBeanDefinition转换为RootBeanDefinition
+				 * 将存储在XML配置文件的 GenericBeanDefinition转换为RootBeanDefinition
 				 * 如果指定BeanName 是 子Bean的话，同时会合并父类相关的属性
 				 * 根据bean的名字 获取 BeanDefinition
 				 */
