@@ -1,5 +1,7 @@
 package web;
 
+import org.springframework.web.WebApplicationInitializer;
+
 import javax.servlet.ServletContainerInitializer;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -11,7 +13,7 @@ import java.util.Set;
  * @date: 2020/8/28 8:13 上午
  * @desc: TODO
  */
-@HandlesTypes(MyWebApplicationInitializer.class)
+@HandlesTypes(WebApplicationInitializer.class)
 public class MyServletContainerInitializer implements ServletContainerInitializer {
 	@Override
 	public void onStartup(Set<Class<?>> c, ServletContext ctx) throws ServletException {

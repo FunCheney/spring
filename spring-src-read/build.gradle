@@ -21,6 +21,7 @@ dependencies {
     testCompile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
     optional("org.aspectj:aspectjweaver:${aspectjVersion}")
     compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.37'
+    compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-el', version: '9.0.37'
     compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '9.0.37'
 
     compile(project(":spring-context"))

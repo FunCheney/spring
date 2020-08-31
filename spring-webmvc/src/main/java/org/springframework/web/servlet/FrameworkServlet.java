@@ -559,6 +559,9 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	 * @see #setContextConfigLocation
 	 */
 	protected WebApplicationContext initWebApplicationContext() {
+		// 这里调用 WebApplicationContextUtils 静态类来得到上下文
+		// 这个上下文是保存在 servletContext 中的
+		// 使用这个根上下文作为当前 mvc 上下文的双亲上下文
 		WebApplicationContext rootContext =
 				WebApplicationContextUtils.getWebApplicationContext(getServletContext());
 		WebApplicationContext wac = null;
@@ -601,6 +604,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 			}
 		}
 
+		// 把当前的上下文保存到 ServletContext 中去，注意使用的属性名称
+		// 和当前 Servlet 名称相关
 		if (this.publishContext) {
 			// Publish the context as a servlet context attribute.
 			String attrName = getServletContextAttributeName();

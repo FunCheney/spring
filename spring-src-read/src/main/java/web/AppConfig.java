@@ -12,6 +12,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 @ComponentScan("web")
-public class AppConfig {
+public class AppConfig implements WebMvcConfigurer{
+
+	@Override
+	public void configureViewResolvers(ViewResolverRegistry registry) {
+		registry.jsp("","");
+	}
 
 }
