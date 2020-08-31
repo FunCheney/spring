@@ -98,6 +98,10 @@ public abstract class WebApplicationContextUtils {
 	 */
 	@Nullable
 	public static WebApplicationContext getWebApplicationContext(ServletContext sc) {
+		/**
+		 * 使用了 ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE，这个属性代表的跟上下文在
+		 * ContextLoaderListener 初始化的过程中被建立，并被设置到 ServletContext 中
+		 */
 		return getWebApplicationContext(sc, WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
 	}
 

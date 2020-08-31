@@ -606,6 +606,11 @@ public class DispatcherServlet extends FrameworkServlet {
 	private void initHandlerMappings(ApplicationContext context) {
 		this.handlerMappings = null;
 
+		/**
+		 * 这里导入所有的 HandlerMapping Bean，这些 Bean 可以在当前的 DispatchServlet 的
+		 * IoC 容器中，也可能在其双亲的上下文中
+		 * 这个 detectAllHandlerMappings 的默认值为 true，即默认的从所有的 IoC 容器中获取
+		 */
 		if (this.detectAllHandlerMappings) {
 			// Find all HandlerMappings in the ApplicationContext, including ancestor contexts.
 			Map<String, HandlerMapping> matchingBeans =
@@ -619,6 +624,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 		else {
 			try {
+				// 根据 名称从当前的 IoC 容器中通过 getBean 获取 handlerMapping
 				HandlerMapping hm = context.getBean(HANDLER_MAPPING_BEAN_NAME, HandlerMapping.class);
 				this.handlerMappings = Collections.singletonList(hm);
 			}
@@ -630,7 +636,8 @@ public class DispatcherServlet extends FrameworkServlet {
 		// Ensure we have at least one HandlerMapping, by registering
 		// a default HandlerMapping if no other mappings are found.
 		if (this.handlerMappings == null) {
-			// 通过配置文件中的信息得到 handleMappering
+			// 通过配置文件中的信息得到 handleMapping
+			// DispatchServlet.properties 中
 			this.handlerMappings = getDefaultStrategies(context, HandlerMapping.class);
 			if (logger.isTraceEnabled()) {
 				logger.trace("No HandlerMappings declared for servlet '" + getServletName() +
