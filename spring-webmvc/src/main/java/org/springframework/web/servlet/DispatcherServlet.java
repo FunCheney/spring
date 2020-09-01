@@ -947,6 +947,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 
 		// Make framework objects available to handlers and view objects.
+		// 对 Http 请求参数进行快照处理
 		request.setAttribute(WEB_APPLICATION_CONTEXT_ATTRIBUTE, getWebApplicationContext());
 		request.setAttribute(LOCALE_RESOLVER_ATTRIBUTE, this.localeResolver);
 		request.setAttribute(THEME_RESOLVER_ATTRIBUTE, this.themeResolver);
@@ -962,6 +963,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 
 		try {
+			// 分发请求
 			doDispatch(request, response);
 		}
 		finally {
@@ -1371,22 +1373,27 @@ public class DispatcherServlet extends FrameworkServlet {
 	 */
 	protected void render(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// Determine locale for request and apply it to the response.
+		// 从 request 中读取 locale 信息，并设置 response 的 locale 值
 		Locale locale =
 				(this.localeResolver != null ? this.localeResolver.resolveLocale(request) : request.getLocale());
 		response.setLocale(locale);
 
 		View view;
 		String viewName = mv.getViewName();
+		// 根据 ModelAndView 中设置的试图名称进行解析，得到对应的试图对象
 		if (viewName != null) {
 			// We need to resolve the view name.
+			// 解析试图名称
 			view = resolveViewName(viewName, mv.getModelInternal(), locale, request);
 			if (view == null) {
 				throw new ServletException("Could not resolve view with name '" + mv.getViewName() +
 						"' in servlet with name '" + getServletName() + "'");
 			}
 		}
+		// ModelAndView 中可能已经直接包含了 view 对象
 		else {
 			// No need to lookup: the ModelAndView object contains the actual View object.
+			// 直接从 ModelAndView 对象中取得实际的试图对象
 			view = mv.getView();
 			if (view == null) {
 				throw new ServletException("ModelAndView [" + mv + "] neither contains a view name nor a " +
@@ -1402,6 +1409,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			if (mv.getStatus() != null) {
 				response.setStatus(mv.getStatus().value());
 			}
+			// 调用 view 实现对数据进行呈现，并通过 HttpResponse 把试图呈现给 HTTP 客户端
 			view.render(mv.getModelInternal(), request, response);
 		}
 		catch (Exception ex) {
@@ -1441,6 +1449,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	protected View resolveViewName(String viewName, @Nullable Map<String, Object> model,
 			Locale locale, HttpServletRequest request) throws Exception {
 
+		// 调用 ViewResolver 进行解析
 		if (this.viewResolvers != null) {
 			for (ViewResolver viewResolver : this.viewResolvers) {
 				View view = viewResolver.resolveViewName(viewName, locale);

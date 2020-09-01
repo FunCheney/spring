@@ -54,9 +54,11 @@ public class MyTestStart {
 
 		// todo Aware 使用测试
 		ApplicationContext ann = new AnnotationConfigApplicationContext(MyConfig.class);
-		MyAwareTestService service = (MyAwareTestService) ann.getBean("myAwareTestService");
-		service.myTest();
-		service.myTest();
+		MyConfig myConfig = ann.getBean(MyConfig.class);
+		System.out.println("XXXXXXXXXXX"+myConfig);
+//		MyAwareTestService service = (MyAwareTestService) ann.getBean("myAwareTestService");
+//		service.myTest();
+//		service.myTest();
 
 
 	}

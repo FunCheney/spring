@@ -23,7 +23,7 @@ public class MyApplication {
 		// 告诉tomcat 源码在哪里
 		Context context = tomcat.addWebapp("/", "/");
 		WebResourceRoot resourceRoot = new StandardRoot(context);
-		resourceRoot.addPreResources(new DirResourceSet(resourceRoot,"WEB-INF/class",path, "/"));
+		resourceRoot.addPreResources(new DirResourceSet(resourceRoot,"/WEB-INF/class",path, "/"));
 		try {
 			//Tomcat启动方法
 			tomcat.start();
