@@ -163,7 +163,7 @@ final class PostProcessorRegistrationDelegate {
 			/**
 			 * 执行 BeanFactoryPostProcessor 的回调
 			 * 这里执行的是 BeanFactoryPostProcessor 的 postProcessBeanFactory() 方法
-			 *
+			 *  ConfigurationClassPostProcessor 动态生成代理类的地方
 			 */
 			invokeBeanFactoryPostProcessors(registryProcessors, beanFactory);
 			/**
