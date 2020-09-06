@@ -26,5 +26,6 @@ public class MyFactoryPostProcessor implements BeanFactoryPostProcessor {
 		System.out.println(Arrays.asList(names));
 //		MyService bean = beanFactory.getBean(MyService.class);
 //		System.out.println(bean);
+//		bean.test();
 	}
 }

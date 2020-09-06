@@ -30,8 +30,8 @@ public class MyService {
 //	}
 	@Autowired
 	MyTest myTest;
-	@Autowired
-	MyServiceB myServiceB;
+//	@Autowired
+//	MyServiceB myServiceB;
 
 	public void test(){
 		System.out.println("hello test");
@@ -43,9 +43,9 @@ public class MyService {
 //
 //	}
 //
-	public MyService(MyTest myTest){
-		this.myTest = myTest;
-	}
+//	public MyService(MyTest myTest){
+////		this.myTest = myTest;
+//	}
 
 //	public MyService(MyServiceB myServiceB, MyTest myTest){
 //
