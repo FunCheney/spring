@@ -120,6 +120,7 @@ public class MyTestStart {
   * [你不知道的BeanFactoryPostProcessor]
   * [ImportSelector]
   * [ImportBeanDefinitionRegistrar]
+  * [区分BeanFactoryPostProcessor 与 BeanPostProcessor]
 
 
 #### spring中的依赖注入
