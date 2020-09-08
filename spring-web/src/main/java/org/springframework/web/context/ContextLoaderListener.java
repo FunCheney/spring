@@ -20,6 +20,9 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 /**
+ * ContextLoaderListener 用来建立 IoC 容器体系，在 IoC 体系建立完成之后，
+ * 把 DispatchServlet 作为 Spring MVC 处理请求的转发器建立起来，从而完成响应 HTTP 请求的准备
+ *
  * Bootstrap listener to start up and shut down Spring's root {@link WebApplicationContext}.
  * Simply delegates to {@link ContextLoader} as well as to {@link ContextCleanupListener}.
  *
