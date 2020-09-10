@@ -60,6 +60,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 			throw new IllegalArgumentException(
 					"AdvisorAutoProxyCreator requires a ConfigurableListableBeanFactory: " + beanFactory);
 		}
+		// 初始化 BeanFactory
 		initBeanFactory((ConfigurableListableBeanFactory) beanFactory);
 	}
 
