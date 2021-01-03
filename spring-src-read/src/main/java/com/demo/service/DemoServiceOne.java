@@ -15,7 +15,7 @@ public class DemoServiceOne {
 
 //	@Autowired
 //	List<IStrategryService> myList;
-	@Autowired
+//	@Autowired
 	DemoServiceTwo demoServiceTwo;
 
 //	public void test(){
@@ -24,10 +24,10 @@ public class DemoServiceOne {
 
 //	DemoServiceThree demoServiceThree;
 
-//	@Autowired
-//	public DemoServiceOne(DemoServiceTwo demoServiceTwo){
-//		this.demoServiceTwo = demoServiceTwo;
-//	}
+	@Autowired
+	public DemoServiceOne(DemoServiceTwo demoServiceTwo){
+		this.demoServiceTwo = demoServiceTwo;
+	}
 
 //	public DemoServiceOne(DemoServiceThree demoServiceThree, DemoServiceTwo demoServiceTwo){
 //		this.demoServiceTwo = demoServiceTwo;

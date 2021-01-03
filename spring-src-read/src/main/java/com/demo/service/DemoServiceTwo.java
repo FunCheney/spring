@@ -16,10 +16,10 @@ public class DemoServiceTwo {
 //	@Autowired
 //	DemoServiceThree demoServiceThree;
 
-//	@Autowired
-//	public DemoServiceTwo(DemoServiceOne demoServiceOne){
-//		this.demoServiceOne = demoServiceOne;
-//	}
 	@Autowired
+	public DemoServiceTwo(DemoServiceOne demoServiceOne){
+		this.demoServiceOne = demoServiceOne;
+	}
+//	@Autowired
 	DemoServiceOne demoServiceOne;
 }
